@@ -19,21 +19,21 @@ public class fusion_tweener : MonoBehaviour {
             system.gravityModifier *= scaleFactor;
         }
         //apply scaling to emitters
-        foreach (ParticleEmitter emitter in emitters)
-        {
-            emitter.minSize *= scaleFactor;
-            emitter.maxSize *= scaleFactor;
-            emitter.worldVelocity *= scaleFactor;
-            emitter.localVelocity *= scaleFactor;
-            emitter.rndVelocity *= scaleFactor;
-        }
-
-        //apply scaling to animators
-        foreach (ParticleAnimator animator in animators)
-        {
-            animator.force *= scaleFactor;
-            animator.rndForce *= scaleFactor;
-        }
+        // foreach (ParticleEmitter emitter in emitters)
+        // {
+        //     emitter.minSize *= scaleFactor;
+        //     emitter.maxSize *= scaleFactor;
+        //     emitter.worldVelocity *= scaleFactor;
+        //     emitter.localVelocity *= scaleFactor;
+        //     emitter.rndVelocity *= scaleFactor;
+        // }
+        //
+        // //apply scaling to animators
+        // foreach (ParticleAnimator animator in animators)
+        // {
+        //     animator.force *= scaleFactor;
+        //     animator.rndForce *= scaleFactor;
+        // }
 	}
     int step = 1;
     float scaleFactor = 0.1f;
@@ -82,20 +82,20 @@ public class fusion_tweener : MonoBehaviour {
             system.gravityModifier *= scaleFactor;
         }
         //apply scaling to emitters
-        foreach (ParticleEmitter emitter in emitters)
-        {
-            emitter.minSize *= scaleFactor;
-            emitter.maxSize *= scaleFactor;
-            emitter.worldVelocity *= scaleFactor;
-            emitter.localVelocity *= scaleFactor;
-            emitter.rndVelocity *= scaleFactor;
-        }
-
-        //apply scaling to animators
-        foreach (ParticleAnimator animator in animators)
-        {
-            animator.force *= scaleFactor;
-            animator.rndForce *= scaleFactor;
-        }
+        // foreach (ParticleEmitter emitter in emitters)
+        // {
+        //     emitter.minSize *= scaleFactor;
+        //     emitter.maxSize *= scaleFactor;
+        //     emitter.worldVelocity *= scaleFactor;
+        //     emitter.localVelocity *= scaleFactor;
+        //     emitter.rndVelocity *= scaleFactor;
+        // }
+        //
+        // //apply scaling to animators
+        // foreach (ParticleAnimator animator in animators)
+        // {
+        //     animator.force *= scaleFactor;
+        //     animator.rndForce *= scaleFactor;
+        // }
     }
 }

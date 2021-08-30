@@ -14,12 +14,12 @@ public class partical_scaler : MonoBehaviour {
 
     public void eltersGo()
     {
-        var elters = gameObject.GetComponentsInChildren<EllipsoidParticleEmitter>(true);
-        foreach (var p in elters)
-        {
-            p.maxSize *= scale;
-            p.minSize *= scale;
-        }
+        // var elters = gameObject.GetComponentsInChildren<EllipsoidParticleEmitter>(true);
+        // foreach (var p in elters)
+        // {
+        //     p.maxSize *= scale;
+        //     p.minSize *= scale;
+        // }
     }
 
     // Update is called once per frame
