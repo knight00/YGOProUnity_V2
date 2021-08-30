@@ -3,8 +3,8 @@ using System.Collections;
 using System;
 
 public class fusion_tweener : MonoBehaviour {
-    ParticleEmitter[] emitters;
-    ParticleAnimator[] animators;
+    // ParticleEmitter[] emitters;
+    // ParticleAnimator[] animators;
     ParticleSystem[] systems;
 	// Use this for initialization
 	void Start () {
