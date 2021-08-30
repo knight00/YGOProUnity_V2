@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using DG.Tweening;
 
 public class MonoCardInDeckManager : MonoBehaviour {
     int loadedPicCode = 0;
@@ -108,28 +109,31 @@ public class MonoCardInDeckManager : MonoBehaviour {
         }
     }
 
-    public void tweenToVectorAndFall(Vector3 position,Vector3 rotation,float delay=0)
+    public void tweenToVectorAndFall(Vector3 position,Vector3 rotation)
     {
         Rigidbody rigidbody = GetComponent<Rigidbody>();
         if (rigidbody != null)
         {
             rigidbody.Sleep();
         }
-        iTween.MoveTo(gameObject, iTween.Hash(
-                            "delay", delay,
-                            "x", position.x,
-                            "y", position.y,
-                            "z", position.z,
-                            "time", 0.2f,
-                            "oncomplete", (Action)physicalON
-                            ));
-        iTween.RotateTo(gameObject, iTween.Hash(
-                          "delay", delay,
-                          "x", rotation.x,
-                          "y", rotation.y,
-                          "z", rotation.z,
-                          "time", 0.15f
-                          ));
+
+        transform.DOMove(position, 0.2f).OnComplete(physicalON);
+        transform.DORotate(rotation, 0.15f);
+        // iTween.MoveTo(gameObject, iTween.Hash(
+        //                     "delay", delay,
+        //                     "x", position.x,
+        //                     "y", position.y,
+        //                     "z", position.z,
+        //                     "time", 0.2f,
+        //                     "oncomplete", (Action)physicalON
+        //                     ));
+        // iTween.RotateTo(gameObject, iTween.Hash(
+        //                   "delay", delay,
+        //                   "x", rotation.x,
+        //                   "y", rotation.y,
+        //                   "z", rotation.z,
+        //                   "time", 0.15f
+        //                   ));
         physicalOFF();
     }
 
