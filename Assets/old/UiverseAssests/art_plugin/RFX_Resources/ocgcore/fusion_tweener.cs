@@ -8,8 +8,8 @@ public class fusion_tweener : MonoBehaviour {
     ParticleSystem[] systems;
 	// Use this for initialization
 	void Start () {
-        emitters = GetComponentsInChildren<ParticleEmitter>();
-        animators = GetComponentsInChildren<ParticleAnimator>();
+        // emitters = GetComponentsInChildren<ParticleEmitter>();
+        // animators = GetComponentsInChildren<ParticleAnimator>();
         systems = GetComponentsInChildren<ParticleSystem>();
         start_time = Program.TimePassed();
         foreach (ParticleSystem system in systems)
