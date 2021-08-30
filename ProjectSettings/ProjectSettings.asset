@@ -582,6 +582,7 @@ PlayerSettings:
     iOS: 1
   incrementalIl2cppBuild:
     iOS: 0
+  allowUnsafeCode: 1
   additionalIl2CppArgs: 
   apiCompatibilityLevelPerPlatform: {}
   m_RenderingPath: 1
