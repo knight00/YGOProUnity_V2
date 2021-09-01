@@ -42,6 +42,10 @@ public class Menu : WindowServantSP
     {
         yield return new WaitForSeconds(1);
         var verFile = File.ReadAllLines("config/ver.txt", Encoding.UTF8);
+        if (verFile.Length == 0) // 放一个空的 ver.txt 以关闭自动更新功能
+        {
+            yield break;
+        }
         if (verFile.Length != 2 || !Uri.IsWellFormedUriString(verFile[1], UriKind.Absolute))
         {
             Program.PrintToChat(InterString.Get("YGOPro2 自动更新：[ff5555]未设置更新服务器，无法检查更新。[-]@n请从官网重新下载安装完整版以获得更新。"));
