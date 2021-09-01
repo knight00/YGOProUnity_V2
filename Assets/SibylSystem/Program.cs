@@ -15,21 +15,27 @@ public class Program : MonoBehaviour
 
     #region Resources
 
-    [Header("场景里的对象引用")] public Camera main_camera;
+    [Header("场景")] public Camera main_camera;
     public Light light;
     public AudioSource audio;
 
+    [Header("容器")]
     public GameObject ui_back_ground_2d;
-    public Camera camera_back_ground_2d;
     public GameObject ui_windows_2d;
     public Camera camera_windows_2d;
     public GameObject ui_main_2d;
     public Camera camera_main_2d;
-
     public GameObject ui_container_3d;
     public Camera camera_container_3d;
     public GameObject ui_main_3d;
     public Camera camera_main_3d;
+
+    [Header("ui_back_ground_2d")]
+    public Camera camera_back_ground_2d;
+    public GameObject mod_simple_ngui_background_texture;
+    public GameObject new_ui_cardDescription;
+    public GameObject new_ui_search;
+    public gameInfo new_ui_gameInfo;
 
     [Header("Prefab")] public facer face;
     public AudioClip zhankai;
@@ -44,7 +50,6 @@ public class Program : MonoBehaviour
     public GameObject mod_ocgcore_coin;
     public GameObject mod_ocgcore_dice;
     public GameObject mod_simple_quad;
-    public GameObject mod_simple_ngui_background_texture;
     public GameObject mod_simple_ngui_text;
     public GameObject mod_ocgcore_number;
     public GameObject mod_ocgcore_decoration_chain_selecting;
@@ -103,9 +108,6 @@ public class Program : MonoBehaviour
     public GameObject new_ui_setting;
     public GameObject new_ui_book;
     public GameObject new_ui_selectServer;
-    public GameObject new_ui_gameInfo;
-    public GameObject new_ui_cardDescription;
-    public GameObject new_ui_search;
     public GameObject new_ui_searchDetailed;
     public GameObject new_ui_cardOnSearchList;
     public GameObject new_bar_changeSide;
@@ -277,115 +279,115 @@ public class Program : MonoBehaviour
 
     private void initialize()
     {
-        go(1, () =>
+        // go(1, () =>
+        // {
+        UIHelper.iniFaces();
+        initializeALLcameras();
+        fixALLcamerasPreFrame();
+        backGroundPic = new BackGroundPic();
+        servants.Add(backGroundPic);
+        backGroundPic.fixScreenProblem();
+        // });
+        // go(300, () =>
+        // {
+        InterString.initialize("config/translation.conf");
+        GameTextureManager.initialize();
+        Config.initialize("config/config.conf");
+
+        if (!Directory.Exists("expansions"))
+            try
+            {
+                Directory.CreateDirectory("expansions");
+            }
+            catch
+            {
+            }
+
+        var fileInfos = new FileInfo[0];
+
+        if (Directory.Exists("expansions"))
         {
-            UIHelper.iniFaces();
-            initializeALLcameras();
-            fixALLcamerasPreFrame();
-            backGroundPic = new BackGroundPic();
-            servants.Add(backGroundPic);
-            backGroundPic.fixScreenProblem();
-        });
-        go(300, () =>
+            fileInfos = new DirectoryInfo("expansions").GetFiles();
+            foreach (var file in fileInfos)
+            {
+                if (file.Name.ToLower().EndsWith(".ypk"))
+                    GameZipManager.Zips.Add(new ZipFile("expansions/" + file.Name));
+                if (file.Name.ToLower().EndsWith(".conf")) GameStringManager.initialize("expansions/" + file.Name);
+                if (file.Name.ToLower().EndsWith(".cdb")) CardsManager.initialize("expansions/" + file.Name);
+            }
+        }
+
+        if (Directory.Exists("cdb"))
         {
-            InterString.initialize("config/translation.conf");
-            GameTextureManager.initialize();
-            Config.initialize("config/config.conf");
-
-            if (!Directory.Exists("expansions"))
-                try
-                {
-                    Directory.CreateDirectory("expansions");
-                }
-                catch
-                {
-                }
-
-            var fileInfos = new FileInfo[0];
-
-            if (Directory.Exists("expansions"))
+            fileInfos = new DirectoryInfo("cdb").GetFiles();
+            foreach (var file in fileInfos)
             {
-                fileInfos = new DirectoryInfo("expansions").GetFiles();
-                foreach (var file in fileInfos)
-                {
-                    if (file.Name.ToLower().EndsWith(".ypk"))
-                        GameZipManager.Zips.Add(new ZipFile("expansions/" + file.Name));
-                    if (file.Name.ToLower().EndsWith(".conf")) GameStringManager.initialize("expansions/" + file.Name);
-                    if (file.Name.ToLower().EndsWith(".cdb")) CardsManager.initialize("expansions/" + file.Name);
-                }
+                if (file.Name.ToLower().EndsWith(".conf")) GameStringManager.initialize("cdb/" + file.Name);
+                if (file.Name.ToLower().EndsWith(".cdb")) CardsManager.initialize("cdb/" + file.Name);
             }
+        }
 
-            if (Directory.Exists("cdb"))
+        if (Directory.Exists("diy"))
+        {
+            fileInfos = new DirectoryInfo("diy").GetFiles();
+            foreach (var file in fileInfos)
             {
-                fileInfos = new DirectoryInfo("cdb").GetFiles();
-                foreach (var file in fileInfos)
+                if (file.Name.ToLower().EndsWith(".conf")) GameStringManager.initialize("diy/" + file.Name);
+                if (file.Name.ToLower().EndsWith(".cdb")) CardsManager.initialize("diy/" + file.Name);
+            }
+        }
+
+        if (Directory.Exists("data"))
+        {
+            fileInfos = new DirectoryInfo("data").GetFiles();
+            foreach (var file in fileInfos)
+                if (file.Name.ToLower().EndsWith(".zip"))
+                    GameZipManager.Zips.Add(new ZipFile("data/" + file.Name));
+        }
+
+        foreach (var zip in GameZipManager.Zips)
+        {
+            if (zip.Name.ToLower().EndsWith("script.zip"))
+                continue;
+            foreach (var file in zip.EntryFileNames)
+            {
+                if (file.ToLower().EndsWith(".conf"))
                 {
-                    if (file.Name.ToLower().EndsWith(".conf")) GameStringManager.initialize("cdb/" + file.Name);
-                    if (file.Name.ToLower().EndsWith(".cdb")) CardsManager.initialize("cdb/" + file.Name);
+                    var ms = new MemoryStream();
+                    var e = zip[file];
+                    e.Extract(ms);
+                    GameStringManager.initializeContent(Encoding.UTF8.GetString(ms.ToArray()));
                 }
-            }
 
-            if (Directory.Exists("diy"))
-            {
-                fileInfos = new DirectoryInfo("diy").GetFiles();
-                foreach (var file in fileInfos)
+                if (file.ToLower().EndsWith(".cdb"))
                 {
-                    if (file.Name.ToLower().EndsWith(".conf")) GameStringManager.initialize("diy/" + file.Name);
-                    if (file.Name.ToLower().EndsWith(".cdb")) CardsManager.initialize("diy/" + file.Name);
-                }
-            }
-
-            if (Directory.Exists("data"))
-            {
-                fileInfos = new DirectoryInfo("data").GetFiles();
-                foreach (var file in fileInfos)
-                    if (file.Name.ToLower().EndsWith(".zip"))
-                        GameZipManager.Zips.Add(new ZipFile("data/" + file.Name));
-            }
-
-            foreach (var zip in GameZipManager.Zips)
-            {
-                if (zip.Name.ToLower().EndsWith("script.zip"))
-                    continue;
-                foreach (var file in zip.EntryFileNames)
-                {
-                    if (file.ToLower().EndsWith(".conf"))
-                    {
-                        var ms = new MemoryStream();
-                        var e = zip[file];
-                        e.Extract(ms);
-                        GameStringManager.initializeContent(Encoding.UTF8.GetString(ms.ToArray()));
-                    }
-
-                    if (file.ToLower().EndsWith(".cdb"))
-                    {
-                        var e = zip[file];
-                        var tempfile = Path.Combine(Path.GetTempPath(), file);
-                        e.Extract(Path.GetTempPath(), ExtractExistingFileAction.OverwriteSilently);
-                        CardsManager.initialize(tempfile);
-                        File.Delete(tempfile);
-                    }
+                    var e = zip[file];
+                    var tempfile = Path.Combine(Path.GetTempPath(), file);
+                    e.Extract(Path.GetTempPath(), ExtractExistingFileAction.OverwriteSilently);
+                    CardsManager.initialize(tempfile);
+                    File.Delete(tempfile);
                 }
             }
+        }
 
-            GameStringManager.initialize("config/strings.conf");
-            BanlistManager.initialize("config/lflist.conf");
+        GameStringManager.initialize("config/strings.conf");
+        BanlistManager.initialize("config/lflist.conf");
 
-            CardsManager.updateSetNames();
+        CardsManager.updateSetNames();
 
-            if (Directory.Exists("pack"))
-            {
-                fileInfos = new DirectoryInfo("pack").GetFiles();
-                foreach (var file in fileInfos)
-                    if (file.Name.ToLower().EndsWith(".db"))
-                        PacksManager.initialize("pack/" + file.Name);
-                PacksManager.initializeSec();
-            }
+        if (Directory.Exists("pack"))
+        {
+            fileInfos = new DirectoryInfo("pack").GetFiles();
+            foreach (var file in fileInfos)
+                if (file.Name.ToLower().EndsWith(".db"))
+                    PacksManager.initialize("pack/" + file.Name);
+            PacksManager.initializeSec();
+        }
 
-            initializeALLservants();
-            loadResources();
-            readParams();
-        });
+        initializeALLservants();
+        loadResources();
+        readParams();
+        // });
     }
 
     private void readParams()
@@ -782,7 +784,7 @@ public class Program : MonoBehaviour
 
     #region MonoBehaviors
 
-    private void Start()
+    private void Awake()
     {
         if (Screen.width < 100 || Screen.height < 100) Screen.SetResolution(1366, 768, false);
         QualitySettings.vSyncCount = 0;

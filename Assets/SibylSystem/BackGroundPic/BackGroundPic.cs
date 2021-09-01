@@ -7,8 +7,7 @@ public class BackGroundPic : Servant
 
     public override void initialize()
     {
-        backGround = create(Program.I().mod_simple_ngui_background_texture, Vector3.zero, Vector3.zero, false,
-            Program.I().ui_back_ground_2d);
+        backGround = Program.I().mod_simple_ngui_background_texture;
         var file = new FileStream("texture/common/desk.jpg", FileMode.Open, FileAccess.Read);
         file.Seek(0, SeekOrigin.Begin);
         var data = new byte[file.Length];
@@ -16,7 +15,7 @@ public class BackGroundPic : Servant
         file.Close();
         file.Dispose();
         file = null;
-        var pic = new Texture2D(1024, 600);
+        var pic = new Texture2D(1920, 1080);
         pic.LoadImage(data);
         backGround.GetComponent<UITexture>().mainTexture = pic;
         backGround.GetComponent<UITexture>().depth = -100;

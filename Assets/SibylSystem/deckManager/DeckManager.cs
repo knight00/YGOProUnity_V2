@@ -663,14 +663,7 @@ public class DeckManager : ServantWithCardDescription
 
     public void setGoodLooking(bool side = false)
     {
-        try
-        {
-            Program.I().cardDescription.setData(CardsManager.Get(deck.Main[0]), GameTextureManager.myBack);
-        }
-        catch (Exception e)
-        {
-            Debug.Log(e);
-        }
+        Program.I().cardDescription.setData(CardsManager.Get(deck.Main[0]), GameTextureManager.myBack);
 
         if (side)
         {
@@ -744,14 +737,7 @@ public class DeckManager : ServantWithCardDescription
 
     public override void initialize()
     {
-        gameObjectSearch = create
-        (
-            Program.I().new_ui_search,
-            Program.I().camera_back_ground_2d.ScreenToWorldPoint(new Vector3(Screen.width + 600, Screen.height / 2, 600)),
-            new Vector3(0, 0, 0),
-            false,
-            Program.I().ui_back_ground_2d
-        );
+        gameObjectSearch = Program.I().new_ui_search;
         gameObjectDetailedSearch = create
         (
             Program.I().new_ui_searchDetailed,

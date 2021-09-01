@@ -474,14 +474,11 @@ public class Ocgcore : ServantWithCardDescription
         Arrow.gameObject.SetActive(false);
         replayShowAll = Config.Get("replayShowAll", "0") != "0";
         reportShowAll = Config.Get("reportShowAll", "0") != "0";
-        gameInfo = create
-        (
-            Program.I().new_ui_gameInfo,
-            Vector3.zero,
-            Vector3.zero,
-            false,
-            Program.I().ui_back_ground_2d
-        ).GetComponent<gameInfo>();
+        
+        
+        gameInfo = Program.I().new_ui_gameInfo;
+        
+        
         gameInfo.ini();
         UIHelper.InterGameObject(gameInfo.gameObject);
         shiftCondition(Condition.duel);

@@ -45,18 +45,20 @@ public class CardDescription : Servant
 
     public override void initialize()
     {
-        gameObject = create
-        (
-            Program.I().new_ui_cardDescription,
-            Program.I().camera_main_2d.ScreenToWorldPoint(new Vector3(-256, 0, 600)),
-            new Vector3(0, 0, 0),
-            true,
-            Program.I().ui_back_ground_2d
-        );
-        picLoader = gameObject.AddComponent<cardPicLoader>();
-        picLoader.code = 0;
-        picLoader.uiTexture = UIHelper.getByName<UITexture>(gameObject, "pic_");
-        picLoader.loaded_code = -1;
+        gameObject = Program.I().new_ui_cardDescription;
+        // create
+        // (
+        //     Program.I().new_ui_cardDescription,
+        //     Program.I().camera_main_2d.ScreenToWorldPoint(new Vector3(-256, 0, 600)),
+        //     new Vector3(0, 0, 0),
+        //     true,
+        //     Program.I().ui_back_ground_2d
+        // );
+        // picLoader = gameObject.AddComponent<cardPicLoader>();
+        // picLoader.code = 0;
+        // picLoader.uiTexture = UIHelper.getByName<UITexture>(gameObject, "pic_");
+        // picLoader.loaded_code = -1;
+        picLoader = gameObject.GetComponent<cardPicLoader>();
         resizer = UIHelper.getByName<UIDragResize>(gameObject, "resizer");
         underSprite = UIHelper.getByName<UITexture>(gameObject, "under_");
         description = UIHelper.getByName<UITextList>(gameObject, "description_");
