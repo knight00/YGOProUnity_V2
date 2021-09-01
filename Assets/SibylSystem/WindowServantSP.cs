@@ -80,14 +80,7 @@ public class WindowServantSP : Servant
 
     public void createWindow(GameObject mod)
     {
-        gameObject = create
-        (
-            mod,
-            Vector3.zero,
-            Vector3.zero,
-            false,
-            Program.I().ui_windows_2d
-        );
+        gameObject = mod;
         UIHelper.InterGameObject(gameObject);
         var v = new Vector3();
         v.x = Mathf.Clamp(Config.getFloat("x_" + gameObject.name), -0.5f, 0.5f) * Screen.width;

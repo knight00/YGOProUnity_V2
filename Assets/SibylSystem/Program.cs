@@ -22,7 +22,6 @@ public class Program : MonoBehaviour
     [Header("容器")]
     public GameObject ui_back_ground_2d;
     public GameObject ui_windows_2d;
-    public Camera camera_windows_2d;
     public GameObject ui_main_2d;
     public Camera camera_main_2d;
     public GameObject ui_container_3d;
@@ -36,6 +35,15 @@ public class Program : MonoBehaviour
     public GameObject new_ui_cardDescription;
     public GameObject new_ui_search;
     public gameInfo new_ui_gameInfo;
+    
+    [Header("ui_windows_2d")]
+    public Camera camera_windows_2d;
+    public GameObject new_ui_menu;
+    public GameObject remaster_deckManager;
+    public GameObject new_ui_selectServer;
+    public GameObject remaster_replayManager;
+    public GameObject remaster_puzzleManager;
+    public GameObject new_ui_aiRoom;
 
     [Header("Prefab")] public facer face;
     public AudioClip zhankai;
@@ -104,10 +112,9 @@ public class Program : MonoBehaviour
     public GameObject mod_ocgcore_ss_p_sum_effect;
     public GameObject mod_ocgcore_ss_dark_hole;
     public GameObject mod_ocgcore_ss_link_mark;
-    public GameObject new_ui_menu;
+    
     public GameObject new_ui_setting;
     public GameObject new_ui_book;
-    public GameObject new_ui_selectServer;
     public GameObject new_ui_searchDetailed;
     public GameObject new_ui_cardOnSearchList;
     public GameObject new_bar_changeSide;
@@ -122,14 +129,10 @@ public class Program : MonoBehaviour
     public GameObject new_ui_textMesh;
     public GameObject new_ui_superButton;
     public GameObject new_ui_superButtonTransparent;
-    public GameObject new_ui_aiRoom;
     public GameObject new_ocgcore_field;
     public GameObject new_ocgcore_chainCircle;
     public GameObject new_ocgcore_wait;
     public GameObject new_mouse;
-    public GameObject remaster_deckManager;
-    public GameObject remaster_replayManager;
-    public GameObject remaster_puzzleManager;
     public GameObject remaster_tagRoom;
     public GameObject remaster_room;
     public GameObject ES_1;
