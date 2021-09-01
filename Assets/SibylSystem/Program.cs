@@ -978,7 +978,7 @@ public class Program : MonoBehaviour
     {
         if (Screen.width < 100 || Screen.height < 100)
         {
-            Screen.SetResolution(1300, 700, false);
+            Screen.SetResolution(1366, 768, false);
         }
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 144;
