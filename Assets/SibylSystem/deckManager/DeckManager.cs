@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using DG.Tweening;
 using UnityEngine;
 using YGOSharp;
 using YGOSharp.OCGWrapper.Enums;
@@ -817,8 +818,9 @@ public class DeckManager : ServantWithCardDescription
     {
         base.applyHideArrangement();
         Program.cameraFacing = false;
-        iTween.MoveTo(gameObjectSearch,
-            Program.I().camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width + 600, Screen.height / 2, 600)), 1.2f);
+        gameObjectSearch.transform.DOMove(
+            Utils.UIToWorldPoint(new Vector3(Utils.UIWidth() + 600, (float) Utils.UIHeight() / 2, 600)),
+            1.2f);
         refreshDetail();
     }
 
@@ -827,9 +829,9 @@ public class DeckManager : ServantWithCardDescription
         base.applyShowArrangement();
         Program.cameraFacing = true;
         var tex = UIHelper.getByName<UITexture>(gameObjectSearch, "under_");
-        tex.height = Screen.height;
-        iTween.MoveTo(gameObjectSearch,
-            Program.I().camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width - tex.width / 2, Screen.height / 2, 0)),
+        tex.height = Utils.UIHeight();
+        gameObjectSearch.transform.DOMove(
+            Utils.UIToWorldPoint(new Vector3(Utils.UIWidth() - tex.width / 2, (float) Utils.UIHeight() / 2, 600)),
             1.2f);
         refreshDetail();
     }
@@ -1040,49 +1042,49 @@ public class DeckManager : ServantWithCardDescription
         {
             if (isShowed)
             {
-                if (Screen.height < 700)
+                // if (Screen.height < 700)
+                // {
+                //     gameObjectDetailedSearch.transform.localScale = new Vector3(Screen.height / 700f,
+                //         Screen.height / 700f, Screen.height / 700f);
+                //     if (detailShowed)
+                //     {
+                //         gameObjectDetailedSearch.GetComponent<UITexture>().height = 700;
+                //         iTween.MoveTo(gameObjectDetailedSearch,
+                //             Program.I().camera_main_2d.ScreenToWorldPoint(
+                //                 new Vector3(Screen.width - 230 - 115f * Screen.height / 700f, Screen.height * 0.5f, 0)),
+                //             0.6f);
+                //         reShowBar(0, 230 + 230 * Screen.height / 700f);
+                //     }
+                //     else
+                //     {
+                //         gameObjectDetailedSearch.GetComponent<UITexture>().height = 700;
+                //         iTween.MoveTo(gameObjectDetailedSearch,
+                //             Program.I().camera_main_2d.ScreenToWorldPoint(
+                //                 new Vector3(Screen.width - 230 - 115f * Screen.height / 700f, Screen.height * 1.5f, 0)),
+                //             0.6f);
+                //         reShowBar(0, 230);
+                //     }
+                // }
+                // else
+                // {
+                gameObjectDetailedSearch.transform.localScale = Vector3.one;
+                if (detailShowed)
                 {
-                    gameObjectDetailedSearch.transform.localScale = new Vector3(Screen.height / 700f,
-                        Screen.height / 700f, Screen.height / 700f);
-                    if (detailShowed)
-                    {
-                        gameObjectDetailedSearch.GetComponent<UITexture>().height = 700;
-                        iTween.MoveTo(gameObjectDetailedSearch,
-                            Program.I().camera_main_2d.ScreenToWorldPoint(
-                                new Vector3(Screen.width - 230 - 115f * Screen.height / 700f, Screen.height * 0.5f, 0)),
-                            0.6f);
-                        reShowBar(0, 230 + 230 * Screen.height / 700f);
-                    }
-                    else
-                    {
-                        gameObjectDetailedSearch.GetComponent<UITexture>().height = 700;
-                        iTween.MoveTo(gameObjectDetailedSearch,
-                            Program.I().camera_main_2d.ScreenToWorldPoint(
-                                new Vector3(Screen.width - 230 - 115f * Screen.height / 700f, Screen.height * 1.5f, 0)),
-                            0.6f);
-                        reShowBar(0, 230);
-                    }
+                    gameObjectDetailedSearch.GetComponent<UITexture>().height = Utils.UIHeight();
+                    gameObjectDetailedSearch.transform.DOMove(
+                        Utils.UIToWorldPoint(new Vector3(Utils.UIWidth() - 345f,
+                            Utils.UIHeight() * 0.5f, 0)), 0.6f);
+                    reShowBar(0, 460);
                 }
                 else
                 {
-                    gameObjectDetailedSearch.transform.localScale = Vector3.one;
-                    if (detailShowed)
-                    {
-                        gameObjectDetailedSearch.GetComponent<UITexture>().height = Screen.height;
-                        iTween.MoveTo(gameObjectDetailedSearch,
-                            Program.I().camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width - 345f,
-                                Screen.height * 0.5f, 0)), 0.6f);
-                        reShowBar(0, 460);
-                    }
-                    else
-                    {
-                        gameObjectDetailedSearch.GetComponent<UITexture>().height = Screen.height;
-                        iTween.MoveTo(gameObjectDetailedSearch,
-                            Program.I().camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width - 345f,
-                                Screen.height * 1.5f, 0)), 0.6f);
-                        reShowBar(0, 230);
-                    }
+                    gameObjectDetailedSearch.GetComponent<UITexture>().height = Utils.UIHeight();
+                    gameObjectDetailedSearch.transform.DOMove(
+                        Utils.UIToWorldPoint(new Vector3(Utils.UIWidth() - 345f,
+                            Utils.UIHeight() * 1.5f, 0)), 0.6f);
+                    reShowBar(0, 230);
                 }
+                // }
             }
             else
             {

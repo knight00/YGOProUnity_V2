@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using YGOSharp;
 using YGOSharp.OCGWrapper.Enums;
@@ -127,8 +128,8 @@ public class CardDescription : Servant
         if (gameObject != null)
         {
             underSprite.height = Utils.UIHeight() + 4;
-            iTween.MoveTo(gameObject,
-                Program.I().camera_main_2d.ScreenToWorldPoint(new Vector3(-underSprite.width - 20,
+            gameObject.transform.DOMove(
+                Utils.UIToWorldPoint(new Vector3(-underSprite.width - 20,
                     (float) Utils.UIHeight() / 2, 0)),
                 1.2f);
             setTitle("");
@@ -141,9 +142,7 @@ public class CardDescription : Servant
         if (gameObject != null)
         {
             underSprite.height = Utils.UIHeight() + 4;
-            iTween.MoveTo(gameObject,
-                Program.I().camera_main_2d.ScreenToWorldPoint(new Vector3(-2, (float) Utils.UIHeight() / 2, 0)),
-                1.2f);
+            gameObject.transform.DOMove(Utils.UIToWorldPoint(new Vector3(-2, (float) Utils.UIHeight() / 2, 0)), 1.2f);
             resizer.gameObject.GetComponent<BoxCollider>().enabled = true;
         }
     }
