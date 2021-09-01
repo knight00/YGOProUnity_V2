@@ -1,18 +1,18 @@
-﻿using UnityEngine;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Threading;
 using System.Text.RegularExpressions;
+using System.Threading;
+using UnityEngine;
 
 public class SelectServer : WindowServantSP
 {
-    UIPopupList list;
+    private GameObject faceShow = null;
 
-    UIInput inputIP;
-    UIInput inputPort;
-    UIInput inputPsw;
-    UIInput inputVersion;
+    private UIInput inputIP;
+    private UIInput inputPort;
+    private UIInput inputPsw;
+    private UIInput inputVersion;
+    private UIPopupList list;
 
     public string name = "";
 
@@ -25,26 +25,23 @@ public class SelectServer : WindowServantSP
         name = Config.Get("name", "一秒一喵机会");
         UIHelper.getByName<UIInput>(gameObject, "name_").value = name;
         list = UIHelper.getByName<UIPopupList>(gameObject, "history_");
-        UIHelper.registEvent(gameObject,"history_", onSelected);
+        UIHelper.registEvent(gameObject, "history_", onSelected);
         inputIP = UIHelper.getByName<UIInput>(gameObject, "ip_");
         inputPort = UIHelper.getByName<UIInput>(gameObject, "port_");
         inputPsw = UIHelper.getByName<UIInput>(gameObject, "psw_");
         inputVersion = UIHelper.getByName<UIInput>(gameObject, "version_");
-        inputVersion.value = "0x" + String.Format("{0:X}", Config.ClientVersion);
+        inputVersion.value = "0x" + string.Format("{0:X}", Config.ClientVersion);
         SetActiveFalse();
     }
 
-    void onSelected()
+    private void onSelected()
     {
-        if (list != null)
-        {
-            readString(list.value);
-        }
+        if (list != null) readString(list.value);
     }
 
     private void readString(string str)
     {
-        string remain = "";
+        var remain = "";
         string ip = "", port = "", psw = "";
         string[] splited;
         splited = str.Split(":");
@@ -56,6 +53,7 @@ public class SelectServer : WindowServantSP
         catch (Exception)
         {
         }
+
         splited = remain.Split(" ");
         try
         {
@@ -65,6 +63,7 @@ public class SelectServer : WindowServantSP
         catch (Exception)
         {
         }
+
         inputIP.value = ip;
         inputPort.value = port;
         inputPsw.value = psw;
@@ -84,59 +83,46 @@ public class SelectServer : WindowServantSP
         Menu.checkCommend();
     }
 
-    void printFile(bool first)
+    private void printFile(bool first)
     {
         list.Clear();
-        if (File.Exists("config/hosts.conf") == false)
-        {
-            File.Create("config/hosts.conf").Close();
-        }
-        string txtString = File.ReadAllText("config/hosts.conf");
-        string[] lines = txtString.Replace("\r", "").Split("\n");
-        for (int i = 0; i < lines.Length; i++)
+        if (File.Exists("config/hosts.conf") == false) File.Create("config/hosts.conf").Close();
+        var txtString = File.ReadAllText("config/hosts.conf");
+        var lines = txtString.Replace("\r", "").Split("\n");
+        for (var i = 0; i < lines.Length; i++)
         {
             lines[i] = Regex.Replace(lines[i], "^\\(.*\\)", ""); // remove old version
             if (i == 0)
-            {
                 if (first)
-                {
                     readString(lines[i]);
-                }
-            }
             list.AddItem(lines[i]);
         }
     }
 
-    void onClickExit()
+    private void onClickExit()
     {
         if (Program.exitOnReturn)
             Program.I().menu.onClickExit();
         else
             Program.I().shiftToServant(Program.I().menu);
         if (TcpHelper.tcpClient != null)
-        {
             if (TcpHelper.tcpClient.Connected)
-            {
                 TcpHelper.tcpClient.Close();
-            }
-        }
     }
 
-    void onClickJoin()
+    private void onClickJoin()
     {
-        if (!isShowed)
-        {
-            return;
-        }
-        string Name = UIHelper.getByName<UIInput>(gameObject, "name_").value;
-        string ipString = UIHelper.getByName<UIInput>(gameObject, "ip_").value;
-        string portString = UIHelper.getByName<UIInput>(gameObject, "port_").value;
-        string pswString = UIHelper.getByName<UIInput>(gameObject, "psw_").value;
-        string versionString = UIHelper.getByName<UIInput>(gameObject, "version_").value;
+        if (!isShowed) return;
+        var Name = UIHelper.getByName<UIInput>(gameObject, "name_").value;
+        var ipString = UIHelper.getByName<UIInput>(gameObject, "ip_").value;
+        var portString = UIHelper.getByName<UIInput>(gameObject, "port_").value;
+        var pswString = UIHelper.getByName<UIInput>(gameObject, "psw_").value;
+        var versionString = UIHelper.getByName<UIInput>(gameObject, "version_").value;
         KF_onlineGame(Name, ipString, portString, versionString, pswString);
     }
 
-    public void KF_onlineGame(string Name,string ipString, string portString, string versionString, string pswString="")
+    public void KF_onlineGame(string Name, string ipString, string portString, string versionString,
+        string pswString = "")
     {
         name = Name;
         Config.Set("name", name);
@@ -148,22 +134,16 @@ public class SelectServer : WindowServantSP
         {
             if (name != "")
             {
-                string fantasty = ipString + ":" + portString + " " + pswString;
+                var fantasty = ipString + ":" + portString + " " + pswString;
                 list.items.Remove(fantasty);
                 list.items.Insert(0, fantasty);
                 list.value = fantasty;
-                if (list.items.Count>5) 
-                {
-                    list.items.RemoveAt(list.items.Count - 1);
-                }
-                string all = "";
-                for (int i = 0; i < list.items.Count; i++)
-                {
-                    all += list.items[i] + "\r\n";
-                }
+                if (list.items.Count > 5) list.items.RemoveAt(list.items.Count - 1);
+                var all = "";
+                for (var i = 0; i < list.items.Count; i++) all += list.items[i] + "\r\n";
                 File.WriteAllText("config/hosts.conf", all);
                 printFile(false);
-                (new Thread(() => { TcpHelper.join(ipString, name, portString, pswString,versionString); })).Start();
+                new Thread(() => { TcpHelper.@join(ipString, name, portString, pswString, versionString); }).Start();
             }
             else
             {
@@ -172,13 +152,10 @@ public class SelectServer : WindowServantSP
         }
     }
 
-    GameObject faceShow = null;
-
-    void onClickFace()
+    private void onClickFace()
     {
         name = UIHelper.getByName<UIInput>(gameObject, "name_").value;
         RMSshow_face("showFace", name);
         Config.Set("name", name);
     }
-
 }

@@ -1,15 +1,20 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System;
-using Ionic.Zip;
 using System.Text;
+using Ionic.Zip;
+using UnityEngine;
+using YGOSharp;
 
 public class Program : MonoBehaviour
 {
+    public static void gugugu()
+    {
+        PrintToChat(InterString.Get("非常抱歉，因为技术原因，此功能暂时无法使用。请关注官方网站获取更多消息。"));
+    }
 
     #region Resources
+
     public Camera main_camera;
     public facer face;
     public Light light;
@@ -137,6 +142,7 @@ public class Program : MonoBehaviour
     public GameObject New_winCaculator;
     public GameObject New_winCaculatorRecord;
     public GameObject New_ocgcore_placeSelector;
+
     #endregion
 
     #region Initializement
@@ -150,28 +156,27 @@ public class Program : MonoBehaviour
 
     public static int TimePassed()
     {
-        return (int)(Time.time * 1000f);
+        return (int) (Time.time * 1000f);
     }
 
-    private List<GameObject> allObjects = new List<GameObject>();
+    private readonly List<GameObject> allObjects = new List<GameObject>();
 
-    void loadResource(GameObject g)
+    private void loadResource(GameObject g)
     {
         try
         {
-            GameObject obj = GameObject.Instantiate(g) as GameObject;
+            var obj = Instantiate(g);
             obj.SetActive(false);
             allObjects.Add(obj);
         }
-        catch (System.Exception e)
+        catch (Exception e)
         {
-            UnityEngine.Debug.Log(e);
+            Debug.Log(e);
         }
     }
 
-    void loadResources()
+    private void loadResources()
     {
-
         loadResource(mod_audio_effect);
         loadResource(mod_ocgcore_card);
         loadResource(mod_ocgcore_card_cloude);
@@ -248,24 +253,21 @@ public class Program : MonoBehaviour
 
     public static float getVerticalTransparency()
     {
-        if (I().setting.setting.closeUp.value == false)
-        {
-            return 0;
-        }
+        if (I().setting.setting.closeUp.value == false) return 0;
         return transparency;
     }
 
-    public static GameObject ui_back_ground_2d = null;
-    public static Camera camera_back_ground_2d = null;
-    public static GameObject ui_container_3d = null;
-    public static Camera camera_container_3d = null;
-    public static Camera camera_game_main = null;
-    public static GameObject ui_windows_2d = null;
-    public static Camera camera_windows_2d = null;
-    public static GameObject ui_main_2d = null;
-    public static Camera camera_main_2d = null;
-    public static GameObject ui_main_3d = null;
-    public static Camera camera_main_3d = null;
+    public static GameObject ui_back_ground_2d;
+    public static Camera camera_back_ground_2d;
+    public static GameObject ui_container_3d;
+    public static Camera camera_container_3d;
+    public static Camera camera_game_main;
+    public static GameObject ui_windows_2d;
+    public static Camera camera_windows_2d;
+    public static GameObject ui_main_2d;
+    public static Camera camera_main_2d;
+    public static GameObject ui_main_3d;
+    public static Camera camera_main_3d;
 
     public static Vector3 cameraPosition = new Vector3(0, 23, -23);
     public static Vector3 cameraRotation = new Vector3(60, 0, 0);
@@ -273,9 +275,8 @@ public class Program : MonoBehaviour
 
     public static float verticleScale = 5f;
 
-    void initialize()
+    private void initialize()
     {
-
         go(1, () =>
         {
             UIHelper.iniFaces();
@@ -292,7 +293,6 @@ public class Program : MonoBehaviour
             Config.initialize("config/config.conf");
 
             if (!Directory.Exists("expansions"))
-            {
                 try
                 {
                     Directory.CreateDirectory("expansions");
@@ -300,124 +300,95 @@ public class Program : MonoBehaviour
                 catch
                 {
                 }
-            }
 
             var fileInfos = new FileInfo[0];
 
             if (Directory.Exists("expansions"))
             {
-                fileInfos = (new DirectoryInfo("expansions")).GetFiles();
-                foreach (FileInfo file in fileInfos)
+                fileInfos = new DirectoryInfo("expansions").GetFiles();
+                foreach (var file in fileInfos)
                 {
                     if (file.Name.ToLower().EndsWith(".ypk"))
-                    {
-                        GameZipManager.Zips.Add(new Ionic.Zip.ZipFile("expansions/" + file.Name));
-                    }
-                    if (file.Name.ToLower().EndsWith(".conf"))
-                    {
-                        GameStringManager.initialize("expansions/" + file.Name);
-                    }
-                    if (file.Name.ToLower().EndsWith(".cdb"))
-                    {
-                        YGOSharp.CardsManager.initialize("expansions/" + file.Name);
-                    }
+                        GameZipManager.Zips.Add(new ZipFile("expansions/" + file.Name));
+                    if (file.Name.ToLower().EndsWith(".conf")) GameStringManager.initialize("expansions/" + file.Name);
+                    if (file.Name.ToLower().EndsWith(".cdb")) CardsManager.initialize("expansions/" + file.Name);
                 }
             }
 
             if (Directory.Exists("cdb"))
             {
-                fileInfos = (new DirectoryInfo("cdb")).GetFiles();
-                foreach (FileInfo file in fileInfos)
+                fileInfos = new DirectoryInfo("cdb").GetFiles();
+                foreach (var file in fileInfos)
                 {
-                    if (file.Name.ToLower().EndsWith(".conf"))
-                    {
-                        GameStringManager.initialize("cdb/" + file.Name);
-                    }
-                    if (file.Name.ToLower().EndsWith(".cdb"))
-                    {
-                        YGOSharp.CardsManager.initialize("cdb/" + file.Name);
-                    }
+                    if (file.Name.ToLower().EndsWith(".conf")) GameStringManager.initialize("cdb/" + file.Name);
+                    if (file.Name.ToLower().EndsWith(".cdb")) CardsManager.initialize("cdb/" + file.Name);
                 }
             }
 
             if (Directory.Exists("diy"))
             {
-                fileInfos = (new DirectoryInfo("diy")).GetFiles();
-                foreach (FileInfo file in fileInfos)
+                fileInfos = new DirectoryInfo("diy").GetFiles();
+                foreach (var file in fileInfos)
                 {
-                    if (file.Name.ToLower().EndsWith(".conf"))
-                    {
-                        GameStringManager.initialize("diy/" + file.Name);
-                    }
-                    if (file.Name.ToLower().EndsWith(".cdb"))
-                    {
-                        YGOSharp.CardsManager.initialize("diy/" + file.Name);
-                    }
+                    if (file.Name.ToLower().EndsWith(".conf")) GameStringManager.initialize("diy/" + file.Name);
+                    if (file.Name.ToLower().EndsWith(".cdb")) CardsManager.initialize("diy/" + file.Name);
                 }
             }
 
             if (Directory.Exists("data"))
             {
-                fileInfos = (new DirectoryInfo("data")).GetFiles();
-                foreach (FileInfo file in fileInfos)
-                {
+                fileInfos = new DirectoryInfo("data").GetFiles();
+                foreach (var file in fileInfos)
                     if (file.Name.ToLower().EndsWith(".zip"))
-                    {
-                        GameZipManager.Zips.Add(new Ionic.Zip.ZipFile("data/" + file.Name));
-                    }
-                }
+                        GameZipManager.Zips.Add(new ZipFile("data/" + file.Name));
             }
 
-            foreach (ZipFile zip in GameZipManager.Zips)
+            foreach (var zip in GameZipManager.Zips)
             {
                 if (zip.Name.ToLower().EndsWith("script.zip"))
                     continue;
-                foreach (string file in zip.EntryFileNames)
+                foreach (var file in zip.EntryFileNames)
                 {
                     if (file.ToLower().EndsWith(".conf"))
                     {
-                        MemoryStream ms = new MemoryStream();
-                        ZipEntry e = zip[file];
+                        var ms = new MemoryStream();
+                        var e = zip[file];
                         e.Extract(ms);
                         GameStringManager.initializeContent(Encoding.UTF8.GetString(ms.ToArray()));
                     }
+
                     if (file.ToLower().EndsWith(".cdb"))
                     {
-                        ZipEntry e = zip[file];
-                        string tempfile = Path.Combine(Path.GetTempPath(), file);
+                        var e = zip[file];
+                        var tempfile = Path.Combine(Path.GetTempPath(), file);
                         e.Extract(Path.GetTempPath(), ExtractExistingFileAction.OverwriteSilently);
-                        YGOSharp.CardsManager.initialize(tempfile);
+                        CardsManager.initialize(tempfile);
                         File.Delete(tempfile);
                     }
                 }
             }
 
             GameStringManager.initialize("config/strings.conf");
-            YGOSharp.BanlistManager.initialize("config/lflist.conf");
+            BanlistManager.initialize("config/lflist.conf");
 
-            YGOSharp.CardsManager.updateSetNames();
+            CardsManager.updateSetNames();
 
             if (Directory.Exists("pack"))
             {
-                fileInfos = (new DirectoryInfo("pack")).GetFiles();
-                foreach (FileInfo file in fileInfos)
-                {
+                fileInfos = new DirectoryInfo("pack").GetFiles();
+                foreach (var file in fileInfos)
                     if (file.Name.ToLower().EndsWith(".db"))
-                    {
-                        YGOSharp.PacksManager.initialize("pack/" + file.Name);
-                    }
-                }
-                YGOSharp.PacksManager.initializeSec();
+                        PacksManager.initialize("pack/" + file.Name);
+                PacksManager.initializeSec();
             }
 
             initializeALLservants();
             loadResources();
             readParams();
         });
-
     }
 
-    void readParams()
+    private void readParams()
     {
         var args = Environment.GetCommandLineArgs();
         string nick = null;
@@ -427,8 +398,8 @@ public class Program : MonoBehaviour
         string deck = null;
         string replay = null;
         string puzzle = null;
-        bool join = false;
-        for (int i = 0; i < args.Length; i++)
+        var join = false;
+        for (var i = 0; i < args.Length; i++)
         {
             if (args[i].ToLower() == "-n" && args.Length > i + 1)
             {
@@ -436,84 +407,86 @@ public class Program : MonoBehaviour
                 if (nick.Contains(" "))
                     nick = "\"" + nick + "\"";
             }
-            if (args[i].ToLower() == "-h" && args.Length > i + 1)
-            {
-                host = args[++i];
-            }
-            if (args[i].ToLower() == "-p" && args.Length > i + 1)
-            {
-                port = args[++i];
-            }
+
+            if (args[i].ToLower() == "-h" && args.Length > i + 1) host = args[++i];
+            if (args[i].ToLower() == "-p" && args.Length > i + 1) port = args[++i];
             if (args[i].ToLower() == "-w" && args.Length > i + 1)
             {
                 password = args[++i];
                 if (password.Contains(" "))
                     password = "\"" + password + "\"";
             }
+
             if (args[i].ToLower() == "-d" && args.Length > i + 1)
             {
                 deck = args[++i];
                 if (deck.Contains(" "))
                     deck = "\"" + deck + "\"";
             }
+
             if (args[i].ToLower() == "-r" && args.Length > i + 1)
             {
                 replay = args[++i];
                 if (replay.Contains(" "))
                     replay = "\"" + replay + "\"";
             }
+
             if (args[i].ToLower() == "-s" && args.Length > i + 1)
             {
                 puzzle = args[++i];
                 if (puzzle.Contains(" "))
                     puzzle = "\"" + puzzle + "\"";
             }
+
             if (args[i].ToLower() == "-j")
             {
                 join = true;
                 Config.Set("deckInUse", deck);
             }
         }
-        string cmdFile = "commamd.shell";
+
+        var cmdFile = "commamd.shell";
         if (join)
         {
-            File.WriteAllText(cmdFile, "online " + nick + " " + host + " " + port + " 0x233 " + password, Encoding.UTF8);
-            Program.exitOnReturn = true;
+            File.WriteAllText(cmdFile, "online " + nick + " " + host + " " + port + " 0x233 " + password,
+                Encoding.UTF8);
+            exitOnReturn = true;
         }
         else if (deck != null)
         {
             File.WriteAllText(cmdFile, "edit " + deck, Encoding.UTF8);
-            Program.exitOnReturn = true;
+            exitOnReturn = true;
         }
         else if (replay != null)
         {
             File.WriteAllText(cmdFile, "replay " + replay, Encoding.UTF8);
-            Program.exitOnReturn = true;
+            exitOnReturn = true;
         }
         else if (puzzle != null)
         {
             File.WriteAllText(cmdFile, "puzzle " + puzzle, Encoding.UTF8);
-            Program.exitOnReturn = true;
+            exitOnReturn = true;
         }
     }
 
     public GameObject mouseParticle;
 
-    static int lastChargeTime = 0;
+    private static int lastChargeTime;
+
     public static void charge()
     {
-        if (Program.TimePassed() - lastChargeTime > 5 * 60 * 1000)
+        if (TimePassed() - lastChargeTime > 5 * 60 * 1000)
         {
-            lastChargeTime = Program.TimePassed();
+            lastChargeTime = TimePassed();
             try
             {
                 GameTextureManager.clearAll();
                 Resources.UnloadUnusedAssets();
                 GC.Collect();
             }
-            catch (System.Exception e)
+            catch (Exception e)
             {
-                UnityEngine.Debug.Log(e);
+                Debug.Log(e);
             }
         }
     }
@@ -522,9 +495,9 @@ public class Program : MonoBehaviour
 
     #region Tools
 
-    public static GameObject pointedGameObject = null;
+    public static GameObject pointedGameObject;
 
-    public static Collider pointedCollider = null;
+    public static Collider pointedCollider;
 
     public static bool InputGetMouseButtonDown_0;
 
@@ -536,61 +509,48 @@ public class Program : MonoBehaviour
 
     public static bool InputGetMouseButtonUp_1;
 
-    public static bool InputEnterDown = false;
+    public static bool InputEnterDown;
 
-    public static float wheelValue = 0;
+    public static float wheelValue;
 
     public class delayedTask
     {
-        public int timeToBeDone;
         public Action act;
+        public int timeToBeDone;
     }
 
-    static List<delayedTask> delayedTasks = new List<delayedTask>();
+    private static readonly List<delayedTask> delayedTasks = new List<delayedTask>();
 
     public static void go(int delay_, Action act_)
     {
         delayedTasks.Add(new delayedTask
         {
             act = act_,
-            timeToBeDone = delay_ + Program.TimePassed(),
+            timeToBeDone = delay_ + TimePassed()
         });
     }
 
     public static void notGo(Action act_)
     {
-        List<delayedTask> rem = new List<delayedTask>();
-        for (int i = 0; i < delayedTasks.Count; i++)
-        {
+        var rem = new List<delayedTask>();
+        for (var i = 0; i < delayedTasks.Count; i++)
             if (delayedTasks[i].act == act_)
-            {
                 rem.Add(delayedTasks[i]);
-            }
-        }
-        for (int i = 0; i < rem.Count; i++)
-        {
-            delayedTasks.Remove(rem[i]);
-        }
+        for (var i = 0; i < rem.Count; i++) delayedTasks.Remove(rem[i]);
         rem.Clear();
     }
 
-    int rayFilter = 0;
+    private int rayFilter;
 
     public void initializeALLcameras()
     {
-        for (int i = 0; i < 32; i++)
+        for (var i = 0; i < 32; i++)
         {
-            if (i == 15)
-            {
-                continue;
-            }
-            rayFilter |= (int)Math.Pow(2, i);
+            if (i == 15) continue;
+            rayFilter |= (int) Math.Pow(2, i);
         }
 
-        if (camera_game_main == null)
-        {
-            camera_game_main = this.main_camera;
-        }
+        if (camera_game_main == null) camera_game_main = main_camera;
         camera_game_main.transform.position = new Vector3(0, 23, -23);
         camera_game_main.transform.eulerAngles = new Vector3(60, 0, 0);
         camera_game_main.transform.localScale = new Vector3(1, 1, 1);
@@ -604,10 +564,11 @@ public class Program : MonoBehaviour
             ui_back_ground_2d = create(mod_ui_2d);
             camera_back_ground_2d = ui_back_ground_2d.transform.Find("Camera").GetComponent<Camera>();
         }
+
         camera_back_ground_2d.depth = -2;
         ui_back_ground_2d.layer = 8;
         ui_back_ground_2d.transform.Find("Camera").gameObject.layer = 8;
-        camera_back_ground_2d.cullingMask = (int)Mathf.Pow(2, 8);
+        camera_back_ground_2d.cullingMask = (int) Mathf.Pow(2, 8);
         camera_back_ground_2d.clearFlags = CameraClearFlags.Depth;
 
         if (ui_container_3d == null)
@@ -615,10 +576,11 @@ public class Program : MonoBehaviour
             ui_container_3d = create(mod_ui_3d);
             camera_container_3d = ui_container_3d.transform.Find("Camera").GetComponent<Camera>();
         }
+
         camera_container_3d.depth = -1;
         ui_container_3d.layer = 9;
         ui_container_3d.transform.Find("Camera").gameObject.layer = 9;
-        camera_container_3d.cullingMask = (int)Mathf.Pow(2, 9);
+        camera_container_3d.cullingMask = (int) Mathf.Pow(2, 9);
         camera_container_3d.fieldOfView = 75;
         camera_container_3d.rect = camera_game_main.rect;
         camera_container_3d.transform.position = new Vector3(0, 23, -23);
@@ -628,16 +590,16 @@ public class Program : MonoBehaviour
         camera_container_3d.clearFlags = CameraClearFlags.Depth;
 
 
-
         if (ui_main_2d == null)
         {
             ui_main_2d = create(mod_ui_2d);
             camera_main_2d = ui_main_2d.transform.Find("Camera").GetComponent<Camera>();
         }
+
         camera_main_2d.depth = 3;
         ui_main_2d.layer = 11;
         ui_main_2d.transform.Find("Camera").gameObject.layer = 11;
-        camera_main_2d.cullingMask = (int)Mathf.Pow(2, 11);
+        camera_main_2d.cullingMask = (int) Mathf.Pow(2, 11);
         camera_main_2d.clearFlags = CameraClearFlags.Depth;
 
 
@@ -646,10 +608,11 @@ public class Program : MonoBehaviour
             ui_windows_2d = create(mod_ui_2d);
             camera_windows_2d = ui_windows_2d.transform.Find("Camera").GetComponent<Camera>();
         }
+
         camera_windows_2d.depth = 2;
         ui_windows_2d.layer = 19;
         ui_windows_2d.transform.Find("Camera").gameObject.layer = 19;
-        camera_windows_2d.cullingMask = (int)Mathf.Pow(2, 19);
+        camera_windows_2d.cullingMask = (int) Mathf.Pow(2, 19);
         camera_windows_2d.clearFlags = CameraClearFlags.Depth;
 
 
@@ -658,18 +621,17 @@ public class Program : MonoBehaviour
             ui_main_3d = create(mod_ui_3d);
             camera_main_3d = ui_main_3d.transform.Find("Camera").GetComponent<Camera>();
         }
+
         camera_main_3d.depth = 1;
         ui_main_3d.layer = 10;
         ui_main_3d.transform.Find("Camera").gameObject.layer = 10;
-        camera_main_3d.cullingMask = (int)Mathf.Pow(2, 10);
+        camera_main_3d.cullingMask = (int) Mathf.Pow(2, 10);
         camera_main_3d.fieldOfView = 75;
         camera_main_3d.rect = new Rect(0, 0, 1, 1);
         camera_main_3d.transform.position = new Vector3(0, 23, -23);
         camera_main_3d.transform.eulerAngles = new Vector3(60, 0, 0);
         camera_main_3d.transform.localScale = new Vector3(1, 1, 1);
         camera_main_3d.clearFlags = CameraClearFlags.Depth;
-
-
 
 
         camera_main_3d.transform.localPosition = camera_game_main.transform.position;
@@ -690,22 +652,17 @@ public class Program : MonoBehaviour
     public void fixALLcamerasPreFrame()
     {
         deltaTime = Time.deltaTime;
-        if (deltaTime > 1f / 40f)
-        {
-            deltaTime = 1f / 40f;
-        }
+        if (deltaTime > 1f / 40f) deltaTime = 1f / 40f;
         if (camera_game_main != null)
         {
-            camera_game_main.transform.position += (cameraPosition - camera_game_main.transform.position) * deltaTime * 3.5f;
+            camera_game_main.transform.position +=
+                (cameraPosition - camera_game_main.transform.position) * deltaTime * 3.5f;
             camera_container_3d.transform.localPosition = camera_game_main.transform.position;
             if (cameraFacing == false)
-            {
-                camera_game_main.transform.localEulerAngles += (cameraRotation - camera_game_main.transform.localEulerAngles) * deltaTime * 3.5f;
-            }
+                camera_game_main.transform.localEulerAngles +=
+                    (cameraRotation - camera_game_main.transform.localEulerAngles) * deltaTime * 3.5f;
             else
-            {
                 camera_game_main.transform.LookAt(Vector3.zero);
-            }
             camera_container_3d.transform.localEulerAngles = camera_game_main.transform.localEulerAngles;
             camera_container_3d.fieldOfView = camera_game_main.fieldOfView;
             camera_container_3d.rect = camera_game_main.rect;
@@ -714,49 +671,35 @@ public class Program : MonoBehaviour
 
     public void fixScreenProblems()
     {
-        for (int i = 0; i < servants.Count; i++)
-        {
-            servants[i].fixScreenProblem();
-        }
+        for (var i = 0; i < servants.Count; i++) servants[i].fixScreenProblem();
     }
 
     public GameObject create(
         GameObject mod,
-        Vector3 position = default(Vector3),
-        Vector3 rotation = default(Vector3),
+        Vector3 position = default,
+        Vector3 rotation = default,
         bool fade = false,
         GameObject father = null,
         bool allParamsInWorld = true,
-        Vector3 wantScale = default(Vector3)
-        )
+        Vector3 wantScale = default
+    )
     {
-        Vector3 scale = mod.transform.localScale;
-        if (wantScale != default(Vector3))
-        {
-            scale = wantScale;
-        }
-        GameObject return_value = (GameObject)MonoBehaviour.Instantiate(mod);
-        if (position != default(Vector3))
-        {
+        var scale = mod.transform.localScale;
+        if (wantScale != default) scale = wantScale;
+        var return_value = Instantiate(mod);
+        if (position != default)
             return_value.transform.position = position;
-        }
         else
-        {
             return_value.transform.position = Vector3.zero;
-        }
-        if (rotation != default(Vector3))
-        {
+        if (rotation != default)
             return_value.transform.eulerAngles = rotation;
-        }
         else
-        {
             return_value.transform.eulerAngles = Vector3.zero;
-        }
         if (father != null)
         {
             return_value.transform.SetParent(father.transform, false);
             return_value.layer = father.layer;
-            if (allParamsInWorld == true)
+            if (allParamsInWorld)
             {
                 return_value.transform.position = position;
                 return_value.transform.localScale = scale;
@@ -773,16 +716,15 @@ public class Program : MonoBehaviour
         {
             return_value.layer = 0;
         }
-        Transform[] Transforms = return_value.GetComponentsInChildren<Transform>();
-        foreach (Transform child in Transforms)
-        {
-            child.gameObject.layer = return_value.layer;
-        }
-        if (fade == true)
+
+        var Transforms = return_value.GetComponentsInChildren<Transform>();
+        foreach (var child in Transforms) child.gameObject.layer = return_value.layer;
+        if (fade)
         {
             return_value.transform.localScale = Vector3.zero;
             iTween.ScaleToE(return_value, scale, 0.3f);
         }
+
         return return_value;
     }
 
@@ -795,22 +737,20 @@ public class Program : MonoBehaviour
                 if (fade)
                 {
                     iTween.ScaleTo(obj, Vector3.zero, 0.4f);
-                    MonoBehaviour.Destroy(obj, 0.6f);
+                    Destroy(obj, 0.6f);
                 }
                 else
                 {
-                    if (time != 0) MonoBehaviour.Destroy(obj, time);
-                    else MonoBehaviour.Destroy(obj);
+                    if (time != 0) Destroy(obj, time);
+                    else Destroy(obj);
                 }
-                if (instantNull)
-                {
-                    obj = null;
-                }
+
+                if (instantNull) obj = null;
             }
         }
-        catch (System.Exception e)
+        catch (Exception e)
         {
-            UnityEngine.Debug.Log(e);
+            Debug.Log(e);
         }
     }
 
@@ -831,9 +771,9 @@ public class Program : MonoBehaviour
 
     public static void reMoveCam(float xINscreen)
     {
-        float all = (float)Screen.width / 2f;
-        float it = xINscreen - (float)Screen.width / 2f;
-        float val = it / all;
+        var all = Screen.width / 2f;
+        var it = xINscreen - Screen.width / 2f;
+        var val = it / all;
         camera_game_main.rect = new Rect(val, 0, 1, 1);
         camera_container_3d.rect = camera_game_main.rect;
         camera_main_3d.rect = camera_game_main.rect;
@@ -842,22 +782,19 @@ public class Program : MonoBehaviour
     public static void ShiftUIenabled(GameObject ui, bool enabled)
     {
         var all = ui.GetComponentsInChildren<BoxCollider>();
-        for (int i = 0; i < all.Length; i++)
-        {
-            all[i].enabled = enabled;
-        }
+        for (var i = 0; i < all.Length; i++) all[i].enabled = enabled;
     }
 
     public static Texture2D GetTextureViaPath(string path)
     {
-        FileStream file = new FileStream(path, FileMode.Open, FileAccess.Read);
+        var file = new FileStream(path, FileMode.Open, FileAccess.Read);
         file.Seek(0, SeekOrigin.Begin);
-        byte[] data = new byte[file.Length];
-        file.Read(data, 0, (int)file.Length);
+        var data = new byte[file.Length];
+        file.Read(data, 0, (int) file.Length);
         file.Close();
         file.Dispose();
         file = null;
-        Texture2D pic = new Texture2D(1024, 600);
+        var pic = new Texture2D(1024, 600);
         pic.LoadImage(data);
         return pic;
     }
@@ -866,7 +803,7 @@ public class Program : MonoBehaviour
 
     #region Servants
 
-    List<Servant> servants = new List<Servant>();
+    private readonly List<Servant> servants = new List<Servant>();
 
     public Servant backGroundPic;
     public Menu menu;
@@ -882,7 +819,7 @@ public class Program : MonoBehaviour
     public puzzleMode puzzleMode;
     public AIRoom aiRoom;
 
-    void initializeALLservants()
+    private void initializeALLservants()
     {
         menu = new Menu();
         servants.Add(menu);
@@ -911,50 +848,17 @@ public class Program : MonoBehaviour
 
     public void shiftToServant(Servant to)
     {
-        if (to != backGroundPic && backGroundPic.isShowed)
-        {
-            backGroundPic.hide();
-        }
-        if (to != menu && menu.isShowed)
-        {
-            menu.hide();
-        }
-        if (to != setting && setting.isShowed)
-        {
-            setting.hide();
-        }
-        if (to != selectDeck && selectDeck.isShowed)
-        {
-            selectDeck.hide();
-        }
-        if (to != room && room.isShowed)
-        {
-            room.hide();
-        }
-        if (to != deckManager && deckManager.isShowed)
-        {
-            deckManager.hide();
-        }
-        if (to != ocgcore && ocgcore.isShowed)
-        {
-            ocgcore.hide();
-        }
-        if (to != selectServer && selectServer.isShowed)
-        {
-            selectServer.hide();
-        }
-        if (to != selectReplay && selectReplay.isShowed)
-        {
-            selectReplay.hide();
-        }
-        if (to != puzzleMode && puzzleMode.isShowed)
-        {
-            puzzleMode.hide();
-        }
-        if (to != aiRoom && aiRoom.isShowed)
-        {
-            aiRoom.hide();
-        }
+        if (to != backGroundPic && backGroundPic.isShowed) backGroundPic.hide();
+        if (to != menu && menu.isShowed) menu.hide();
+        if (to != setting && setting.isShowed) setting.hide();
+        if (to != selectDeck && selectDeck.isShowed) selectDeck.hide();
+        if (to != room && room.isShowed) room.hide();
+        if (to != deckManager && deckManager.isShowed) deckManager.hide();
+        if (to != ocgcore && ocgcore.isShowed) ocgcore.hide();
+        if (to != selectServer && selectServer.isShowed) selectServer.hide();
+        if (to != selectReplay && selectReplay.isShowed) selectReplay.hide();
+        if (to != puzzleMode && puzzleMode.isShowed) puzzleMode.hide();
+        if (to != aiRoom && aiRoom.isShowed) aiRoom.hide();
 
         if (to == backGroundPic && backGroundPic.isShowed == false) backGroundPic.show();
         if (to == menu && menu.isShowed == false) menu.show();
@@ -967,19 +871,15 @@ public class Program : MonoBehaviour
         if (to == selectReplay && selectReplay.isShowed == false) selectReplay.show();
         if (to == puzzleMode && puzzleMode.isShowed == false) puzzleMode.show();
         if (to == aiRoom && aiRoom.isShowed == false) aiRoom.show();
-
     }
 
     #endregion
 
     #region MonoBehaviors
 
-    void Start()
+    private void Start()
     {
-        if (Screen.width < 100 || Screen.height < 100)
-        {
-            Screen.SetResolution(1366, 768, false);
-        }
+        if (Screen.width < 100 || Screen.height < 100) Screen.SetResolution(1366, 768, false);
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 144;
         mouseParticle = Instantiate(new_mouse);
@@ -988,13 +888,13 @@ public class Program : MonoBehaviour
         go(500, () => { gameStart(); });
     }
 
-    int preWid = 0;
+    private int preWid;
 
-    int preheight = 0;
+    private int preheight;
 
-    public static float _padScroll = 0;
+    public static float _padScroll;
 
-    void OnGUI()
+    private void OnGUI()
     {
         if (Event.current.type == EventType.ScrollWheel)
             _padScroll = -Event.current.delta.y / 100;
@@ -1002,75 +902,67 @@ public class Program : MonoBehaviour
             _padScroll = 0;
     }
 
-    void Update()
+    private void Update()
     {
-       
         if (preWid != Screen.width || preheight != Screen.height)
         {
             Resources.UnloadUnusedAssets();
             onRESIZED();
         }
+
         fixALLcamerasPreFrame();
         wheelValue = UICamera.GetAxis("Mouse ScrollWheel") * 50;
         pointedGameObject = null;
         pointedCollider = null;
-        Ray line = Camera.main.ScreenPointToRay(Input.mousePosition);
+        var line = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
-        if (Physics.Raycast(line, out hit, (float)1000, rayFilter))
+        if (Physics.Raycast(line, out hit, 1000, rayFilter))
         {
             pointedGameObject = hit.collider.gameObject;
             pointedCollider = hit.collider;
         }
-        GameObject hoverobject = UICamera.Raycast(Input.mousePosition) ? UICamera.lastHit.collider.gameObject : null;
+
+        var hoverobject = UICamera.Raycast(Input.mousePosition) ? UICamera.lastHit.collider.gameObject : null;
         if (hoverobject != null)
-        {
             if (hoverobject.layer == 11 || pointedGameObject == null)
             {
                 pointedGameObject = hoverobject;
                 pointedCollider = UICamera.lastHit.collider;
             }
-        }
+
         InputGetMouseButtonDown_0 = Input.GetMouseButtonDown(0);
         InputGetMouseButtonUp_0 = Input.GetMouseButtonUp(0);
         InputGetMouseButtonDown_1 = Input.GetMouseButtonDown(1);
         InputGetMouseButtonUp_1 = Input.GetMouseButtonUp(1);
         InputEnterDown = Input.GetKeyDown(KeyCode.Return);
         InputGetMouseButton_0 = Input.GetMouseButton(0);
-        for (int i = 0; i < servants.Count; i++)
-        {
-            servants[i].Update();
-        }
+        for (var i = 0; i < servants.Count; i++) servants[i].Update();
         TcpHelper.preFrameFunction();
         delayedTask remove = null;
         while (true)
         {
             remove = null;
-            for (int i = 0; i < delayedTasks.Count; i++)
-            {
-                if (Program.TimePassed() > delayedTasks[i].timeToBeDone)
+            for (var i = 0; i < delayedTasks.Count; i++)
+                if (TimePassed() > delayedTasks[i].timeToBeDone)
                 {
                     remove = delayedTasks[i];
                     try
                     {
                         remove.act();
                     }
-                    catch (System.Exception e)
+                    catch (Exception e)
                     {
-                        UnityEngine.Debug.Log(e);
+                        Debug.Log(e);
                     }
+
                     break;
                 }
-            }
-            if (remove != null)
-            {
-                delayedTasks.Remove(remove);
-            }
-            else
-            {
-                break;
-            }
-        }
 
+            if (remove != null)
+                delayedTasks.Remove(remove);
+            else
+                break;
+        }
     }
 
     private void onRESIZED()
@@ -1079,8 +971,8 @@ public class Program : MonoBehaviour
         preheight = Screen.height;
         //if (setting != null)
         //    setting.setScreenSizeValue();
-        Program.notGo(fixScreenProblems);
-        Program.go(500, fixScreenProblems);
+        notGo(fixScreenProblems);
+        go(500, fixScreenProblems);
     }
 
     public static void DEBUGLOG(object o)
@@ -1102,12 +994,9 @@ public class Program : MonoBehaviour
         }
     }
 
-    void gameStart()
+    private void gameStart()
     {
-        if (UIHelper.shouldMaximize())
-        {
-            UIHelper.MaximizeWindow();
-        }
+        if (UIHelper.shouldMaximize()) UIHelper.MaximizeWindow();
         backGroundPic.show();
         shiftToServant(menu);
     }
@@ -1120,31 +1009,26 @@ public class Program : MonoBehaviour
 
     public static bool noAccess = false;
 
-    public static bool exitOnReturn = false;
+    public static bool exitOnReturn;
 
-    void OnApplicationQuit()
+    private void OnApplicationQuit()
     {
         TcpHelper.SaveRecord();
         cardDescription.save();
         setting.saveWhenQuit();
-        for (int i = 0; i < servants.Count; i++)
-        {
-            servants[i].OnQuit();
-        }
+        for (var i = 0; i < servants.Count; i++) servants[i].OnQuit();
         Running = false;
         try
         {
             TcpHelper.tcpClient.Close();
         }
-        catch (System.Exception e)
+        catch (Exception e)
         {
             //adeUnityEngine.Debug.Log(e);
         }
+
         Menu.deleteShell();
-        foreach (ZipFile zip in GameZipManager.Zips)
-        {
-            zip.Dispose();
-        }
+        foreach (var zip in GameZipManager.Zips) zip.Dispose();
     }
 
     public void quit()
@@ -1153,9 +1037,4 @@ public class Program : MonoBehaviour
     }
 
     #endregion
-
-    public static void gugugu()
-    {
-        PrintToChat(InterString.Get("非常抱歉，因为技术原因，此功能暂时无法使用。请关注官方网站获取更多消息。"));
-    }
 }

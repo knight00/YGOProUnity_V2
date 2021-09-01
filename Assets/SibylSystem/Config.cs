@@ -1,21 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using UnityEngine;
+
 public static class Config
 {
     public static uint ClientVersion = 0x1352;
 
-    class oneString
-    {
-        public string original = "";
-        public string translated = "";
-    }
+    private static readonly List<oneString> translations = new List<oneString>();
 
-    static List<oneString> translations = new List<oneString>();
+    private static readonly List<oneString> uits = new List<oneString>();
 
-    static List<oneString> uits = new List<oneString>();    
+    private static string path;
 
-    static string path;
+    private static bool loaded;
 
     public static bool getEffectON(string raw)
     {
@@ -24,19 +22,16 @@ public static class Config
 
     public static void initialize(string path)
     {
-        Config.path = path;   
-        if (File.Exists(path) == false)
+        Config.path = path;
+        if (File.Exists(path) == false) File.Create(path).Close();
+        var txtString = File.ReadAllText(path);
+        var lines = txtString.Replace("\r", "").Split("\n");
+        for (var i = 0; i < lines.Length; i++)
         {
-            File.Create(path).Close();
-        }
-        string txtString = File.ReadAllText(path);
-        string[] lines = txtString.Replace("\r", "").Split("\n");
-        for (int i = 0; i < lines.Length; i++)
-        {
-            string[] mats = lines[i].Split("->");
+            var mats = lines[i].Split("->");
             if (mats.Length == 2)
             {
-                oneString s = new oneString();
+                var s = new oneString();
                 s.original = mats[0];
                 s.translated = mats[1];
                 translations.Add(s);
@@ -44,107 +39,102 @@ public static class Config
         }
     }
 
-    static bool loaded = false;
-
     public static string Getui(string original)
     {
         if (loaded == false)
         {
             loaded = true;
-            string[] lines = File.ReadAllText("texture/ui/config.txt").Replace("\r", "").Replace(" ", "").Split("\n");
-            for (int i = 0; i < lines.Length; i++)
+            var lines = File.ReadAllText("texture/ui/config.txt").Replace("\r", "").Replace(" ", "").Split("\n");
+            for (var i = 0; i < lines.Length; i++)
             {
-                string[] mats = lines[i].Split("=");
+                var mats = lines[i].Split("=");
                 if (mats.Length == 2)
                 {
-                    oneString s = new oneString();
+                    var s = new oneString();
                     s.original = mats[0];
                     s.translated = mats[1];
                     uits.Add(s);
                 }
             }
         }
-        string return_value = "";
-        for (int i = 0; i < uits.Count; i++)
-        {
+
+        var return_value = "";
+        for (var i = 0; i < uits.Count; i++)
             if (uits[i].original == original)
             {
                 return_value = uits[i].translated;
                 break;
             }
-        }
+
         return return_value;
     }
 
     internal static float getFloat(string v)
     {
-        int getted = 0;
+        var getted = 0;
         try
         {
-            getted = Int32.Parse(Get(v, "0"));
+            getted = int.Parse(Get(v, "0"));
         }
-        catch (Exception)   
+        catch (Exception)
         {
         }
-        return ((float)getted) / 100000f;
+
+        return getted / 100000f;
     }
 
-    internal static void setFloat(string v,float f) 
+    internal static void setFloat(string v, float f)
     {
-        Set(v,((int)(f* 100000f)).ToString());
+        Set(v, ((int) (f * 100000f)).ToString());
     }
 
-    public static string Get(string original,string defau)  
+    public static string Get(string original, string defau)
     {
-        string return_value = defau;
-        bool finded = false;
-        for (int i = 0; i < translations.Count; i++)
-        {
+        var return_value = defau;
+        var finded = false;
+        for (var i = 0; i < translations.Count; i++)
             if (translations[i].original == original)
             {
                 return_value = translations[i].translated;
                 finded = true;
                 break;
             }
-        }
+
         if (finded == false)
-        {
             if (path != null)
             {
                 File.AppendAllText(path, original + "->" + defau + "\r\n");
-                oneString s = new oneString();
+                var s = new oneString();
                 s.original = original;
                 s.translated = defau;
                 return_value = defau;
                 translations.Add(s);
             }
-        }
+
         return return_value;
     }
 
-    public static void Set(string original,string setted)
+    public static void Set(string original, string setted)
     {
-        bool finded = false;
-        for (int i = 0; i < translations.Count; i++)
-        {
+        var finded = false;
+        for (var i = 0; i < translations.Count; i++)
             if (translations[i].original == original)
             {
                 finded = true;
                 translations[i].translated = setted;
             }
-        }
+
         if (finded == false)
         {
-            oneString s = new oneString();
+            var s = new oneString();
             s.original = original;
             s.translated = setted;
             translations.Add(s);
         }
-        string all = "";
-        for (int i = 0; i < translations.Count; i++)
-        {
+
+        var all = "";
+        for (var i = 0; i < translations.Count; i++)
             all += translations[i].original + "->" + translations[i].translated + "\r\n";
-        }
         try
         {
             File.WriteAllText(path, all);
@@ -152,7 +142,13 @@ public static class Config
         catch (Exception e)
         {
             Program.noAccess = true;
-            UnityEngine.Debug.Log(e);
+            Debug.Log(e);
         }
+    }
+
+    private class oneString
+    {
+        public string original = "";
+        public string translated = "";
     }
 }

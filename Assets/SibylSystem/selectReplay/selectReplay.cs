@@ -1,14 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text.RegularExpressions;
+using Percy;
+using SevenZip.Compression.LZMA;
 using UnityEngine;
+using GameMessage = YGOSharp.OCGWrapper.Enums.GameMessage;
 
 public class selectReplay : WindowServantSP
 {
-    UIselectableList superScrollView = null;
+    private bool opYRP;
 
-    string sort = "sortByTimeReplay";
+    private PrecyOcg precy;
+
+    private string selectedTrace = "";
+
+    private readonly string sort = "sortByTimeReplay";
+    private UIselectableList superScrollView;
 
     public override void initialize()
     {
@@ -29,79 +36,51 @@ public class selectReplay : WindowServantSP
         SetActiveFalse();
     }
 
-    void onValue()
+    private void onValue()
     {
         RMSshow_yesOrNo(
-                 "onValue",
-                 InterString.Get("您确定要删除所有未命名的录像？"),
-                 new messageSystemValue { hint = "yes", value = "yes" },
-                 new messageSystemValue { hint = "no", value = "no" });
-
+            "onValue",
+            InterString.Get("您确定要删除所有未命名的录像？"),
+            new messageSystemValue {hint = "yes", value = "yes"},
+            new messageSystemValue {hint = "no", value = "no"});
     }
 
     private void setSortLable()
     {
-        if (Config.Get(sort,"1") == "1")
-        {
+        if (Config.Get(sort, "1") == "1")
             UIHelper.trySetLableText(gameObject, "sort_", InterString.Get("时间排序"));
-        }
         else
-        {
             UIHelper.trySetLableText(gameObject, "sort_", InterString.Get("名称排序"));
-        }
     }
 
     private void onLaunch()
     {
-        if (!superScrollView.Selected())
-        {
-            return;
-        }
-        if (!isShowed)
-        {
-            return;
-        }
+        if (!superScrollView.Selected()) return;
+        if (!isShowed) return;
         KF_replay(superScrollView.selectedString);
     }
 
-    PrecyOcg precy;
-
-    private void onGod()    
+    private void onGod()
     {
-        if (!superScrollView.Selected())
-        {
-            return;
-        }
-        if (!isShowed)
-        {
-            return;
-        }
-        KF_replay(superScrollView.selectedString,true);
+        if (!superScrollView.Selected()) return;
+        if (!isShowed) return;
+        KF_replay(superScrollView.selectedString, true);
     }
 
     private void onSort()
     {
-        if (Config.Get(sort,"1") == "1")
-        {
+        if (Config.Get(sort, "1") == "1")
             Config.Set(sort, "0");
-        }
         else
-        {
             Config.Set(sort, "1");
-        }
         setSortLable();
         printFile();
     }
 
-    bool opYRP = false;
-
     private void onRename()
     {
-        if (!superScrollView.Selected())
-        {
-            return;
-        }
-        string name = superScrollView.selectedString;
+        if (!superScrollView.Selected()) return;
+        var name = superScrollView.selectedString;
         if (name.Length > 4 && name.Substring(name.Length - 4, 4) == ".yrp")
         {
             opYRP = true;
@@ -116,75 +95,69 @@ public class selectReplay : WindowServantSP
 
     private void onDelete()
     {
-        if (!superScrollView.Selected())
-        {
-            return;
-        }
+        if (!superScrollView.Selected()) return;
         RMSshow_yesOrNo(
-                 "onDelete",
-                 InterString.Get("删除[?],@n请确认。",
-                 superScrollView.selectedString),
-                 new messageSystemValue { hint = "yes", value = "yes" },
-                 new messageSystemValue { hint = "no", value = "no" });
+            "onDelete",
+            InterString.Get("删除[?],@n请确认。",
+                superScrollView.selectedString),
+            new messageSystemValue {hint = "yes", value = "yes"},
+            new messageSystemValue {hint = "no", value = "no"});
     }
 
-    List<byte[]> getYRPbuffer(string path)
+    private List<byte[]> getYRPbuffer(string path)
     {
-        if (path.Substring(path.Length - 4, 4) == ".yrp")
-        {
-            return new List<byte[]> { File.ReadAllBytes(path) };
-        }
+        if (path.Substring(path.Length - 4, 4) == ".yrp") return new List<byte[]> {File.ReadAllBytes(path)};
         var returnValue = new List<byte[]>();
         try
         {
             var collection = TcpHelper.readPackagesInRecord(path);
             foreach (var item in collection)
-            {
-                if (item.Fuction == (int)YGOSharp.OCGWrapper.Enums.GameMessage.sibyl_replay)
+                if (item.Fuction == (int) GameMessage.sibyl_replay)
                 {
-                    byte[] replay = item.Data.reader.ReadToEnd();
+                    var replay = item.Data.reader.ReadToEnd();
                     // TODO: don't include other replays
                     returnValue.Add(replay);
                 }
-            }
         }
-        catch (Exception e) 
+        catch (Exception e)
         {
             Debug.Log(e);
         }
+
         return returnValue;
     }
 
-    Percy.YRP getYRP(byte[] buffer)
+    private YRP getYRP(byte[] buffer)
     {
-        Percy.YRP returnValue = new Percy.YRP();
+        var returnValue = new YRP();
         try
         {
-            BinaryReader reader = new BinaryReader(new MemoryStream(buffer));
-            returnValue.ID= reader.ReadInt32();
-            returnValue.Version= reader.ReadInt32();
-            returnValue.Flag= reader.ReadInt32();
-            returnValue.Seed= reader.ReadUInt32();
+            var reader = new BinaryReader(new MemoryStream(buffer));
+            returnValue.ID = reader.ReadInt32();
+            returnValue.Version = reader.ReadInt32();
+            returnValue.Flag = reader.ReadInt32();
+            returnValue.Seed = reader.ReadUInt32();
             returnValue.DataSize = reader.ReadInt32();
             returnValue.Hash = reader.ReadInt32();
-            returnValue.Props= reader.ReadBytes(8);
-            byte[] raw = reader.ReadToEnd();
+            returnValue.Props = reader.ReadBytes(8);
+            var raw = reader.ReadToEnd();
             if ((returnValue.Flag & 0x1) > 0)
             {
-                SevenZip.Compression.LZMA.Decoder lzma = new SevenZip.Compression.LZMA.Decoder();
+                var lzma = new Decoder();
                 lzma.SetDecoderProperties(returnValue.Props);
-                MemoryStream decompressed = new MemoryStream();
+                var decompressed = new MemoryStream();
                 lzma.Code(new MemoryStream(raw), decompressed, raw.LongLength, returnValue.DataSize, null);
                 raw = decompressed.ToArray();
             }
+
             reader = new BinaryReader(new MemoryStream(raw));
             if ((returnValue.Flag & 0x2) > 0)
             {
                 Program.I().room.mode = 2;
-                returnValue.playerData.Add(new Percy.YRP.PlayerData());
-                returnValue.playerData.Add(new Percy.YRP.PlayerData());
-                returnValue.playerData.Add(new Percy.YRP.PlayerData());
-                returnValue.playerData.Add(new Percy.YRP.PlayerData());
+                returnValue.playerData.Add(new YRP.PlayerData());
+                returnValue.playerData.Add(new YRP.PlayerData());
+                returnValue.playerData.Add(new YRP.PlayerData());
+                returnValue.playerData.Add(new YRP.PlayerData());
                 returnValue.playerData[0].name = reader.ReadUnicode(20);
                 returnValue.playerData[1].name = reader.ReadUnicode(20);
                 returnValue.playerData[2].name = reader.ReadUnicode(20);
@@ -194,24 +167,18 @@ public class selectReplay : WindowServantSP
                 returnValue.DrawCount = reader.ReadInt32();
                 returnValue.opt = reader.ReadInt32();
                 Program.I().ocgcore.MasterRule = returnValue.opt >> 16;
-                for (int i = 0; i < 4; i++)
+                for (var i = 0; i < 4; i++)
                 {
-                    int count = reader.ReadInt32();
-                    for (int i2 = 0; i2 < count; i2++)
-                    {
-                        returnValue.playerData[i].main.Add(reader.ReadInt32());
-                    }
+                    var count = reader.ReadInt32();
+                    for (var i2 = 0; i2 < count; i2++) returnValue.playerData[i].main.Add(reader.ReadInt32());
                     count = reader.ReadInt32();
-                    for (int i2 = 0; i2 < count; i2++)
-                    {
-                        returnValue.playerData[i].extra.Add(reader.ReadInt32());
-                    }
+                    for (var i2 = 0; i2 < count; i2++) returnValue.playerData[i].extra.Add(reader.ReadInt32());
                 }
             }
             else
             {
-                returnValue.playerData.Add(new Percy.YRP.PlayerData());
-                returnValue.playerData.Add(new Percy.YRP.PlayerData());
+                returnValue.playerData.Add(new YRP.PlayerData());
+                returnValue.playerData.Add(new YRP.PlayerData());
                 returnValue.playerData[0].name = reader.ReadUnicode(20);
                 returnValue.playerData[1].name = reader.ReadUnicode(20);
                 returnValue.StartLp = reader.ReadInt32();
@@ -219,65 +186,48 @@ public class selectReplay : WindowServantSP
                 returnValue.DrawCount = reader.ReadInt32();
                 returnValue.opt = reader.ReadInt32();
                 Program.I().ocgcore.MasterRule = returnValue.opt >> 16;
-                for (int i = 0; i < 2; i++)
+                for (var i = 0; i < 2; i++)
                 {
-                    int count = reader.ReadInt32();
-                    for (int i2 = 0; i2 < count; i2++)
-                    {
-                        returnValue.playerData[i].main.Add(reader.ReadInt32());
-                    }
+                    var count = reader.ReadInt32();
+                    for (var i2 = 0; i2 < count; i2++) returnValue.playerData[i].main.Add(reader.ReadInt32());
                     count = reader.ReadInt32();
-                    for (int i2 = 0; i2 < count; i2++)
-                    {
-                        returnValue.playerData[i].extra.Add(reader.ReadInt32());
-                    }
+                    for (var i2 = 0; i2 < count; i2++) returnValue.playerData[i].extra.Add(reader.ReadInt32());
                 }
             }
+
             while (reader.BaseStream.Position < reader.BaseStream.Length)
-            {
                 returnValue.gameData.Add(reader.ReadBytes(reader.ReadByte()));
-            }
         }
         catch (Exception e)
         {
             Debug.Log(e);
         }
+
         return returnValue;
     }
 
-    private void onYdk()    
+    private void onYdk()
     {
-        if (!superScrollView.Selected())
-        {
-            return;
-        }
+        if (!superScrollView.Selected()) return;
         try
         {
-            Percy.YRP yrp;
-            if (File.Exists("replay/" + superScrollView.selectedString))    
-            {
+            YRP yrp;
+            if (File.Exists("replay/" + superScrollView.selectedString))
                 yrp = getYRP(File.ReadAllBytes("replay/" + superScrollView.selectedString));
-            }
             else
-            {
                 yrp = getYRP(getYRPbuffer("replay/" + superScrollView.selectedString + ".yrp3d")[0]);
-            }
-            for (int i = 0; i < yrp.playerData.Count; i++)  
+            for (var i = 0; i < yrp.playerData.Count; i++)
             {
-                string value = "#created by ygopro2\r\n#main\r\n";
-                for (int i2 = 0; i2 < yrp.playerData[i].main.Count; i2++)
-                {
-                    value += yrp.playerData[i].main[i2].ToString() + "\r\n";
-                }
+                var value = "#created by ygopro2\r\n#main\r\n";
+                for (var i2 = 0; i2 < yrp.playerData[i].main.Count; i2++) value += yrp.playerData[i].main[i2] + "\r\n";
                 value += "#extra\r\n";
-                for (int i2 = 0; i2 < yrp.playerData[i].extra.Count; i2++)
-                {
-                    value += yrp.playerData[i].extra[i2].ToString() + "\r\n";
-                }
-                string name = "deck/" + superScrollView.selectedString + "_" + (i + 1).ToString() + ".ydk";
+                for (var i2 = 0; i2 < yrp.playerData[i].extra.Count; i2++)
+                    value += yrp.playerData[i].extra[i2] + "\r\n";
+                var name = "deck/" + superScrollView.selectedString + "_" + (i + 1) + ".ydk";
                 File.WriteAllText(name, value);
                 RMSshow_none(InterString.Get("卡组入库：[?]", name));
             }
+
             if (yrp.playerData.Count == 0)
             {
                 RMSshow_none(InterString.Get("录像没有录制完整。"));
@@ -293,20 +243,19 @@ public class selectReplay : WindowServantSP
 
     private void onYrp()
     {
-        if (!superScrollView.Selected())
-        {
-            return;
-        }
+        if (!superScrollView.Selected()) return;
         try
         {
-            if (File.Exists("replay/" + superScrollView.selectedString + ".yrp3d"))  
+            if (File.Exists("replay/" + superScrollView.selectedString + ".yrp3d"))
             {
                 var replays = getYRPbuffer("replay/" + superScrollView.selectedString + ".yrp3d");
-                for(int i = 1; i <= replays.Count; i++) {
-                    string filename = "replay/" + superScrollView.selectedString + "-Game" + i + ".yrp";
+                for (var i = 1; i <= replays.Count; i++)
+                {
+                    var filename = "replay/" + superScrollView.selectedString + "-Game" + i + ".yrp";
                     File.WriteAllBytes(filename, replays[i - 1]);
                     RMSshow_none(InterString.Get("录像入库：[?]", filename));
                 }
+
                 printFile();
             }
             else
@@ -326,18 +275,13 @@ public class selectReplay : WindowServantSP
     {
         base.ES_RMS(hashCode, result);
         if (hashCode == "onRename")
-        {
             try
             {
                 if (opYRP)
-                {
-                    System.IO.File.Move("replay/" + superScrollView.selectedString, "replay/" + result[0].value + ".yrp");
-
-                }else
-                {
-                    System.IO.File.Move("replay/" + superScrollView.selectedString + ".yrp3d", "replay/" + result[0].value + ".yrp3d");
-
-                }
+                    File.Move("replay/" + superScrollView.selectedString, "replay/" + result[0].value + ".yrp");
+                else
+                    File.Move("replay/" + superScrollView.selectedString + ".yrp3d",
+                        "replay/" + result[0].value + ".yrp3d");
                 printFile();
                 RMSshow_none(InterString.Get("重命名成功。"));
             }
@@ -345,22 +289,21 @@ public class selectReplay : WindowServantSP
             {
                 RMSshow_none(InterString.Get("重命名失败！请检查输入的文件名，以及文件夹权限。"));
             }
-        }
+
         if (hashCode == "onDelete")
-        {
             if (result[0].value == "yes")
-            {
                 try
                 {
                     if (File.Exists("replay/" + superScrollView.selectedString + ".yrp3d"))
                     {
-                        System.IO.File.Delete("replay/" + superScrollView.selectedString + ".yrp3d");
+                        File.Delete("replay/" + superScrollView.selectedString + ".yrp3d");
                         RMSshow_none(InterString.Get("[?]已经被删除。", superScrollView.selectedString));
                         printFile();
                     }
+
                     if (File.Exists("replay/" + superScrollView.selectedString))
                     {
-                        System.IO.File.Delete("replay/" + superScrollView.selectedString);
+                        File.Delete("replay/" + superScrollView.selectedString);
                         RMSshow_none(InterString.Get("[?]已经被删除。", superScrollView.selectedString));
                         printFile();
                     }
@@ -368,23 +311,16 @@ public class selectReplay : WindowServantSP
                 catch (Exception)
                 {
                 }
-            }
-        }
+
         if (hashCode == "onValue")
-        {
             if (result[0].value == "yes")
             {
-                FileInfo[] fileInfos = (new DirectoryInfo("replay")).GetFiles();
-                for (int i = 0; i < fileInfos.Length; i++)
-                {
+                var fileInfos = new DirectoryInfo("replay").GetFiles();
+                for (var i = 0; i < fileInfos.Length; i++)
                     if (fileInfos[i].Name.Length == 21 || fileInfos[i].Name.Length == 25)
-                    {
                         if (fileInfos[i].Name[2] == '-')
-                        {
                             if (fileInfos[i].Name[5] == '「')
-                            {
                                 if (fileInfos[i].Name[8] == '：')
-                                {
                                     try
                                     {
                                         File.Delete("replay/" + fileInfos[i].Name);
@@ -392,24 +328,15 @@ public class selectReplay : WindowServantSP
                                     catch (Exception)
                                     {
                                     }
-                                }
-                            }
-                        }
-                    }
-                }
+
                 RMSshow_none(InterString.Get("清理完毕。"));
                 printFile();
             }
-        }
     }
 
-    string selectedTrace = "";    
-    void onSelected()
+    private void onSelected()
     {
-        if (selectedTrace == superScrollView.selectedString)    
-        {
-            KF_replay(selectedTrace);
-        }
+        if (selectedTrace == superScrollView.selectedString) KF_replay(selectedTrace);
         selectedTrace = superScrollView.selectedString;
     }
 
@@ -432,7 +359,8 @@ public class selectReplay : WindowServantSP
                         precy.dispose();
                     precy = new PrecyOcg();
                     var replays = getYRPbuffer("replay/" + name + ".yrp3d");
-                    var collections = TcpHelper.getPackages(precy.ygopro.getYRP3dBuffer(getYRP(replays[replays.Count - 1])));
+                    var collections =
+                        TcpHelper.getPackages(precy.ygopro.getYRP3dBuffer(getYRP(replays[replays.Count - 1])));
                     pushCollection(collections);
                 }
                 else
@@ -443,21 +371,21 @@ public class selectReplay : WindowServantSP
             }
             else
             {
-                if (name.Length>4&&name.Substring(name.Length - 4, 4) == ".yrp")
-                {
+                if (name.Length > 4 && name.Substring(name.Length - 4, 4) == ".yrp")
                     if (File.Exists("replay/" + name))
                     {
                         RMSshow_none(InterString.Get("您正在观看旧版的录像（上帝视角），不保证稳定性。"));
                         if (precy != null)
                             precy.dispose();
                         precy = new PrecyOcg();
-                        var collections = TcpHelper.getPackages(precy.ygopro.getYRP3dBuffer(getYRP(File.ReadAllBytes("replay/" + name))));
+                        var collections =
+                            TcpHelper.getPackages(
+                                precy.ygopro.getYRP3dBuffer(getYRP(File.ReadAllBytes("replay/" + name))));
                         pushCollection(collections);
                     }
-                }
             }
         }
-        catch (Exception)   
+        catch (Exception)
         {
             RMSshow_none(InterString.Get("录像没有录制完整。"));
             RMSshow_none(InterString.Get("MATCH局中可能只有最后一局决斗才包含旧版录像信息。"));
@@ -467,7 +395,7 @@ public class selectReplay : WindowServantSP
     private void pushCollection(List<Package> collection)
     {
         Program.I().ocgcore.returnServant = Program.I().selectReplay;
-        Program.I().ocgcore.handler = (a) => { };
+        Program.I().ocgcore.handler = a => { };
         Program.I().ocgcore.name_0 = Config.Get("name", "一秒一喵机会");
         Program.I().ocgcore.name_0_c = Program.I().ocgcore.name_0;
         Program.I().ocgcore.name_1 = "Percy AI";
@@ -489,40 +417,31 @@ public class selectReplay : WindowServantSP
         Program.charge();
     }
 
-    void printFile()
+    private void printFile()
     {
         superScrollView.clear();
-        FileInfo[] fileInfos = (new DirectoryInfo("replay")).GetFiles();
+        var fileInfos = new DirectoryInfo("replay").GetFiles();
         if (Config.Get(sort, "1") == "1")
-        {
             Array.Sort(fileInfos, UIHelper.CompareTime);
-        }
         else
-        {
             Array.Sort(fileInfos, UIHelper.CompareName);
-        }
-        for (int i = 0; i < fileInfos.Length; i++)
-        {
+        for (var i = 0; i < fileInfos.Length; i++)
             if (fileInfos[i].Name.Length > 6)
             {
-                if (fileInfos[i].Name.Length > 6 && fileInfos[i].Name.Substring(fileInfos[i].Name.Length - 6, 6) == ".yrp3d")
-                {
+                if (fileInfos[i].Name.Length > 6 &&
+                    fileInfos[i].Name.Substring(fileInfos[i].Name.Length - 6, 6) == ".yrp3d")
                     superScrollView.add(fileInfos[i].Name.Substring(0, fileInfos[i].Name.Length - 6));
-                }
-                if (fileInfos[i].Name.Length > 4 && fileInfos[i].Name.Substring(fileInfos[i].Name.Length - 4, 4) == ".yrp")
-                {
+                if (fileInfos[i].Name.Length > 4 &&
+                    fileInfos[i].Name.Substring(fileInfos[i].Name.Length - 4, 4) == ".yrp")
                     superScrollView.add(fileInfos[i].Name);
-                }
             }
-        }
     }
 
-    void onClickExit()
+    private void onClickExit()
     {
         if (Program.exitOnReturn)
             Program.I().menu.onClickExit();
         else
             Program.I().shiftToServant(Program.I().menu);
     }
-
 }

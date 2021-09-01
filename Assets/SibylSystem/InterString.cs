@@ -1,39 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
+
 public static class InterString
 {
-    static Dictionary<string, string> translations = new Dictionary<string, string>();
+    private static readonly Dictionary<string, string> translations = new Dictionary<string, string>();
 
-    static string path;
+    private static string path;
 
-    public static bool loaded = false;
+    public static bool loaded;
 
     public static void initialize(string path)
     {
         InterString.path = path;
-        if (File.Exists(path) == false)
+        if (File.Exists(path) == false) File.Create(path).Close();
+        var txtString = File.ReadAllText(path);
+        var lines = txtString.Replace("\r", "").Split("\n");
+        for (var i = 0; i < lines.Length; i++)
         {
-            File.Create(path).Close();
-        }
-        string txtString = File.ReadAllText(path);
-        string[] lines = txtString.Replace("\r", "").Split("\n");
-        for (int i = 0; i < lines.Length; i++)
-        {
-            string[] mats = lines[i].Split("->");
+            var mats = lines[i].Split("->");
             if (mats.Length == 2)
-            {
                 if (!translations.ContainsKey(mats[0]))
-                {
                     translations.Add(mats[0], mats[1]);
-                }
-            }
         }
+
         GameStringHelper.xilie = Get("系列：");
         GameStringHelper.opHint = Get("*控制权经过转移");
-        GameStringHelper.licechuwai= Get("*里侧表示的除外卡片");
+        GameStringHelper.licechuwai = Get("*里侧表示的除外卡片");
         GameStringHelper.biaoceewai = Get("*表侧表示的额外卡片");
-        GameStringHelper.teshuzhaohuan= Get("*被特殊召唤出场");
+        GameStringHelper.teshuzhaohuan = Get("*被特殊召唤出场");
         GameStringHelper.yijingqueren = Get("卡片展示简表※  ");
         GameStringHelper._chaoliang = Get("超量：");
         GameStringHelper._ewaikazu = Get("额外卡组：");
@@ -59,13 +53,11 @@ public static class InterString
 
     public static string Get(string original)
     {
-        
-        string return_value = original;
+        var return_value = original;
         if (translations.TryGetValue(original, out return_value))
-        {
             return return_value.Replace("@n", "\r\n").Replace("@ui", "");
-        }
-        else if (original != "")
+
+        if (original != "")
         {
             try
             {
@@ -75,16 +67,16 @@ public static class InterString
             {
                 Program.noAccess = true;
             }
+
             translations.Add(original, original);
             return original.Replace("@n", "\r\n").Replace("@ui", "");
         }
-        else
-            return original;
+
+        return original;
     }
 
     public static string Get(string original, string replace)
     {
         return Get(original).Replace("[?]", replace);
     }
-
 }

@@ -1,16 +1,23 @@
-﻿using UnityEngine;
-using System;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Net;
 using System.Text;
-using System.Threading;
-using System.Collections.Generic;
-using System.Collections;
+using UnityEngine;
 using UnityEngine.Networking;
+using Debug = UnityEngine.Debug;
 
-public class Menu : WindowServantSP 
+public class Menu : WindowServantSP
 {
+    private static int lastTime;
+    private bool msgPermissionShowed;
+
+    private bool msgUpdateShowed;
+    private string uptxt = "";
+
+    private string upurl = "";
+
     //GameObject screen;
     public override void initialize()
     {
@@ -36,46 +43,40 @@ public class Menu : WindowServantSP
         base.hide();
     }
 
-    string upurl = "";
-    string uptxt = "";
-    IEnumerator checkUpdate()
+    private IEnumerator checkUpdate()
     {
         yield return new WaitForSeconds(1);
         var verFile = File.ReadAllLines("config/ver.txt", Encoding.UTF8);
         if (verFile.Length == 0) // 放一个空的 ver.txt 以关闭自动更新功能
-        {
             yield break;
-        }
         if (verFile.Length != 2 || !Uri.IsWellFormedUriString(verFile[1], UriKind.Absolute))
         {
             Program.PrintToChat(InterString.Get("YGOPro2 自动更新：[ff5555]未设置更新服务器，无法检查更新。[-]@n请从官网重新下载安装完整版以获得更新。"));
             yield break;
         }
-        string ver = verFile[0];
-        string url = verFile[1];
-        UnityWebRequest www = UnityWebRequest.Get(url);
+
+        var ver = verFile[0];
+        var url = verFile[1];
+        var www = UnityWebRequest.Get(url);
         www.SetRequestHeader("Cache-Control", "max-age=0, no-cache, no-store");
         www.SetRequestHeader("Pragma", "no-cache");
         yield return www.Send();
         try
         {
-            string result = www.downloadHandler.text;
-            string[] lines = result.Replace("\r", "").Split("\n");
-            string[] mats = lines[0].Split(":.:");
+            var result = www.downloadHandler.text;
+            var lines = result.Replace("\r", "").Split("\n");
+            var mats = lines[0].Split(":.:");
             if (ver != mats[0])
             {
                 upurl = mats[1];
-                for(int i = 1; i < lines.Length; i++)
-                {
-                    uptxt += lines[i] + "\n";
-                }
+                for (var i = 1; i < lines.Length; i++) uptxt += lines[i] + "\n";
             }
             else
             {
                 Program.PrintToChat(InterString.Get("YGOPro2 自动更新：[55ff55]当前已是最新版本。[-]"));
             }
         }
-        catch (System.Exception e)
+        catch (Exception e)
         {
             Program.PrintToChat(InterString.Get("YGOPro2 自动更新：[ff5555]检查更新失败！[-]"));
         }
@@ -84,28 +85,25 @@ public class Menu : WindowServantSP
     public override void ES_RMS(string hashCode, List<messageSystemValue> result)
     {
         base.ES_RMS(hashCode, result);
-        if (hashCode == "update" && result[0].value == "1")
-        {
-            Application.OpenURL(upurl);
-        }
+        if (hashCode == "update" && result[0].value == "1") Application.OpenURL(upurl);
     }
 
-    bool msgUpdateShowed = false;
-    bool msgPermissionShowed = false;
     public override void preFrameFunction()
     {
         base.preFrameFunction();
-        Menu.checkCommend();
+        checkCommend();
         if (Program.noAccess && !msgPermissionShowed)
         {
             msgPermissionShowed = true;
-            Program.PrintToChat(InterString.Get("[b][FF0000]NO ACCESS!! NO ACCESS!! NO ACCESS!![-][/b]") + "\n" + InterString.Get("访问程序目录出错，软件大部分功能将无法使用。@n请将 YGOPro2 安装到其他文件夹，或以管理员身份运行。"));
+            Program.PrintToChat(InterString.Get("[b][FF0000]NO ACCESS!! NO ACCESS!! NO ACCESS!![-][/b]") + "\n" +
+                                InterString.Get("访问程序目录出错，软件大部分功能将无法使用。@n请将 YGOPro2 安装到其他文件夹，或以管理员身份运行。"));
         }
         else if (upurl != "" && !msgUpdateShowed)
         {
             msgUpdateShowed = true;
-            RMSshow_yesOrNo("update", InterString.Get("[b]发现更新！[/b]") + "\n" + uptxt + "\n" + InterString.Get("是否打开下载页面？"),
-                new messageSystemValue { value = "1", hint = "yes" }, new messageSystemValue { value = "0", hint = "no" });
+            RMSshow_yesOrNo("update",
+                InterString.Get("[b]发现更新！[/b]") + "\n" + uptxt + "\n" + InterString.Get("是否打开下载页面？"),
+                new messageSystemValue {value = "1", hint = "yes"}, new messageSystemValue {value = "0", hint = "no"});
         }
     }
 
@@ -117,32 +115,32 @@ public class Menu : WindowServantSP
         Process.GetCurrentProcess().Kill();
     }
 
-    void onClickOnline()
+    private void onClickOnline()
     {
         Program.I().shiftToServant(Program.I().selectServer);
     }
 
-    void onClickAI()
+    private void onClickAI()
     {
         Program.I().shiftToServant(Program.I().aiRoom);
     }
 
-    void onClickPizzle()
+    private void onClickPizzle()
     {
         Program.I().shiftToServant(Program.I().puzzleMode);
     }
 
-    void onClickReplay()
+    private void onClickReplay()
     {
         Program.I().shiftToServant(Program.I().selectReplay);
     }
 
-    void onClickSetting()
+    private void onClickSetting()
     {
         Program.I().setting.show();
     }
 
-    void onClickSelectDeck()
+    private void onClickSelectDeck()
     {
         Program.I().shiftToServant(Program.I().selectDeck);
     }
@@ -151,127 +149,105 @@ public class Menu : WindowServantSP
     {
         try
         {
-            if (File.Exists("commamd.shell") == true)
-            {
-                File.Delete("commamd.shell");
-            }
+            if (File.Exists("commamd.shell")) File.Delete("commamd.shell");
         }
         catch (Exception)
         {
         }
     }
 
-    static int lastTime = 0;
     public static void checkCommend()
     {
         if (Program.TimePassed() - lastTime > 1000)
         {
             lastTime = Program.TimePassed();
-            if (Program.I().selectDeck == null)
-            {
-                return;
-            }
-            if (Program.I().selectReplay == null)
-            {
-                return;
-            }
-            if (Program.I().puzzleMode == null)
-            {
-                return;
-            }
-            if (Program.I().selectServer == null)
-            {
-                return;
-            }
+            if (Program.I().selectDeck == null) return;
+            if (Program.I().selectReplay == null) return;
+            if (Program.I().puzzleMode == null) return;
+            if (Program.I().selectServer == null) return;
             try
             {
-                if (File.Exists("commamd.shell") == false)
-                {
-                    File.Create("commamd.shell").Close();
-                }
+                if (File.Exists("commamd.shell") == false) File.Create("commamd.shell").Close();
             }
-            catch (System.Exception e)
+            catch (Exception e)
             {
                 Program.noAccess = true;
-                UnityEngine.Debug.Log(e);
+                Debug.Log(e);
             }
-            string all = "";
+
+            var all = "";
             try
             {
                 all = File.ReadAllText("commamd.shell", Encoding.UTF8);
-                char[] parmChars = all.ToCharArray();
-                bool inQuote = false;
-                for (int index = 0; index < parmChars.Length; index++)
+                var parmChars = all.ToCharArray();
+                var inQuote = false;
+                for (var index = 0; index < parmChars.Length; index++)
                 {
                     if (parmChars[index] == '"')
                     {
                         inQuote = !inQuote;
                         parmChars[index] = '\n';
                     }
+
                     if (!inQuote && parmChars[index] == ' ')
                         parmChars[index] = '\n';
                 }
-                string[] mats = (new string(parmChars)).Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+                var mats = new string(parmChars).Split(new[] {'\n'}, StringSplitOptions.RemoveEmptyEntries);
                 if (mats.Length > 0)
-                {
                     switch (mats[0])
                     {
                         case "online":
                             if (mats.Length == 5)
                             {
-                                UIHelper.iniFaces();//加载用户头像
+                                UIHelper.iniFaces(); //加载用户头像
                                 Program.I().selectServer.KF_onlineGame(mats[1], mats[2], mats[3], mats[4]);
                             }
+
                             if (mats.Length == 6)
                             {
                                 UIHelper.iniFaces();
                                 Program.I().selectServer.KF_onlineGame(mats[1], mats[2], mats[3], mats[4], mats[5]);
                             }
+
                             break;
                         case "edit":
-                            if (mats.Length == 2)
-                            {
-                                Program.I().selectDeck.KF_editDeck(mats[1]);//编辑卡组
-                            }
+                            if (mats.Length == 2) Program.I().selectDeck.KF_editDeck(mats[1]); //编辑卡组
                             break;
                         case "replay":
                             if (mats.Length == 2)
                             {
                                 UIHelper.iniFaces();
-                                Program.I().selectReplay.KF_replay(mats[1]);//编辑录像
+                                Program.I().selectReplay.KF_replay(mats[1]); //编辑录像
                             }
+
                             break;
                         case "puzzle":
                             if (mats.Length == 2)
                             {
                                 UIHelper.iniFaces();
-                                Program.I().puzzleMode.KF_puzzle(mats[1]);//运行残局
+                                Program.I().puzzleMode.KF_puzzle(mats[1]); //运行残局
                             }
-                            break;
-                        default:
+
                             break;
                     }
-                }
             }
-            catch (System.Exception e)
+            catch (Exception e)
             {
                 Program.noAccess = true;
-                UnityEngine.Debug.Log(e);
+                Debug.Log(e);
             }
+
             try
             {
                 if (all != "")
-                {
-                    if (File.Exists("commamd.shell") == true)
-                    {
+                    if (File.Exists("commamd.shell"))
                         File.WriteAllText("commamd.shell", "");
-                    }
-                }
             }
-            catch (System.Exception e)
+            catch (Exception e)
             {
                 Program.noAccess = true;
-                UnityEngine.Debug.Log(e);
+                Debug.Log(e);
             }
         }
     }

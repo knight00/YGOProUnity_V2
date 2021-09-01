@@ -1,6 +1,6 @@
-﻿using System;
-using UnityEngine;
-public class WindowServantSP : Servant  
+﻿using UnityEngine;
+
+public class WindowServantSP : Servant
 {
     public bool instanceHide = false;
 
@@ -8,22 +8,14 @@ public class WindowServantSP : Servant
     {
         base.hide();
         if (instanceHide)
-        {
             if (gameObject != null)
             {
                 var glass = gameObject.transform.Find("glass");
-                UIPanel pan = gameObject.GetComponentInChildren<UIPanel>();
-                if (pan != null)
-                {
-                    pan.alpha = 0;
-                }
-                if (glass != null)
-                {
-                    glass.gameObject.SetActive(false);
-                }
+                var pan = gameObject.GetComponentInChildren<UIPanel>();
+                if (pan != null) pan.alpha = 0;
+                if (glass != null) glass.gameObject.SetActive(false);
                 SetActiveFalse();
             }
-        }
     }
 
     public override void applyHideArrangement()
@@ -31,27 +23,19 @@ public class WindowServantSP : Servant
         base.applyHideArrangement();
         if (gameObject != null)
         {
-            if (instanceHide)   
-            {
-                return;
-            }
+            if (instanceHide) return;
             var glass = gameObject.transform.Find("glass");
             var panelKIller = gameObject.GetComponent<panelKIller>();
-            if (panelKIller == null)
-            {
-                panelKIller = gameObject.AddComponent<panelKIller>();
-            }
+            if (panelKIller == null) panelKIller = gameObject.AddComponent<panelKIller>();
             panelKIller.set(false);
             Program.go(1000, SetActiveFalse);
-            if (glass != null)
-            {
-                glass.gameObject.SetActive(false);
-            }
+            if (glass != null) glass.gameObject.SetActive(false);
         }
+
         resize();
     }
 
-    public void SetActiveFalse()   
+    public void SetActiveFalse()
     {
         gameObject.SetActive(false);
     }
@@ -69,27 +53,22 @@ public class WindowServantSP : Servant
             Program.notGo(SetActiveFalse);
             SetActiveTrue();
             var panelKIller = gameObject.GetComponent<panelKIller>();
-            if (panelKIller == null)
-            {
-                panelKIller = gameObject.AddComponent<panelKIller>();
-            }
+            if (panelKIller == null) panelKIller = gameObject.AddComponent<panelKIller>();
             panelKIller.set(true);
             var glass = gameObject.transform.Find("glass");
-            if (glass != null)
-            {
-                glass.gameObject.SetActive(true);
-            }
+            if (glass != null) glass.gameObject.SetActive(true);
         }
+
         resize();
     }
 
-    void resize()
+    private void resize()
     {
         if (gameObject != null)
         {
             if (Program.I().setting.setting.resize.value)
             {
-                float f = Screen.height / 700f;
+                var f = Screen.height / 700f;
                 gameObject.transform.localScale = new Vector3(f, f, f);
             }
             else
@@ -102,23 +81,20 @@ public class WindowServantSP : Servant
     public void createWindow(GameObject mod)
     {
         gameObject = create
-            (
+        (
             mod,
             Vector3.zero,
             Vector3.zero,
             false,
             Program.ui_windows_2d
-            );
+        );
         UIHelper.InterGameObject(gameObject);
-        Vector3 v=new Vector3();
-        v.x = Mathf.Clamp(Config.getFloat("x_" + gameObject.name), -0.5f, 0.5f) * (float)Screen.width;
-        v.y = Mathf.Clamp(Config.getFloat("y_" + gameObject.name), -0.5f, 0.5f) * (float)Screen.height;
+        var v = new Vector3();
+        v.x = Mathf.Clamp(Config.getFloat("x_" + gameObject.name), -0.5f, 0.5f) * Screen.width;
+        v.y = Mathf.Clamp(Config.getFloat("y_" + gameObject.name), -0.5f, 0.5f) * Screen.height;
         gameObject.transform.localPosition = v;
         var panelKIller = gameObject.GetComponent<panelKIller>();
-        if (panelKIller == null)
-        {
-            panelKIller = gameObject.AddComponent<panelKIller>();
-        }
+        if (panelKIller == null) panelKIller = gameObject.AddComponent<panelKIller>();
         panelKIller.ini();
     }
 
@@ -127,8 +103,8 @@ public class WindowServantSP : Servant
         base.ES_quit();
         if (gameObject != null)
         {
-            Config.setFloat("x_" + gameObject.name, gameObject.transform.localPosition.x / (float)Screen.width);
-            Config.setFloat("y_" + gameObject.name, gameObject.transform.localPosition.y / (float)Screen.height);
+            Config.setFloat("x_" + gameObject.name, gameObject.transform.localPosition.x / Screen.width);
+            Config.setFloat("y_" + gameObject.name, gameObject.transform.localPosition.y / Screen.height);
         }
     }
 }

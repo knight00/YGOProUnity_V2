@@ -1,29 +1,31 @@
-﻿using Ionic.Zip;
-using System;
+﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Threading;
-using UnityEngine;
-using YGOSharp.OCGWrapper.Enums;
+using Percy;
+using YGOSharp;
+using GameMessage = YGOSharp.OCGWrapper.Enums.GameMessage;
 
 public class PrecyOcg
 {
-    public static string HintInGame = Percy.smallYgopro.HintInGame;
-    
-    public static bool godMode = false;
+    public static string HintInGame = smallYgopro.HintInGame;
 
-    public Percy.smallYgopro ygopro;
+    public static bool godMode;
 
-    static string error = "Error occurred.";
+    private static string error = "Error occurred.";
 
-    static IntPtr _buffer;
+    private static IntPtr _buffer;
+
+    private object locker = new object();
+
+    public smallYgopro ygopro;
 
     public PrecyOcg()
     {
         _buffer = Marshal.AllocHGlobal(1024 * 256); // 256 KiB
-        error = InterString.Get("Error occurred! @nError occurred! @nError occurred! @nError occurred! @nError occurred! @nError occurred! @nYGOPro1旧版的录像崩溃了！您可以选择使用永不崩溃的新版录像。");
-        ygopro = new Percy.smallYgopro(receiveHandler, cardHandler, scriptHandler, chatHandler);
-        ygopro.m_log = (a) => { Program.DEBUGLOG(a); };
+        error = InterString.Get(
+            "Error occurred! @nError occurred! @nError occurred! @nError occurred! @nError occurred! @nError occurred! @nYGOPro1旧版的录像崩溃了！您可以选择使用永不崩溃的新版录像。");
+        ygopro = new smallYgopro(receiveHandler, cardHandler, scriptHandler, chatHandler);
+        ygopro.m_log = a => { Program.DEBUGLOG(a); };
     }
 
     public void dispose()
@@ -31,16 +33,15 @@ public class PrecyOcg
         ygopro.dispose();
     }
 
-    object locker = new object();
-    void receiveHandler(byte[] buffer)
+    private void receiveHandler(byte[] buffer)
     {
-        byte[] bufferR = new byte[buffer.Length + 1];
+        var bufferR = new byte[buffer.Length + 1];
         bufferR[0] = 1;
-        buffer.CopyTo(bufferR,1);
+        buffer.CopyTo(bufferR, 1);
         TcpHelper.addDateJumoLine(bufferR);
     }
 
-    public void startPuzzle(System.String path)
+    public void startPuzzle(string path)
     {
         if (Program.I().ocgcore.isShowed == false)
         {
@@ -54,16 +55,15 @@ public class PrecyOcg
                 Program.I().cardDescription.RMSshow_none(InterString.Get("游戏内部出错，请重试。"));
                 return;
             }
-            else
-            {
-                //Config.ClientVersion = 0x233c;
-                Program.I().shiftToServant(Program.I().ocgcore);
-            }
-        ((CardDescription)Program.I().cardDescription).setTitle(path);
+
+            //Config.ClientVersion = 0x233c;
+            Program.I().shiftToServant(Program.I().ocgcore);
+            Program.I().cardDescription.setTitle(path);
         }
     }
 
-    public void startAI(string playerDek, string aiDeck, string aiScript, bool playerGo, bool unrand, int life,bool god,int rule)
+    public void startAI(string playerDek, string aiDeck, string aiScript, bool playerGo, bool unrand, int life,
+        bool god, int rule)
     {
         if (Program.I().ocgcore.isShowed == false)
         {
@@ -79,17 +79,15 @@ public class PrecyOcg
                 Program.I().cardDescription.RMSshow_none(InterString.Get("游戏内部出错，请重试。"));
                 return;
             }
-            else
-            {
-                //Config.ClientVersion = 0x233c;
-                Program.I().shiftToServant(Program.I().ocgcore);
-            }
+
+            //Config.ClientVersion = 0x233c;
+            Program.I().shiftToServant(Program.I().ocgcore);
         }
     }
 
     private void prepareOcgcore()
     {
-        Program.I().ocgcore.name_0 = Config.Get("name","一秒一喵机会");
+        Program.I().ocgcore.name_0 = Config.Get("name", "一秒一喵机会");
         Program.I().ocgcore.name_0_c = Program.I().ocgcore.name_0;
         Program.I().ocgcore.name_1 = "Percy AI";
         Program.I().ocgcore.name_1_c = "Percy AI";
@@ -107,14 +105,11 @@ public class PrecyOcg
         ygopro.response(resp);
     }
 
-    Percy.CardData cardHandler(long code)
+    private CardData cardHandler(long code)
     {
-        YGOSharp.Card card = YGOSharp.CardsManager.GetCard((int)code);
-        if (card==null) 
-        {
-            card = new YGOSharp.Card();
-        }
-        Percy.CardData retuvalue = new Percy.CardData();
+        var card = CardsManager.GetCard((int) code);
+        if (card == null) card = new Card();
+        var retuvalue = new CardData();
         retuvalue.Alias = card.Alias;
         retuvalue.Attack = card.Attack;
         retuvalue.Attribute = card.Attribute;
@@ -130,21 +125,20 @@ public class PrecyOcg
         return retuvalue;
     }
 
-    Percy.ScriptData scriptHandler(string filename)
+    private ScriptData scriptHandler(string filename)
     {
         //string filename = GetScriptFilename(scriptName);
         byte[] content;
-        Percy.ScriptData ret;
+        ScriptData ret;
         ret.buffer = IntPtr.Zero;
         ret.len = 0;
-        bool found = false;
-        string filename2 = filename.TrimStart('.', '/');
-        foreach (ZipFile zip in GameZipManager.Zips)
-        {
+        var found = false;
+        var filename2 = filename.TrimStart('.', '/');
+        foreach (var zip in GameZipManager.Zips)
             if (zip.ContainsEntry(filename2))
             {
-                MemoryStream ms = new MemoryStream();
-                ZipEntry e = zip[filename2];
+                var ms = new MemoryStream();
+                var e = zip[filename2];
                 e.Extract(ms);
                 content = ms.ToArray();
                 Marshal.Copy(content, 0, _buffer, content.Length);
@@ -153,9 +147,8 @@ public class PrecyOcg
                 found = true;
                 break;
             }
-        }
+
         if (!found)
-        {
             if (File.Exists(filename))
             {
                 content = File.ReadAllBytes(filename);
@@ -163,14 +156,14 @@ public class PrecyOcg
                 ret.buffer = _buffer;
                 ret.len = content.Length;
             }
-        }
+
         return ret;
     }
 
-    void chatHandler(string result) 
+    private void chatHandler(string result)
     {
-        BinaryMaster p = new BinaryMaster();
-        p.writer.Write((byte)YGOSharp.OCGWrapper.Enums.GameMessage.sibyl_chat);
+        var p = new BinaryMaster();
+        p.writer.Write((byte) GameMessage.sibyl_chat);
         result = result.Replace("Error Occurred.", error);
         p.writer.WriteUnicode(result, result.Length + 1);
         receiveHandler(p.get());

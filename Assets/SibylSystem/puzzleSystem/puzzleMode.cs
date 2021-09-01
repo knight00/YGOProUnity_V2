@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using UnityEngine;
 
 public class puzzleMode : WindowServantSP
 {
+    private PrecyOcg precy;
 
-    UIselectableList superScrollView = null;
+
+    private string selectedString = "miaomiaomiao";
+
+    private UIselectableList superScrollView;
 
     public override void initialize()
     {
@@ -18,18 +21,10 @@ public class puzzleMode : WindowServantSP
         SetActiveFalse();
     }
 
-
-    string selectedString = "miaomiaomiao";
-    void onSelected()
+    private void onSelected()
     {
-        if (!isShowed)
-        {
-            return;
-        }
-        if (selectedString == superScrollView.selectedString)
-        {
-            KF_puzzle(superScrollView.selectedString);
-        }
+        if (!isShowed) return;
+        if (selectedString == superScrollView.selectedString) KF_puzzle(superScrollView.selectedString);
         selectedString = superScrollView.selectedString;
     }
 
@@ -50,25 +45,19 @@ public class puzzleMode : WindowServantSP
         printFile();
     }
 
-    void printFile()
+    private void printFile()
     {
         superScrollView.clear();
-        List<string[]> args = new List<string[]>();
-        FileInfo[] fileInfos = (new DirectoryInfo("puzzle")).GetFiles();
+        var args = new List<string[]>();
+        var fileInfos = new DirectoryInfo("puzzle").GetFiles();
         Array.Sort(fileInfos, UIHelper.CompareName);
-        for (int i = 0; i < fileInfos.Length; i++)
-        {
+        for (var i = 0; i < fileInfos.Length; i++)
             if (fileInfos[i].Name.Length > 4)
-            {
                 if (fileInfos[i].Name.Substring(fileInfos[i].Name.Length - 4, 4) == ".lua")
-                {
                     superScrollView.add(fileInfos[i].Name.Substring(0, fileInfos[i].Name.Length - 4));
-                }
-            }
-        }
     }
 
-    void onClickExit()
+    private void onClickExit()
     {
         if (Program.exitOnReturn)
             Program.I().menu.onClickExit();
@@ -76,16 +65,10 @@ public class puzzleMode : WindowServantSP
             Program.I().shiftToServant(Program.I().menu);
     }
 
-    PrecyOcg precy;
-
     public void launch(string path)
     {
-        if (precy != null)
-        {
-            precy.dispose();
-        }
+        if (precy != null) precy.dispose();
         precy = new PrecyOcg();
         precy.startPuzzle(path);
     }
 }
-

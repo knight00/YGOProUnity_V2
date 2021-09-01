@@ -1,10 +1,20 @@
-﻿using UnityEngine;
-using System;
+﻿using System;
+using UnityEngine;
+
 public class Setting : WindowServant2D
 {
+    public int atk = 1800;
     private EventDelegate onChange;
 
     public LAZYsetting setting;
+
+
+    private UISlider sliderAlpha;
+
+    private UISlider sliderSize;
+
+    private UISlider sliderVsize;
+    public int star = 5;
 
     public override void initialize()
     {
@@ -15,23 +25,27 @@ public class Setting : WindowServant2D
         UIHelper.registEvent(gameObject, "full_", resizeScreen);
         UIHelper.registEvent(gameObject, "resize_", resizeScreen);
         UIHelper.getByName<UIToggle>(gameObject, "full_").value = Screen.fullScreen;
-        UIHelper.getByName<UIToggle>(gameObject, "ignoreWatcher_").value = UIHelper.fromStringToBool(Config.Get("ignoreWatcher_", "0"));
-        UIHelper.getByName<UIToggle>(gameObject, "ignoreOP_").value = UIHelper.fromStringToBool(Config.Get("ignoreOP_", "0"));
-        UIHelper.getByName<UIToggle>(gameObject, "smartSelect_").value = UIHelper.fromStringToBool(Config.Get("smartSelect_", "1"));
-        UIHelper.getByName<UIToggle>(gameObject, "autoChain_").value = UIHelper.fromStringToBool(Config.Get("autoChain_", "1"));
-        UIHelper.getByName<UIToggle>(gameObject, "handPosition_").value = UIHelper.fromStringToBool(Config.Get("handPosition_", "1"));
-        UIHelper.getByName<UIToggle>(gameObject, "handmPosition_").value = UIHelper.fromStringToBool(Config.Get("handmPosition_", "1"));
+        UIHelper.getByName<UIToggle>(gameObject, "ignoreWatcher_").value =
+            UIHelper.fromStringToBool(Config.Get("ignoreWatcher_", "0"));
+        UIHelper.getByName<UIToggle>(gameObject, "ignoreOP_").value =
+            UIHelper.fromStringToBool(Config.Get("ignoreOP_", "0"));
+        UIHelper.getByName<UIToggle>(gameObject, "smartSelect_").value =
+            UIHelper.fromStringToBool(Config.Get("smartSelect_", "1"));
+        UIHelper.getByName<UIToggle>(gameObject, "autoChain_").value =
+            UIHelper.fromStringToBool(Config.Get("autoChain_", "1"));
+        UIHelper.getByName<UIToggle>(gameObject, "handPosition_").value =
+            UIHelper.fromStringToBool(Config.Get("handPosition_", "1"));
+        UIHelper.getByName<UIToggle>(gameObject, "handmPosition_").value =
+            UIHelper.fromStringToBool(Config.Get("handmPosition_", "1"));
         UIHelper.getByName<UIToggle>(gameObject, "spyer_").value = UIHelper.fromStringToBool(Config.Get("spyer_", "1"));
-        UIHelper.getByName<UIToggle>(gameObject, "resize_").value = UIHelper.fromStringToBool(Config.Get("resize_", "0"));
-        UIHelper.getByName<UIToggle>(gameObject, "longField_").value = UIHelper.fromStringToBool(Config.Get("longField_", "0"));
-        if (QualitySettings.GetQualityLevel()<3)
-        {
+        UIHelper.getByName<UIToggle>(gameObject, "resize_").value =
+            UIHelper.fromStringToBool(Config.Get("resize_", "0"));
+        UIHelper.getByName<UIToggle>(gameObject, "longField_").value =
+            UIHelper.fromStringToBool(Config.Get("longField_", "0"));
+        if (QualitySettings.GetQualityLevel() < 3)
             UIHelper.getByName<UIToggle>(gameObject, "high_").value = false;
-        }
         else
-        {
             UIHelper.getByName<UIToggle>(gameObject, "high_").value = true;
-        }
         UIHelper.registEvent(gameObject, "ignoreWatcher_", save);
         UIHelper.registEvent(gameObject, "ignoreOP_", save);
         UIHelper.registEvent(gameObject, "smartSelect_", save);
@@ -47,29 +61,25 @@ public class Setting : WindowServant2D
         sliderSize = UIHelper.getByName<UISlider>(gameObject, "size_");
         //sliderAlpha = UIHelper.getByName<UISlider>(gameObject, "alpha_");
         sliderVsize = UIHelper.getByName<UISlider>(gameObject, "vSize_");
-        Program.go(2000,readVales);
+        Program.go(2000, readVales);
         var collection = gameObject.GetComponentsInChildren<UIToggle>();
-        for (int i = 0; i < collection.Length; i++)
-        {
+        for (var i = 0; i < collection.Length; i++)
             if (collection[i].name.Length > 0 && collection[i].name[0] == '*')
             {
-                if (collection[i].name== "*mouseParticle" || collection[i].name == "*showOff" || collection[i].name == "*Efield" || collection[i].name == "*Ewin") 
-                {
+                if (collection[i].name == "*mouseParticle" || collection[i].name == "*showOff" ||
+                    collection[i].name == "*Efield" || collection[i].name == "*Ewin")
                     collection[i].value = UIHelper.fromStringToBool(Config.Get(collection[i].name, "1"));
-                }
                 else
-                {
                     collection[i].value = UIHelper.fromStringToBool(Config.Get(collection[i].name, "0"));
-                }
             }
-        }
-        setting.showoffATK.value = Config.Get("showoffATK","1800");
+
+        setting.showoffATK.value = Config.Get("showoffATK", "1800");
         setting.showoffStar.value = Config.Get("showoffStar", "5");
         UIHelper.registEvent(setting.showoffATK.gameObject, onchangeClose);
         UIHelper.registEvent(setting.showoffStar.gameObject, onchangeClose);
         UIHelper.registEvent(setting.mouseEffect.gameObject, onchangeMouse);
         UIHelper.registEvent(setting.closeUp.gameObject, onchangeCloseUp);
-        UIHelper.registEvent(setting.cloud.gameObject, onchangeCloud);  
+        UIHelper.registEvent(setting.cloud.gameObject, onchangeCloud);
         UIHelper.registEvent(setting.Vpedium.gameObject, onCP);
         UIHelper.registEvent(setting.Vfield.gameObject, onCP);
         UIHelper.registEvent(setting.Vlink.gameObject, onCP);
@@ -82,9 +92,9 @@ public class Setting : WindowServant2D
     {
         try
         {
-            setting.sliderVolum.forceValue(((float)(int.Parse(Config.Get("vol_", "750")))) / 1000f);
-            setting.sliderSize.forceValue(((float)(int.Parse(Config.Get("size_", "500")))) / 1000f);
-            setting.sliderSizeDrawing.forceValue(((float)(int.Parse(Config.Get("vSize_", "500")))) / 1000f);
+            setting.sliderVolum.forceValue(int.Parse(Config.Get("vol_", "750")) / 1000f);
+            setting.sliderSize.forceValue(int.Parse(Config.Get("size_", "500")) / 1000f);
+            setting.sliderSizeDrawing.forceValue(int.Parse(Config.Get("vSize_", "500")) / 1000f);
             //setting.sliderAlpha.forceValue(((float)(int.Parse(Config.Get("alpha_", "666")))) / 1000f);
             onChangeAlpha();
             onChangeSize();
@@ -110,22 +120,22 @@ public class Setting : WindowServant2D
     public void setScreenSizeValue()
     {
         //dontResizeTwice = 3;
-        UIHelper.getByName<UIPopupList>(gameObject, "screen_").value = Screen.width.ToString() + "*" + Screen.height.ToString();
+        UIHelper.getByName<UIPopupList>(gameObject, "screen_").value = Screen.width + "*" + Screen.height;
     }
 
-    void onCP()
+    private void onCP()
     {
         try
         {
             Program.I().ocgcore.realize(true);
         }
-        catch (Exception e) 
+        catch (Exception e)
         {
         }
     }
 
 
-    public void onchangeCloseUp()   
+    public void onchangeCloseUp()
     {
         if (setting.closeUp.value == false)
         {
@@ -137,14 +147,12 @@ public class Setting : WindowServant2D
             setting.sliderAlpha.forceValue(0.6666f);
             setting.sliderSize.forceValue(1f);
         }
+
         onChangeSize();
         onChangeAlpha();
     }
 
-    public int atk = 1800;
-    public int star = 5;
-
-    void onchangeClose()
+    private void onchangeClose()
     {
         atk = 1800;
         star = 5;
@@ -154,54 +162,40 @@ public class Setting : WindowServant2D
         }
         catch (Exception)
         {
-
         }
+
         try
         {
             star = int.Parse(setting.showoffStar.value);
         }
         catch (Exception)
         {
-
         }
     }
 
-
-    UISlider sliderAlpha;
-    void onChangeAlpha()
+    private void onChangeAlpha()
     {
-        if (sliderAlpha != null)
-        {
-            Program.transparency = 1.5f * sliderAlpha.value;
-        }
+        if (sliderAlpha != null) Program.transparency = 1.5f * sliderAlpha.value;
         Program.transparency = 1f;
     }
 
-    void onChangeLongField()
+    private void onChangeLongField()
     {
         Program.longField = UIHelper.getByName<UIToggle>(gameObject, "longField_").value;
         onCP();
     }
 
-    UISlider sliderVsize;
-    void onChangeVsize()
+    private void onChangeVsize()
     {
-        if (sliderVsize != null)
-        {
-            Program.verticleScale = 4f + 2f * sliderVsize.value;
-        }
+        if (sliderVsize != null) Program.verticleScale = 4f + 2f * sliderVsize.value;
     }
 
-    UISlider sliderSize;
-    void onChangeSize()  
+    private void onChangeSize()
     {
-        if (sliderSize != null)
-        {
-            Program.fieldSize = 1f + sliderSize.value * 0.21f;
-        }
+        if (sliderSize != null) Program.fieldSize = 1f + sliderSize.value * 0.21f;
     }
 
-    public float vol() 
+    public float vol()
     {
         return UIHelper.getByName<UISlider>(gameObject, "vol_").value;
     }
@@ -211,12 +205,12 @@ public class Setting : WindowServant2D
         base.preFrameFunction();
     }
 
-    void onClickExit()
+    private void onClickExit()
     {
         hide();
     }
 
-    void resizeScreen()
+    private void resizeScreen()
     {
         //if (dontResizeTwice > 0)
         //{
@@ -226,52 +220,50 @@ public class Setting : WindowServant2D
         //dontResizeTwice = 2;
         if (UIHelper.isMaximized())
             UIHelper.RestoreWindow();
-        string[] mats = UIHelper.getByName<UIPopupList>(gameObject, "screen_").value.Split(new string[] { "*" }, StringSplitOptions.RemoveEmptyEntries);
+        var mats = UIHelper.getByName<UIPopupList>(gameObject, "screen_").value
+            .Split(new[] {"*"}, StringSplitOptions.RemoveEmptyEntries);
         if (mats.Length == 2)
-        {
-            Screen.SetResolution(int.Parse(mats[0]), int.Parse(mats[1]), UIHelper.getByName<UIToggle>(gameObject, "full_").value);
-        }
+            Screen.SetResolution(int.Parse(mats[0]), int.Parse(mats[1]),
+                UIHelper.getByName<UIToggle>(gameObject, "full_").value);
         Program.go(100, () => { Program.I().fixScreenProblems(); });
     }
 
     public void saveWhenQuit()
     {
-        Config.Set("vol_", ((int)(UIHelper.getByName<UISlider>(gameObject, "vol_").value * 1000)).ToString());
-        Config.Set("size_", ((int)(UIHelper.getByName<UISlider>(gameObject, "size_").value * 1000)).ToString());
-        Config.Set("vSize_", ((int)(UIHelper.getByName<UISlider>(gameObject, "vSize_").value * 1000)).ToString());
+        Config.Set("vol_", ((int) (UIHelper.getByName<UISlider>(gameObject, "vol_").value * 1000)).ToString());
+        Config.Set("size_", ((int) (UIHelper.getByName<UISlider>(gameObject, "size_").value * 1000)).ToString());
+        Config.Set("vSize_", ((int) (UIHelper.getByName<UISlider>(gameObject, "vSize_").value * 1000)).ToString());
         //Config.Set("alpha_", ((int)(UIHelper.getByName<UISlider>(gameObject, "alpha_").value * 1000)).ToString());
-        Config.Set("longField_", UIHelper.fromBoolToString(UIHelper.getByName<UIToggle>(gameObject, "longField_").value));
+        Config.Set("longField_",
+            UIHelper.fromBoolToString(UIHelper.getByName<UIToggle>(gameObject, "longField_").value));
         var collection = gameObject.GetComponentsInChildren<UIToggle>();
-        for (int i = 0; i < collection.Length; i++) 
-        {
+        for (var i = 0; i < collection.Length; i++)
             if (collection[i].name.Length > 0 && collection[i].name[0] == '*')
-            {
                 Config.Set(collection[i].name, UIHelper.fromBoolToString(collection[i].value));
-            }
-        }
-        Config.Set("showoffATK", setting.showoffATK.value.ToString());
-        Config.Set("showoffStar", setting.showoffStar.value.ToString());
+        Config.Set("showoffATK", setting.showoffATK.value);
+        Config.Set("showoffStar", setting.showoffStar.value);
         Config.Set("resize_", UIHelper.fromBoolToString(UIHelper.getByName<UIToggle>(gameObject, "resize_").value));
         Config.Set("maximize_", UIHelper.fromBoolToString(UIHelper.isMaximized()));
     }
 
     public void save()
     {
-        Config.Set("ignoreWatcher_",UIHelper.fromBoolToString(UIHelper.getByName<UIToggle>(gameObject, "ignoreWatcher_").value));
+        Config.Set("ignoreWatcher_",
+            UIHelper.fromBoolToString(UIHelper.getByName<UIToggle>(gameObject, "ignoreWatcher_").value));
         Config.Set("ignoreOP_", UIHelper.fromBoolToString(UIHelper.getByName<UIToggle>(gameObject, "ignoreOP_").value));
-        Config.Set("smartSelect_", UIHelper.fromBoolToString(UIHelper.getByName<UIToggle>(gameObject, "smartSelect_").value));
-        Config.Set("autoChain_", UIHelper.fromBoolToString(UIHelper.getByName<UIToggle>(gameObject, "autoChain_").value));
-        Config.Set("handPosition_", UIHelper.fromBoolToString(UIHelper.getByName<UIToggle>(gameObject, "handPosition_").value));
-        Config.Set("handmPosition_", UIHelper.fromBoolToString(UIHelper.getByName<UIToggle>(gameObject, "handmPosition_").value));
+        Config.Set("smartSelect_",
+            UIHelper.fromBoolToString(UIHelper.getByName<UIToggle>(gameObject, "smartSelect_").value));
+        Config.Set("autoChain_",
+            UIHelper.fromBoolToString(UIHelper.getByName<UIToggle>(gameObject, "autoChain_").value));
+        Config.Set("handPosition_",
+            UIHelper.fromBoolToString(UIHelper.getByName<UIToggle>(gameObject, "handPosition_").value));
+        Config.Set("handmPosition_",
+            UIHelper.fromBoolToString(UIHelper.getByName<UIToggle>(gameObject, "handmPosition_").value));
         Config.Set("spyer_", UIHelper.fromBoolToString(UIHelper.getByName<UIToggle>(gameObject, "spyer_").value));
         if (UIHelper.getByName<UIToggle>(gameObject, "high_").value)
-        {
             QualitySettings.SetQualityLevel(5);
-        }
         else
-        {
             QualitySettings.SetQualityLevel(0);
-        }
     }
 
     public float soundValue()

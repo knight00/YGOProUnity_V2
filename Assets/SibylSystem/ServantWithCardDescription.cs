@@ -1,5 +1,5 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
+
 public class ServantWithCardDescription : Servant
 {
     public override void show()
@@ -24,10 +24,8 @@ public class ServantWithCardDescription : Servant
     public override void preFrameFunction()
     {
         var des = Program.I().cardDescription;
-        if (Program.pointedGameObject!= Program.I().cardDescription.description.gameObject)    
-        {
+        if (Program.pointedGameObject != Program.I().cardDescription.description.gameObject)
             des.description.OnScroll(Program.wheelValue / 50f);
-        }
         des.onResized();
     }
 }

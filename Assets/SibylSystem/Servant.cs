@@ -1,19 +1,29 @@
-﻿using UnityEngine;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 using YGOSharp.OCGWrapper.Enums;
+using Object = UnityEngine.Object;
 
 public class Servant
 {
+    private readonly List<GameObject> allGameObjects = new List<GameObject>();
+
+    private float buttomToScreen;
+
+    private readonly List<Program.delayedTask> delayedTasks = new List<Program.delayedTask>();
     public GameObject gameObject;
 
-    public bool isShowed = false;
+    public bool isShowed;
 
-    List<GameObject> allGameObjects = new List<GameObject>();
+    private GameObject preHover;
 
-    List<Action> updateActions = new List<Action>();
+    private float RightToScreen;
 
-    List<Action> updateActions_s = new List<Action>();
+    public GameObject toolBar;
+
+    private readonly List<Action> updateActions = new List<Action>();
+
+    private readonly List<Action> updateActions_s = new List<Action>();
 
 
     public Servant()
@@ -24,7 +34,6 @@ public class Servant
 
     public virtual void initialize()
     {
-
     }
 
     public virtual void show()
@@ -41,35 +50,26 @@ public class Servant
     {
         RMSshow_clear();
         RMSshow_clearYNF();
-        if (isShowed == true)
+        if (isShowed)
         {
             isShowed = false;
             Program.notGo(fixScreenProblem);
             Program.go(50, fixScreenProblem);
         }
-        for (int i = 0; i < allGameObjects.Count; i++)
-        {
-            Program.I().destroy(allGameObjects[i], 0, false, true);
-        }
+
+        for (var i = 0; i < allGameObjects.Count; i++) Program.I().destroy(allGameObjects[i], 0, false, true);
         allGameObjects.Clear();
         updateActions_s.Clear();
-        for (int i = 0; i < delayedTasks.Count; i++)
-        {
-            Program.notGo(delayedTasks[i].act);
-        }
+        for (var i = 0; i < delayedTasks.Count; i++) Program.notGo(delayedTasks[i].act);
         delayedTasks.Clear();
     }
 
     public virtual void fixScreenProblem()
     {
         if (isShowed)
-        {
             applyShowArrangement();
-        }
         else
-        {
             applyHideArrangement();
-        }
     }
 
     public void safeObject(GameObject o)
@@ -79,61 +79,50 @@ public class Servant
 
     public virtual void preFrameFunction()
     {
-
     }
 
     public virtual void ES_mouseDownEmpty()
     {
-
     }
 
     public virtual void ES_mouseDownGameObject(GameObject gameObject)
     {
-
     }
 
     public virtual void ES_mouseUp()
     {
-
     }
 
-    public virtual void ES_mouseDownRight()    
+    public virtual void ES_mouseDownRight()
     {
-
     }
 
     public virtual void ES_mouseUpRight()
     {
-
     }
 
     public virtual void ES_mouseUpEmpty()
     {
-
     }
 
     public virtual void ES_mouseUpGameObject(GameObject gameObject)
     {
-
     }
 
     public virtual void ES_HoverOverGameObject(GameObject gameObject)
     {
-
     }
 
     public void showBarOnly()
     {
         if (toolBar != null)
         {
-            Vector3 vectorOfShowedBar_Screen = new Vector3(Screen.width - RightToScreen, buttomToScreen, 0);
+            var vectorOfShowedBar_Screen = new Vector3(Screen.width - RightToScreen, buttomToScreen, 0);
             iTween.MoveTo(toolBar, Program.camera_back_ground_2d.ScreenToWorldPoint(vectorOfShowedBar_Screen), 0.6f);
-            toolBar.transform.localScale = new Vector3(((float)Screen.height) / 700f, ((float)Screen.height) / 700f, ((float)Screen.height) / 700f);
+            toolBar.transform.localScale =
+                new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f);
             var items = toolBar.GetComponentsInChildren<toolShift>();
-            for (int i = 0; i < items.Length; i++)  
-            {
-                items[i].enabled = true;
-            }
+            for (var i = 0; i < items.Length; i++) items[i].enabled = true;
         }
     }
 
@@ -141,14 +130,12 @@ public class Servant
     {
         if (toolBar != null)
         {
-            Vector3 vectorOfHidedBar_Screen = new Vector3(Screen.width - RightToScreen, -100, 0);
+            var vectorOfHidedBar_Screen = new Vector3(Screen.width - RightToScreen, -100, 0);
             iTween.MoveTo(toolBar, Program.camera_back_ground_2d.ScreenToWorldPoint(vectorOfHidedBar_Screen), 0.6f);
-            toolBar.transform.localScale = new Vector3(((float)Screen.height) / 700f, ((float)Screen.height) / 700f, ((float)Screen.height) / 700f);
+            toolBar.transform.localScale =
+                new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f);
             var items = toolBar.GetComponentsInChildren<toolShift>();
-            for (int i = 0; i < items.Length; i++)
-            {
-                items[i].enabled = false;
-            }
+            for (var i = 0; i < items.Length; i++) items[i].enabled = false;
         }
     }
 
@@ -164,58 +151,37 @@ public class Servant
 
     public virtual void ES_quit()
     {
-
     }
-
-    GameObject preHover = null;
 
     public void Update()
     {
         if (isShowed)
         {
-            for (int i = 0; i < updateActions.Count; i++)
-            {
-                updateActions[i]();
-            }
-            for (int i = 0; i < updateActions_s.Count; i++)
-            {
-                updateActions_s[i]();
-            }
+            for (var i = 0; i < updateActions.Count; i++) updateActions[i]();
+            for (var i = 0; i < updateActions_s.Count; i++) updateActions_s[i]();
             if (Program.InputGetMouseButtonDown_0)
             {
                 if (Program.pointedGameObject == null)
-                {
                     ES_mouseDownEmpty();
-                }
                 else
-                {
                     ES_mouseDownGameObject(Program.pointedGameObject);
-                }
             }
+
             if (Program.InputGetMouseButtonUp_0)
             {
                 if (Program.pointedGameObject == null)
-                {
                     ES_mouseUpEmpty();
-                }
                 else
-                {
                     ES_mouseUpGameObject(Program.pointedGameObject);
-                }
                 ES_mouseUp();
             }
-            if (Program.InputGetMouseButtonDown_1)
-            {
-                ES_mouseDownRight();
-            }
-            if (Program.InputGetMouseButtonUp_1)
-            {
-                ES_mouseUpRight();
-            }
+
+            if (Program.InputGetMouseButtonDown_1) ES_mouseDownRight();
+            if (Program.InputGetMouseButtonUp_1) ES_mouseUpRight();
             if (preHover != Program.pointedGameObject)
             {
                 preHover = Program.pointedGameObject;
-                if (preHover!=null) 
+                if (preHover != null)
                     ES_HoverOverGameObject(preHover);
             }
         }
@@ -228,13 +194,13 @@ public class Servant
 
     public GameObject create(
         GameObject mod,
-        Vector3 position = default(Vector3),
-        Vector3 rotation = default(Vector3),
+        Vector3 position = default,
+        Vector3 rotation = default,
         bool fade = false,
         GameObject father = null,
         bool allParamsInWorld = true,
-        Vector3 wantScale = default(Vector3)
-        )
+        Vector3 wantScale = default
+    )
     {
         var re = Program.I().create(mod, position, rotation, fade, father, allParamsInWorld, wantScale);
         return re;
@@ -242,13 +208,13 @@ public class Servant
 
     public GameObject create_s(
         GameObject mod,
-        Vector3 position = default(Vector3),
-        Vector3 rotation = default(Vector3),
+        Vector3 position = default,
+        Vector3 rotation = default,
         bool fade = false,
         GameObject father = null,
         bool allParamsInWorld = true,
-        Vector3 wantScale = default(Vector3)
-        )
+        Vector3 wantScale = default
+    )
     {
         var re = Program.I().create(mod, position, rotation, fade, father, allParamsInWorld, wantScale);
         allGameObjects.Add(re);
@@ -281,28 +247,19 @@ public class Servant
         updateActions_s.Remove(action);
     }
 
-    public GameObject toolBar;
-
-    float buttomToScreen;
-
-    float RightToScreen;
-
-    public void SetBar(GameObject mod,float buttomToScreen,float RightToScreen)
+    public void SetBar(GameObject mod, float buttomToScreen, float RightToScreen)
     {
         this.buttomToScreen = buttomToScreen;
         this.RightToScreen = RightToScreen;
-        if (toolBar!=null)
-        {
-            MonoBehaviour.DestroyImmediate(toolBar);
-        }
+        if (toolBar != null) Object.DestroyImmediate(toolBar);
         toolBar = create
-            (
+        (
             mod,
             Program.camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width - RightToScreen, -100, 0)),
             new Vector3(0, 0, 0),
             false,
             Program.ui_main_2d
-            );
+        );
         UIHelper.InterGameObject(toolBar);
         fixScreenProblem();
     }
@@ -310,66 +267,57 @@ public class Servant
     public void reShowBar(float buttomToScreen, float RightToScreen)
     {
         this.buttomToScreen = buttomToScreen;
-        this.RightToScreen = RightToScreen; 
-        if (isShowed)   
-        {
-            showBarOnly();
-        }
+        this.RightToScreen = RightToScreen;
+        if (isShowed) showBarOnly();
     }
 
-    List<Program.delayedTask> delayedTasks = new List<Program.delayedTask>();
     public void safeGogo(int delay_, Action act_)
     {
         Program.go(delay_, act_);
         delayedTasks.Add(new Program.delayedTask
         {
             act = act_,
-            timeToBeDone = delay_ + Program.TimePassed(),
+            timeToBeDone = delay_ + Program.TimePassed()
         });
     }
 
     #region remasterMessageSystem
 
-    public Vector3 centre(bool fix=false)
+    public Vector3 centre(bool fix = false)
     {
         if (Program.I().ocgcore.isShowed || Program.I().deckManager.isShowed)
         {
-            Vector3 screenP = Program.camera_game_main.WorldToScreenPoint(Vector3.zero);
+            var screenP = Program.camera_game_main.WorldToScreenPoint(Vector3.zero);
             screenP.z = 0;
             if (fix)
             {
-                if (screenP.y > Screen.height - 350f)
-                {
-                    screenP.y = Screen.height - 350f;
-                }
-                if (screenP.y < 350f)
-                {
-                    screenP.y = 350f;
-                }
+                if (screenP.y > Screen.height - 350f) screenP.y = Screen.height - 350f;
+                if (screenP.y < 350f) screenP.y = 350f;
             }
+
             return Program.camera_main_2d.ScreenToWorldPoint(screenP);
         }
-        else
-        {
-            return Program.camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2, 0));
-        }
+
+        return Program.camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2, 0));
     }
 
-    Vector3 MSentre()
+    private Vector3 MSentre()
     {
         if (Program.I().ocgcore.isShowed)
         {
-            float real = (Program.fieldSize - 1) * 0.9f + 1f;
-            Vector3 screenP = Program.camera_game_main.WorldToScreenPoint(new Vector3(0, 0, -5.65f * real));
+            var real = (Program.fieldSize - 1) * 0.9f + 1f;
+            var screenP = Program.camera_game_main.WorldToScreenPoint(new Vector3(0, 0, -5.65f * real));
             screenP.z = 0;
             return Program.camera_main_2d.ScreenToWorldPoint(screenP);
         }
+
         if (Program.I().deckManager.isShowed)
         {
-            Vector3 screenP = Program.camera_game_main.WorldToScreenPoint(Vector3.zero);
+            var screenP = Program.camera_game_main.WorldToScreenPoint(Vector3.zero);
             screenP.z = 0;
             return Program.camera_main_2d.ScreenToWorldPoint(screenP);
         }
+
         return Program.camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2, 0));
     }
 
@@ -384,19 +332,19 @@ public class Servant
         multipleChoice,
         input,
         position,
-        tp,
+        tp
     }
 
     private messageSystemType currentMStype = messageSystemType.none;
 
     public string currentMShash;
 
-    private GameObject currentMSwindow = null;
+    private GameObject currentMSwindow;
 
     public class messageSystemValue
     {
-        public string value = "";
         public string hint = "";
+        public string value = "";
     }
 
     public virtual void ES_RMS(string hashCode, List<messageSystemValue> result)
@@ -404,10 +352,10 @@ public class Servant
         RMSshow_clear();
     }
 
-    void ES_RMSpremono(GameObject gameObjectClicked, messageSystemValue value)
+    private void ES_RMSpremono(GameObject gameObjectClicked, messageSystemValue value)
     {
         List<messageSystemValue> re;
-        switch (currentMStype)  
+        switch (currentMStype)
         {
             case messageSystemType.onlyYes:
             case messageSystemType.yesOrNo:
@@ -422,21 +370,17 @@ public class Servant
                 ES_RMS(currentMShash, re);
                 break;
             case messageSystemType.multipleChoice:
-                bool exist = false;
-                for (int i = 0; i < RMSshow_multipleChoice_selected.Count; i++)
-                {
+                var exist = false;
+                for (var i = 0; i < RMSshow_multipleChoice_selected.Count; i++)
                     if (RMSshow_multipleChoice_selected[i] == value)
-                    {
                         exist = true;
-                    }
-                }
-                UILabel lab = gameObjectClicked.GetComponentInChildren<UILabel>();
+                var lab = gameObjectClicked.GetComponentInChildren<UILabel>();
                 if (exist)
                 {
                     RMSshow_multipleChoice_selected.Remove(value);
                     if (lab != null)
                     {
-                        Color c = lab.color;
+                        var c = lab.color;
                         c.a = 1f;
                         lab.color = c;
                     }
@@ -446,15 +390,14 @@ public class Servant
                     RMSshow_multipleChoice_selected.Add(value);
                     if (lab != null)
                     {
-                        Color c = lab.color;
+                        var c = lab.color;
                         c.a = 0.3f;
                         lab.color = c;
                     }
                 }
+
                 if (RMSshow_multipleChoice_selected.Count == RMSshow_multipleChoice_count)
-                {
                     ES_RMS(currentMShash, RMSshow_multipleChoice_selected);
-                }
                 break;
         }
     }
@@ -490,15 +433,15 @@ public class Servant
         currentMShash = hashCode;
         currentMStype = messageSystemType.onlyYes;
         currentMSwindow = create
-            (
+        (
             Program.I().ES_1,
             MSentre(),
             Vector3.zero,
             true,
             Program.ui_main_2d,
             true,
-            new Vector3(((float)Screen.height) / 700f, ((float)Screen.height) / 700f, ((float)Screen.height) / 700f)
-            );
+            new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f)
+        );
         UIHelper.InterGameObject(currentMSwindow);
         UIHelper.trySetLableText(currentMSwindow, "hint_", hint);
         UIHelper.registEvent(currentMSwindow, "yes_", ES_RMSpremono, yes);
@@ -510,15 +453,15 @@ public class Servant
         currentMShash = hashCode;
         currentMStype = messageSystemType.yesOrNo;
         currentMSwindow = create
-            (
+        (
             Program.I().ES_2,
             MSentre(),
             Vector3.zero,
             true,
             Program.ui_main_2d,
             true,
-            new Vector3(((float)Screen.height) / 700f, ((float)Screen.height) / 700f, ((float)Screen.height) / 700f)
-            );
+            new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f)
+        );
         UIHelper.InterGameObject(currentMSwindow);
         UIHelper.trySetLableText(currentMSwindow, "hint_", hint);
         UIHelper.registEvent(currentMSwindow, "yes_", ES_RMSpremono, yes);
@@ -531,22 +474,22 @@ public class Servant
     {
         RMSshow_clearYNF();
         yesOrNoForce = create
-            (
+        (
             Program.I().ES_2Force,
             MSentre(),
             Vector3.zero,
             true,
             Program.ui_main_2d,
             true,
-            new Vector3(((float)Screen.height) / 700f, ((float)Screen.height) / 700f, ((float)Screen.height) / 700f)
-            );
+            new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f)
+        );
         UIHelper.InterGameObject(yesOrNoForce);
         UIHelper.trySetLableText(yesOrNoForce, "hint_", hint);
         UIHelper.registEvent(yesOrNoForce, "yes_", ES_RMSpremonoForceYesNo, yes);
         UIHelper.registEvent(yesOrNoForce, "no_", ES_RMSpremonoForceYesNo, no);
     }
 
-    void ES_RMSpremonoForceYesNo(GameObject gameObjectClicked, messageSystemValue value)
+    private void ES_RMSpremonoForceYesNo(GameObject gameObjectClicked, messageSystemValue value)
     {
         ES_RMS_ForcedYesNo(value);
     }
@@ -562,35 +505,36 @@ public class Servant
         currentMShash = hashCode;
         currentMStype = messageSystemType.yesOrNo;
         currentMSwindow = create
-            (
+        (
             Program.I().ES_FS,
             MSentre(),
             Vector3.zero,
             true,
             Program.ui_main_2d,
             true,
-            new Vector3(((float)Screen.height) / 700f, ((float)Screen.height) / 700f, ((float)Screen.height) / 700f)
-            );
+            new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f)
+        );
         UIHelper.InterGameObject(currentMSwindow);
         UIHelper.registEvent(currentMSwindow, "yes_", ES_RMSpremono, first);
         UIHelper.registEvent(currentMSwindow, "no_", ES_RMSpremono, second);
     }
 
-    public void RMSshow_yesOrNoOrCancle(string hashCode, string hint, messageSystemValue yes, messageSystemValue no, messageSystemValue cancle)
+    public void RMSshow_yesOrNoOrCancle(string hashCode, string hint, messageSystemValue yes, messageSystemValue no,
+        messageSystemValue cancle)
     {
         RMSshow_clear();
         currentMShash = hashCode;
         currentMStype = messageSystemType.yesOrNoOrCancle;
         currentMSwindow = create
-            (
+        (
             Program.I().ES_3cancle,
             MSentre(),
             Vector3.zero,
             true,
             Program.ui_main_2d,
             true,
-            new Vector3(((float)Screen.height) / 700f, ((float)Screen.height) / 700f, ((float)Screen.height) / 700f)
-            );
+            new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f)
+        );
         UIHelper.InterGameObject(currentMSwindow);
         UIHelper.trySetLableText(currentMSwindow, "hint_", hint);
         UIHelper.registEvent(currentMSwindow, "yes_", ES_RMSpremono, yes);
@@ -604,37 +548,38 @@ public class Servant
         currentMShash = hashCode;
         currentMStype = messageSystemType.singleChoice;
         currentMSwindow = create
-            (
+        (
             Program.I().ES_Single_multiple_window,
             MSentre(),
             Vector3.zero,
             true,
             Program.ui_main_2d,
             true,
-            new Vector3(((float)Screen.height) / 700f, ((float)Screen.height) / 700f, ((float)Screen.height) / 700f)
-            );
-        UISprite sp = UIHelper.getByName<UISprite>(currentMSwindow, "under");
+            new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f)
+        );
+        var sp = UIHelper.getByName<UISprite>(currentMSwindow, "under");
         sp.height = 70 + options.Count * 48;
-        for (int i = 0; i < options.Count; i++)
+        for (var i = 0; i < options.Count; i++)
         {
-            GameObject btn = create
-           (
-           Program.I().ES_Single_option,
-           new Vector3(-2, sp.height / 2 - 59 - 48 * i, 0),
-           Vector3.zero,
-           false,
-           sp.gameObject,
-           false
-           );
-            UIHelper.trySetLableText(btn, "[u]"+options[i].hint);
+            var btn = create
+            (
+                Program.I().ES_Single_option,
+                new Vector3(-2, sp.height / 2 - 59 - 48 * i, 0),
+                Vector3.zero,
+                false,
+                sp.gameObject,
+                false
+            );
+            UIHelper.trySetLableText(btn, "[u]" + options[i].hint);
             UIHelper.registEvent(btn, btn.name, ES_RMSpremono, options[i]);
         }
+
         UIHelper.InterGameObject(currentMSwindow);
     }
 
-    int RMSshow_multipleChoice_count = 0;
+    private int RMSshow_multipleChoice_count;
 
-    List<messageSystemValue> RMSshow_multipleChoice_selected = new List<messageSystemValue>();
+    private readonly List<messageSystemValue> RMSshow_multipleChoice_selected = new List<messageSystemValue>();
 
     public void RMSshow_multipleChoice(string hashCode, int selectCount, List<messageSystemValue> options)
     {
@@ -644,35 +589,36 @@ public class Servant
         currentMShash = hashCode;
         currentMStype = messageSystemType.multipleChoice;
         currentMSwindow = create
-            (
+        (
             Program.I().ES_Single_multiple_window,
             MSentre(),
             Vector3.zero,
             true,
             Program.ui_main_2d,
             true,
-            new Vector3(((float)Screen.height) / 700f, ((float)Screen.height) / 700f, ((float)Screen.height) / 700f)
-            );
-        UISprite sp = UIHelper.getByName<UISprite>(currentMSwindow, "under");
+            new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f)
+        );
+        var sp = UIHelper.getByName<UISprite>(currentMSwindow, "under");
         sp.height = 70 + UIHelper.get_zonghangshu(options.Count, 5) * 40;
         sp.width = 470;
-        for (int i = 0; i < options.Count; i++)
+        for (var i = 0; i < options.Count; i++)
         {
-            Vector2 v = UIHelper.get_hang_lie(i, 5);
-            float hang = v.x;
-            float lie = v.y;
-            GameObject btn = create
-           (
-           Program.I().ES_multiple_option,
-           new Vector3(-162 + lie * 80, sp.height / 2 - 55 - 40 * hang, 0),
-           Vector3.zero,
-           false,
-           sp.gameObject,
-           false
-           );
+            var v = UIHelper.get_hang_lie(i, 5);
+            var hang = v.x;
+            var lie = v.y;
+            var btn = create
+            (
+                Program.I().ES_multiple_option,
+                new Vector3(-162 + lie * 80, sp.height / 2 - 55 - 40 * hang, 0),
+                Vector3.zero,
+                false,
+                sp.gameObject,
+                false
+            );
             UIHelper.trySetLableText(btn, "[u]" + options[i].hint);
             UIHelper.registEvent(btn, btn.name, ES_RMSpremono, options[i]);
         }
+
         UIHelper.InterGameObject(currentMSwindow);
     }
 
@@ -682,22 +628,22 @@ public class Servant
         currentMShash = hashCode;
         currentMStype = messageSystemType.position;
         currentMSwindow = create
-            (
+        (
             Program.I().ES_position,
             MSentre(),
             Vector3.zero,
             true,
             Program.ui_main_2d,
             true,
-            new Vector3(((float)Screen.height) / 700f, ((float)Screen.height) / 700f, ((float)Screen.height) / 700f)
-            );
+            new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f)
+        );
         UIHelper.InterGameObject(currentMSwindow);
         UIHelper.registEvent(currentMSwindow, "atk_", ES_RMSpremono, atk);
         UIHelper.registEvent(currentMSwindow, "def_", ES_RMSpremono, def);
 
-        UITexture atkpic = UIHelper.getByName<UITexture>(currentMSwindow, "atkPic_");
-        UIButton defbutton = UIHelper.getByName<UIButton>(currentMSwindow, "def_");
-        if (Int32.Parse(atk.value) == (int)CardPosition.FaceUpDefence)
+        var atkpic = UIHelper.getByName<UITexture>(currentMSwindow, "atkPic_");
+        var defbutton = UIHelper.getByName<UIButton>(currentMSwindow, "def_");
+        if (int.Parse(atk.value) == (int) CardPosition.FaceUpDefence)
         {
             atkpic.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
             defbutton.transform.localPosition = new Vector3(72.8f, 2f, 0f);
@@ -708,50 +654,51 @@ public class Servant
             defbutton.transform.localPosition = new Vector3(62.8f, 0f, 0f);
         }
 
-        cardPicLoader cardPicLoader_ = currentMSwindow.AddComponent<cardPicLoader>();
+        var cardPicLoader_ = currentMSwindow.AddComponent<cardPicLoader>();
         cardPicLoader_.code = code;
         cardPicLoader_.uiTexture = atkpic;
         cardPicLoader_ = currentMSwindow.AddComponent<cardPicLoader>();
-        cardPicLoader_.code = (Int32.Parse(def.value) == (int)CardPosition.FaceDownDefence) ? 0 : code;
+        cardPicLoader_.code = int.Parse(def.value) == (int) CardPosition.FaceDownDefence ? 0 : code;
         cardPicLoader_.uiTexture = UIHelper.getByName<UITexture>(currentMSwindow, "defPic_");
     }
 
-    public void RMSshow_tp(string hashCode, messageSystemValue jiandao, messageSystemValue shitou, messageSystemValue bu)
+    public void RMSshow_tp(string hashCode, messageSystemValue jiandao, messageSystemValue shitou,
+        messageSystemValue bu)
     {
         RMSshow_clear();
         currentMShash = hashCode;
         currentMStype = messageSystemType.tp;
         currentMSwindow = create
-            (
+        (
             Program.I().ES_Tp,
             MSentre(),
             Vector3.zero,
             true,
             Program.ui_main_2d,
             true,
-            new Vector3(((float)Screen.height) / 700f, ((float)Screen.height) / 700f, ((float)Screen.height) / 700f)
-            );
+            new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f)
+        );
         UIHelper.InterGameObject(currentMSwindow);
         UIHelper.registEvent(currentMSwindow, "jiandao_", ES_RMSpremono, jiandao);
         UIHelper.registEvent(currentMSwindow, "shitou_", ES_RMSpremono, shitou);
         UIHelper.registEvent(currentMSwindow, "bu_", ES_RMSpremono, bu);
     }
 
-    public void RMSshow_input(string hashCode, string hint,string default_) 
+    public void RMSshow_input(string hashCode, string hint, string default_)
     {
         RMSshow_clear();
         currentMShash = hashCode;
         currentMStype = messageSystemType.input;
         currentMSwindow = create
-            (
+        (
             Program.I().ES_input,
             MSentre(),
             Vector3.zero,
             true,
             Program.ui_main_2d,
             true,
-            new Vector3(((float)Screen.height) / 700f, ((float)Screen.height) / 700f, ((float)Screen.height) / 700f)
-            );
+            new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f)
+        );
         UIHelper.InterGameObject(currentMSwindow);
         UIHelper.trySetLableText(currentMSwindow, "hint_", hint);
         UIHelper.registEvent(currentMSwindow, "input_", ES_RMSpremono, null, "yes_");
@@ -764,21 +711,21 @@ public class Servant
         Program.I().cardDescription.mLog(hint);
     }
 
-    public void RMSshow_face(string hashCode, string name)  
+    public void RMSshow_face(string hashCode, string name)
     {
         RMSshow_clear();
         currentMShash = hashCode;
         currentMStype = messageSystemType.onlyYes;
         currentMSwindow = create
-            (
+        (
             Program.I().ES_Face,
             MSentre(),
             Vector3.zero,
             true,
             Program.ui_main_2d,
             true,
-            new Vector3(((float)Screen.height) / 700f, ((float)Screen.height) / 700f, ((float)Screen.height) / 700f)
-            );
+            new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f)
+        );
         UIHelper.InterGameObject(currentMSwindow);
         UIHelper.getByName<UITexture>(currentMSwindow, "face_").mainTexture = UIHelper.getFace(name);
         UIHelper.registEvent(currentMSwindow, "yes_", ES_RMSpremono, new messageSystemValue());

@@ -1,16 +1,713 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using UnityEngine;
+using YGOSharp;
 using YGOSharp.OCGWrapper.Enums;
+using Object = UnityEngine.Object;
+
 public class DeckManager : ServantWithCardDescription
 {
+    private float cameraAngle = Mathf.Atan(23 / 17.5f);
+
+    private float cameraDistance = Vector3.Distance(new Vector3(0, 23f, -17.5f), Vector3.zero);
+
+    private bool canSave;
+
+    public MonoCardInDeckManager cardInDragging;
+
+    public Deck deck = new Deck();
+    public bool deckDirty;
+
+
+    private readonly List<GameObject> diedCards = new List<GameObject>();
+
+    private number_loader extra_unmber;
+
+    private GameObject gameObjectDesk;
+    private GameObject goLast;
+
+    private number_loader m_unmber;
+
+    private number_loader main_unmber;
+
+    private number_loader s_number;
+
+    private number_loader side_number;
+
+    private number_loader t_unmber;
+    private int timeLastDown;
+
+    public override void show()
+    {
+        base.show();
+        Program.camera_game_main.transform.position = new Vector3(0, 35, 0);
+        Program.camera_game_main.transform.localEulerAngles = new Vector3(90, 0, 0);
+        cameraAngle = 90;
+        Program.cameraFacing = true;
+        Program.cameraPosition = Program.camera_game_main.transform.position;
+        camrem();
+        Program.I().light.transform.eulerAngles = new Vector3(50, 0, 0);
+        gameObjectDesk = create_s(Program.I().new_mod_tableInDeckManager);
+        gameObjectDesk.layer = 16;
+        gameObjectDesk.transform.position = new Vector3(0, 0, 0);
+        gameObjectDesk.transform.eulerAngles = new Vector3(90, 0, 0);
+        gameObjectDesk.transform.localScale = new Vector3(30, 30, 1);
+        gameObjectDesk.GetComponent<Renderer>().material.mainTexture =
+            Program.GetTextureViaPath("texture/duel/deckTable.png");
+        //UIHelper.SetMaterialRenderingMode(gameObjectDesk.GetComponent<Renderer>().material, UIHelper.RenderingMode.Transparent);
+        var rigidbody = gameObjectDesk.AddComponent<Rigidbody>();
+        rigidbody.useGravity = false;
+        rigidbody.isKinematic = true;
+        rigidbody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+        var boxCollider = gameObjectDesk.AddComponent<BoxCollider>();
+        main_unmber =
+            create_s(Program.I().mod_ocgcore_number, new Vector3(-16.5f, 0, 13.6f), new Vector3(90, 0, 0), true)
+                .GetComponent<number_loader>();
+        m_unmber = create_s(Program.I().mod_ocgcore_number, new Vector3(-16.5f, 0, 6.6f), new Vector3(90, 0, 0), true)
+            .GetComponent<number_loader>();
+        s_number = create_s(Program.I().mod_ocgcore_number, new Vector3(-16.5f, 0, 4.6f), new Vector3(90, 0, 0), true)
+            .GetComponent<number_loader>();
+        t_unmber = create_s(Program.I().mod_ocgcore_number, new Vector3(-16.5f, 0, 2.6f), new Vector3(90, 0, 0), true)
+            .GetComponent<number_loader>();
+        extra_unmber =
+            create_s(Program.I().mod_ocgcore_number, new Vector3(-16.5f, 0, -5.3f), new Vector3(90, 0, 0), true)
+                .GetComponent<number_loader>();
+        side_number =
+            create_s(Program.I().mod_ocgcore_number, new Vector3(-16.5f, 0, -11f), new Vector3(90, 0, 0), true)
+                .GetComponent<number_loader>();
+        switch (condition)
+        {
+            case Condition.editDeck:
+                boxCollider.size = new Vector3(1, 1, 1);
+                break;
+            case Condition.changeSide:
+                boxCollider.size = new Vector3(100, 100, 1);
+                break;
+        }
+
+        clearAll();
+    }
+
+    public override void hide()
+    {
+        if (isShowed) hideDetail();
+        for (var i = 0; i < deck.IMain.Count; i++) destroyCard(deck.IMain[i]);
+        for (var i = 0; i < deck.IExtra.Count; i++) destroyCard(deck.IExtra[i]);
+        for (var i = 0; i < deck.ISide.Count; i++) destroyCard(deck.ISide[i]);
+        for (var i = 0; i < deck.IRemoved.Count; i++) destroyCard(deck.IRemoved[i]);
+        deck = new Deck();
+        deckDirty = false;
+        Program.I().cardDescription.setTitle("");
+        base.hide();
+    }
+
+    public override void preFrameFunction()
+    {
+        base.preFrameFunction();
+        if (cardInDragging != null)
+        {
+            if (detailPanelShiftedTemp == false) shiftDetailPanel(true);
+        }
+        else
+        {
+            if (detailPanelShiftedTemp) shiftDetailPanel(false);
+        }
+
+        camrem();
+        if (Input.mousePosition.x < Screen.width - 280)
+            if (Input.mousePosition.x > 250)
+            {
+                cameraAngle += Program.wheelValue * 1.2f;
+                if (cameraAngle < 0f) cameraAngle = 0f;
+                if (cameraAngle > 90f) cameraAngle = 90f;
+            }
+
+        cameraDistance = 29 - 3.1415926f / 180f * (cameraAngle - 60f) * 13f;
+        Program.cameraPosition = new Vector3(0, cameraDistance * Mathf.Sin(3.1415926f / 180f * cameraAngle),
+            -cameraDistance * Mathf.Cos(3.1415926f / 180f * cameraAngle));
+        if (Program.TimePassed() - lastRefreshTime > 80)
+        {
+            lastRefreshTime = Program.TimePassed();
+            FromObjectDeckToCodedDeck();
+            main_unmber.set_number(deck.Main.Count, 3);
+            side_number.set_number(deck.Side.Count, 4);
+            extra_unmber.set_number(deck.Extra.Count, 0);
+            int m = 0, s = 0, t = 0;
+            foreach (var item in deck.IMain)
+            {
+                if ((item.cardData.Type & (int) CardType.Monster) > 0) m++;
+                if ((item.cardData.Type & (int) CardType.Spell) > 0) s++;
+                if ((item.cardData.Type & (int) CardType.Trap) > 0) t++;
+            }
+
+            m_unmber.set_number(m, 1);
+            s_number.set_number(s, 2);
+            t_unmber.set_number(t, 5);
+        }
+
+        if (Program.InputEnterDown)
+            if (condition == Condition.editDeck)
+                onClickSearch();
+        if (Input.GetKeyDown(KeyCode.Tab) || Input.GetMouseButtonDown(2)) onClickDetail();
+    }
+
+    private void camrem()
+    {
+        var l = Program.I().cardDescription.width + Screen.width * 0.03f;
+        var r = Screen.width - 230f;
+        if (detailShowed)
+            if (gameObjectDetailedSearch != null)
+                r -= 230 * gameObjectDetailedSearch.transform.localScale.x;
+        Program.reMoveCam((l + r) / 2f);
+    }
+
+    public override void ES_HoverOverGameObject(GameObject gameObject)
+    {
+        var cardInDeck = gameObject.GetComponent<MonoCardInDeckManager>();
+        if (cardInDeck != null) Program.I().cardDescription.setData(cardInDeck.cardData, GameTextureManager.myBack);
+        var cardInSearchResult = gameObject.GetComponent<cardPicLoader>();
+        if (cardInSearchResult != null)
+            Program.I().cardDescription.setData(cardInSearchResult.data, GameTextureManager.myBack);
+    }
+
+    public override void ES_mouseDownGameObject(GameObject gameObject)
+    {
+        var doubleClick = false;
+        if (goLast == gameObject)
+            if (Program.TimePassed() - timeLastDown < 300)
+                doubleClick = true;
+        goLast = gameObject;
+        timeLastDown = Program.TimePassed();
+        var cardInDeck = gameObject.GetComponent<MonoCardInDeckManager>();
+        var cardInSearchResult = gameObject.GetComponent<cardPicLoader>();
+        if (cardInDeck != null && !cardInDeck.dying)
+        {
+            if (doubleClick && condition == Condition.editDeck && checkBanlistAvail(cardInDeck.cardData.Id))
+            {
+                var card = createCard();
+                card.transform.position = cardInDeck.transform.position;
+                cardInDeck.cardData.cloneTo(card.cardData);
+                card.gameObject.layer = 16;
+                deck.IMain.Add(card);
+                deckDirty = true;
+                ArrangeObjectDeck(true);
+                ShowObjectDeck();
+            }
+            else
+            {
+                cardInDragging = cardInDeck;
+                cardInDeck.beginDrag();
+            }
+        }
+        else if (cardInSearchResult != null)
+        {
+            if (condition == Condition.editDeck)
+                if (checkBanlistAvail(cardInSearchResult.data.Id))
+                    if ((cardInSearchResult.data.Type & (uint) CardType.Token) == 0)
+                    {
+                        var card = createCard();
+                        card.transform.position = card.getGoodPosition(4);
+                        card.cardData = cardInSearchResult.data;
+                        card.gameObject.layer = 16;
+                        deck.IMain.Add(card);
+                        cardInDragging = card;
+                        card.beginDrag();
+                    }
+        }
+    }
+
+    public override void ES_mouseUp()
+    {
+        if (cardInDragging != null)
+        {
+            if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
+            {
+                //
+            }
+            else
+            {
+                if (cardInDragging.getIfAlive())
+                    deckDirty = true;
+                ArrangeObjectDeck(true);
+                ShowObjectDeck();
+            }
+
+            cardInDragging.endDrag();
+            cardInDragging = null;
+        }
+    }
+
+    public override void ES_mouseUpRight()
+    {
+        if (Program.pointedGameObject != null)
+        {
+            if (condition == Condition.editDeck)
+            {
+                var cardInDeck = Program.pointedGameObject.GetComponent<MonoCardInDeckManager>();
+                if (cardInDeck != null)
+                {
+                    cardInDeck.killIt();
+                    ArrangeObjectDeck(true);
+                    ShowObjectDeck();
+                }
+
+                var cardInSearchResult = Program.pointedGameObject.GetComponent<cardPicLoader>();
+                if (cardInSearchResult != null)
+                {
+                    CreateMonoCard(cardInSearchResult.data);
+                    ShowObjectDeck();
+                }
+            }
+            else
+            {
+                var cardInDeck = Program.pointedGameObject.GetComponent<MonoCardInDeckManager>();
+                if (cardInDeck != null)
+                {
+                    var isSide = false;
+                    for (var i = 0; i < deck.ISide.Count; i++)
+                        if (cardInDeck == deck.ISide[i])
+                            isSide = true;
+                    if (isSide)
+                    {
+                        if (cardInDeck.cardData.IsExtraCard())
+                        {
+                            deck.IExtra.Add(cardInDeck);
+                            deck.ISide.Remove(cardInDeck);
+                        }
+                        else
+                        {
+                            deck.IMain.Add(cardInDeck);
+                            deck.ISide.Remove(cardInDeck);
+                        }
+                    }
+                    else
+                    {
+                        deck.ISide.Add(cardInDeck);
+                        deck.IMain.Remove(cardInDeck);
+                        deck.IExtra.Remove(cardInDeck);
+                    }
+
+                    ShowObjectDeck();
+                }
+            }
+        }
+    }
+
+    private void CreateMonoCard(Card data)
+    {
+        if (checkBanlistAvail(data.Id))
+        {
+            var card = createCard();
+            card.transform.position = card.getGoodPosition(4);
+            card.cardData = data;
+            card.gameObject.layer = 16;
+            if (data.IsExtraCard())
+            {
+                deck.IExtra.Add(card);
+                deck.Extra.Add(card.cardData.Id);
+            }
+            else
+            {
+                deck.IMain.Add(card);
+                deck.Main.Add(card.cardData.Id);
+            }
+
+            deckDirty = true;
+        }
+    }
+
+    public void loadDeckFromYDK(string path)
+    {
+        FromYDKtoCodedDeck(path, out deck);
+        FormCodedDeckToObjectDeck();
+        deckDirty = false;
+    }
+
+    public static void FromYDKtoCodedDeck(string path, out Deck deck)
+    {
+        deck = new Deck();
+        try
+        {
+            var text = File.ReadAllText(path);
+            var st = text.Replace("\r", "");
+            var lines = st.Split(new[] {"\n"}, StringSplitOptions.RemoveEmptyEntries);
+            var flag = -1;
+            foreach (var line in lines)
+                if (line == "#main")
+                {
+                    flag = 1;
+                }
+                else if (line == "#extra")
+                {
+                    flag = 2;
+                }
+                else if (line == "!side")
+                {
+                    flag = 3;
+                }
+                else
+                {
+                    var code = 0;
+                    try
+                    {
+                        code = int.Parse(line);
+                    }
+                    catch (Exception)
+                    {
+                    }
+
+                    if (code > 100)
+                    {
+                        var card = CardsManager.Get(code);
+                        if (card.Id > 0 && flag != 3)
+                        {
+                            if (card.IsExtraCard())
+                            {
+                                deck.Extra.Add(code);
+                                deck.Deck_O.Extra.Add(code);
+                            }
+                            else
+                            {
+                                deck.Main.Add(code);
+                                deck.Deck_O.Main.Add(code);
+                            }
+                        }
+                        else
+                        {
+                            switch (flag)
+                            {
+                                case 1:
+                                {
+                                    deck.Main.Add(code);
+                                    deck.Deck_O.Main.Add(code);
+                                }
+                                    break;
+                                case 2:
+                                {
+                                    deck.Extra.Add(code);
+                                    deck.Deck_O.Extra.Add(code);
+                                }
+                                    break;
+                                case 3:
+                                {
+                                    deck.Side.Add(code);
+                                    deck.Deck_O.Side.Add(code);
+                                }
+                                    break;
+                            }
+                        }
+                    }
+                }
+        }
+        catch (Exception e)
+        {
+        }
+    }
+
+    public Deck getRealDeck()
+    {
+        if (canSave) return deck;
+
+        var r = new Deck();
+        foreach (var item in deck.Deck_O.Main)
+        {
+            r.Main.Add(item);
+            r.Deck_O.Main.Add(item);
+        }
+
+        foreach (var item in deck.Deck_O.Side)
+        {
+            r.Side.Add(item);
+            r.Deck_O.Side.Add(item);
+        }
+
+        foreach (var item in deck.Deck_O.Extra)
+        {
+            r.Extra.Add(item);
+            r.Deck_O.Extra.Add(item);
+        }
+
+        return r;
+    }
+
+    private void ArrangeObjectDeck(bool order = false)
+    {
+        var deckTemp = deck.getAllObjectCardAndDeload();
+        if (order)
+            deckTemp.Sort((left, right) =>
+            {
+                var leftPosition = left.gameObject.transform.position;
+                var rightPosition = right.gameObject.transform.position;
+                if (leftPosition.y > 3f) leftPosition = MonoCardInDeckManager.refLectPosition(leftPosition);
+                if (rightPosition.y > 3f) rightPosition = MonoCardInDeckManager.refLectPosition(rightPosition);
+                if (leftPosition.z > -3 && rightPosition.z > -3)
+                {
+                    var l = leftPosition.x + 1000f * (int) ((13f - leftPosition.z) / 3.7f);
+                    var r = rightPosition.x + 1000f * (int) ((13f - rightPosition.z) / 3.7f);
+                    if (l < r)
+                        return -1;
+                    return 1;
+                }
+
+                if (leftPosition.z > -3 && rightPosition.z < -3) return 1;
+
+                if (leftPosition.z < -3 && rightPosition.z > -3) return -1;
+
+                {
+                    var l = leftPosition.x;
+                    var r = rightPosition.x;
+                    if (l < r)
+                        return -1;
+                    return 1;
+                }
+            });
+        for (var i = 0; i < deckTemp.Count; i++)
+        {
+            var p = deckTemp[i].gameObject.transform.position;
+            if (deckTemp[i].getIfAlive())
+            {
+                if (p.z > -8)
+                {
+                    if (deckTemp[i].cardData.IsExtraCard())
+                        deck.IExtra.Add(deckTemp[i]);
+                    else
+                        deck.IMain.Add(deckTemp[i]);
+                }
+                else
+                {
+                    deck.ISide.Add(deckTemp[i]);
+                }
+            }
+            else
+            {
+                deck.IRemoved.Add(deckTemp[i]);
+            }
+        }
+    }
+
+    private void SortObjectDeck()
+    {
+        Deck.sort((List<MonoCardInDeckManager>) deck.IMain);
+        Deck.sort((List<MonoCardInDeckManager>) deck.IExtra);
+        Deck.sort((List<MonoCardInDeckManager>) deck.ISide);
+        deckDirty = true;
+    }
+
+    private void RandObjectDeck()
+    {
+        Deck.rand((List<MonoCardInDeckManager>) deck.IMain);
+        deckDirty = true;
+    }
+
+    private MonoCardInDeckManager createCard()
+    {
+        MonoCardInDeckManager r = null;
+        if (diedCards.Count > 0)
+        {
+            r = diedCards[0].AddComponent<MonoCardInDeckManager>();
+            diedCards.RemoveAt(0);
+        }
+
+        if (r == null)
+        {
+            r = Program.I().create(Program.I().new_mod_cardInDeckManager).AddComponent<MonoCardInDeckManager>();
+            r.gameObject.transform.Find("back").gameObject.GetComponent<Renderer>().material.mainTexture =
+                GameTextureManager.myBack;
+            r.gameObject.transform.Find("face").gameObject.GetComponent<Renderer>().material.mainTexture =
+                GameTextureManager.myBack;
+        }
+
+        r.gameObject.transform.position = new Vector3(0, 5, 0);
+        r.gameObject.transform.eulerAngles = new Vector3(90, 0, 0);
+        r.gameObject.transform.localScale = new Vector3(0, 0, 0);
+        iTween.ScaleTo(r.gameObject, new Vector3(3, 4, 1), 0.4f);
+        r.gameObject.SetActive(true);
+        return r;
+    }
+
+    private void destroyCard(MonoCardInDeckManager c)
+    {
+        try
+        {
+            c.gameObject.SetActive(false);
+            diedCards.Add(c.gameObject);
+            Object.DestroyImmediate(c);
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e);
+        }
+    }
+
+    public void FormCodedDeckToObjectDeck()
+    {
+        canSave = false;
+        safeGogo(4000, () => { canSave = true; });
+        var indexOfLogic = 0;
+        var hangshu = UIHelper.get_decklieshuArray(deck.Main.Count);
+        foreach (var item in deck.Main)
+        {
+            var v = UIHelper.get_hang_lieArry(indexOfLogic, hangshu);
+            var toVector = new Vector3(UIHelper.get_left_right_index(-12.5f, 12.5f, (int) v.y, hangshu[(int) v.x]),
+                0.5f + v.y / 3f + v.x / 3f, 11.8f - v.x * 4f);
+            var data = CardsManager.Get(item);
+            safeGogo(indexOfLogic * 25, () =>
+            {
+                var card = createCard();
+                card.cardData = data;
+                card.gameObject.layer = 16;
+                deck.IMain.Add(card);
+                card.tweenToVectorAndFall(toVector, new Vector3(90, 0, 0));
+            });
+            indexOfLogic++;
+        }
+
+        indexOfLogic = 0;
+        foreach (var item in deck.Extra)
+        {
+            var toVector =
+                new Vector3(UIHelper.get_left_right_indexZuo(-12.5f, 12.5f, indexOfLogic, deck.Extra.Count, 10),
+                    0.5f + indexOfLogic / 3f, -6.2f);
+            var data = CardsManager.Get(item);
+            safeGogo(indexOfLogic * 90, () =>
+            {
+                var card = createCard();
+                card.cardData = data;
+                card.gameObject.layer = 16;
+                deck.IExtra.Add(card);
+                card.tweenToVectorAndFall(toVector, new Vector3(90, 0, 0));
+            });
+            indexOfLogic++;
+        }
+
+        indexOfLogic = 0;
+        foreach (var item in deck.Side)
+        {
+            var toVector =
+                new Vector3(UIHelper.get_left_right_indexZuo(-12.5f, 12.5f, indexOfLogic, deck.Side.Count, 10),
+                    0.5f + indexOfLogic / 3f, -12f);
+            var data = CardsManager.Get(item);
+            safeGogo(indexOfLogic * 90, () =>
+            {
+                var card = createCard();
+                card.cardData = data;
+                card.gameObject.layer = 16;
+                deck.ISide.Add(card);
+                card.tweenToVectorAndFall(toVector, new Vector3(90, 0, 0));
+            });
+            indexOfLogic++;
+        }
+    }
+
+    private void ShowObjectDeck()
+    {
+        var k = (float) (1.5 * 0.1 / 0.130733633);
+        var hangshu = UIHelper.get_decklieshuArray(deck.IMain.Count);
+        for (var i = 0; i < deck.IMain.Count; i++)
+        {
+            var v = UIHelper.get_hang_lieArry(i, hangshu);
+            var toAngle = new Vector3(90, 0, 0);
+            if ((int) v.y > 0)
+            {
+                toAngle = new Vector3(87, -90, -90);
+                if (hangshu[(int) v.x] > 10) toAngle = new Vector3(87f - (hangshu[(int) v.x] - 10f) * 0.4f, -90, -90);
+            }
+
+            var toVector =
+                new Vector3(UIHelper.get_left_right_indexZuo(-12.5f, 12.5f, (int) v.y, hangshu[(int) v.x], 10),
+                    0.6f + Mathf.Sin((90 - toAngle.x) / 180f * Mathf.PI) * k, 11.8f - v.x * 4f);
+            deck.IMain[i].tweenToVectorAndFall(toVector, toAngle);
+        }
+
+        for (var i = 0; i < deck.IExtra.Count; i++)
+        {
+            var toAngle = new Vector3(90, 0, 0);
+            if (i > 0)
+            {
+                toAngle = new Vector3(87, -90, -90);
+                if (deck.IExtra.Count > 10) toAngle = new Vector3(87f - (deck.IExtra.Count - 10f) * 0.4f, -90, -90);
+            }
+
+            var toVector = new Vector3(UIHelper.get_left_right_indexZuo(-12.5f, 12.5f, i, deck.IExtra.Count, 10),
+                0.6f + Mathf.Sin((90 - toAngle.x) / 180f * Mathf.PI) * k, -6.2f);
+            deck.IExtra[i].tweenToVectorAndFall(toVector, toAngle);
+        }
+
+        for (var i = 0; i < deck.ISide.Count; i++)
+        {
+            var toAngle = new Vector3(90, 0, 0);
+            if (i > 0)
+            {
+                toAngle = new Vector3(87, -90, -90);
+                if (deck.ISide.Count > 10) toAngle = new Vector3(87f - (deck.ISide.Count - 10f) * 0.4f, -90, -90);
+            }
+
+            var toVector = new Vector3(UIHelper.get_left_right_indexZuo(-12.5f, 12.5f, i, deck.ISide.Count, 10),
+                0.6f + Mathf.Sin((90 - toAngle.x) / 180f * Mathf.PI) * k, -12f);
+            deck.ISide[i].tweenToVectorAndFall(toVector, toAngle);
+        }
+    }
+
+    public void FromObjectDeckToCodedDeck(bool order = false)
+    {
+        ArrangeObjectDeck(order);
+        deck.Main.Clear();
+        deck.Extra.Clear();
+        deck.Side.Clear();
+        foreach (var item in deck.IMain) deck.Main.Add(item.cardData.Id);
+        foreach (var item in deck.IExtra) deck.Extra.Add(item.cardData.Id);
+        foreach (var item in deck.ISide) deck.Side.Add(item.cardData.Id);
+    }
+
+    public void setGoodLooking(bool side = false)
+    {
+        try
+        {
+            Program.I().cardDescription.setData(CardsManager.Get(deck.Main[0]), GameTextureManager.myBack);
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e);
+        }
+
+        if (side)
+        {
+            var result = new List<Card>();
+            foreach (var item in Program.I().ocgcore.sideReference) result.Add(CardsManager.Get(item.Value));
+            print(result);
+            UIHelper.trySetLableText(gameObjectSearch, "title_", result.Count.ToString());
+        }
+        else
+        {
+            UIHelper.trySetLableText(gameObjectSearch, "title_", InterString.Get("在此搜索卡片，拖动加入卡组"));
+        }
+
+        Program.go(50, superScrollView.toTop);
+        Program.go(100, superScrollView.toTop);
+        Program.go(200, superScrollView.toTop);
+        Program.go(300, superScrollView.toTop);
+        Program.go(400, superScrollView.toTop);
+        Program.go(500, superScrollView.toTop);
+        if (side)
+        {
+            UIInput_search.value = InterString.Get("对手使用过的卡↓");
+            UIInput_search.isSelected = false;
+        }
+        else
+        {
+            UIInput_search.value = "";
+            UIInput_search.isSelected = true;
+        }
+    }
+
     #region UI
 
     public enum Condition
     {
         editDeck = 1,
-        changeSide = 2,
+        changeSide = 2
     }
 
     public Condition condition = Condition.editDeck;
@@ -19,50 +716,50 @@ public class DeckManager : ServantWithCardDescription
 
     public GameObject gameObjectDetailedSearch;
 
-    UIPopupList UIPopupList_main;
+    private UIPopupList UIPopupList_main;
 
-    UIPopupList UIPopupList_ban;    
+    private UIPopupList UIPopupList_ban;
 
-    UIPopupList UIPopupList_second;
+    private UIPopupList UIPopupList_second;
 
-    UIPopupList UIPopupList_race;
+    private UIPopupList UIPopupList_race;
 
-    UIPopupList UIPopupList_attribute;
+    private UIPopupList UIPopupList_attribute;
 
-    UIPopupList UIPopupList_pack;
+    private UIPopupList UIPopupList_pack;
 
-    UIInput UIInput_level;
+    private UIInput UIInput_level;
 
-    UIInput UIInput_atk;
+    private UIInput UIInput_atk;
 
-    UIInput UIInput_def;
+    private UIInput UIInput_def;
 
-    UIInput UIInput_search;
+    private UIInput UIInput_search;
 
-    UIToggle[] UIToggle_effects = new UIToggle[32];
+    private readonly UIToggle[] UIToggle_effects = new UIToggle[32];
 
-    SuperScrollView superScrollView = null;
+    private SuperScrollView superScrollView;
 
-    UIPopupList UIPopupList_banlist;
+    private UIPopupList UIPopupList_banlist;
 
     public override void initialize()
     {
         gameObjectSearch = create
-            (
+        (
             Program.I().new_ui_search,
             Program.camera_back_ground_2d.ScreenToWorldPoint(new Vector3(Screen.width + 600, Screen.height / 2, 600)),
             new Vector3(0, 0, 0),
             false,
             Program.ui_back_ground_2d
-            );
+        );
         gameObjectDetailedSearch = create
-            (
+        (
             Program.I().new_ui_searchDetailed,
             Program.camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height * 2f, 0)),
             new Vector3(0, 0, 0),
             false,
             Program.ui_main_2d
-            );
+        );
         UIHelper.InterGameObject(gameObjectSearch);
         UIHelper.InterGameObject(gameObjectDetailedSearch);
         shiftCondition(Condition.editDeck);
@@ -79,18 +776,16 @@ public class DeckManager : ServantWithCardDescription
         UIInput_level = UIHelper.getByName<UIInput>(gameObjectDetailedSearch, "level_");
         UIInput_atk = UIHelper.getByName<UIInput>(gameObjectDetailedSearch, "atk_");
         UIInput_def = UIHelper.getByName<UIInput>(gameObjectDetailedSearch, "def_");
-        for (int i = 0; i < 32; i++)
+        for (var i = 0; i < 32; i++)
         {
-            UIToggle_effects[i] = UIHelper.getByName<UIToggle>(gameObjectDetailedSearch, "T (" + (i+1).ToString() + ")");
+            UIToggle_effects[i] = UIHelper.getByName<UIToggle>(gameObjectDetailedSearch, "T (" + (i + 1) + ")");
             UIHelper.trySetLableText(UIToggle_effects[i].gameObject, GameStringManager.get_unsafe(1100 + i));
             UIToggle_effects[i].GetComponentInChildren<UILabel>().overflowMethod = UILabel.Overflow.ClampContent;
         }
+
         UIPopupList_pack.Clear();
         UIPopupList_pack.AddItem(GameStringManager.get_unsafe(1310));
-        foreach (var item in YGOSharp.PacksManager.packs)
-        {
-            UIPopupList_pack.AddItem(item.fullName);
-        }
+        foreach (var item in PacksManager.packs) UIPopupList_pack.AddItem(item.fullName);
         UIPopupList_main.Clear();
         UIPopupList_main.AddItem(GameStringManager.get_unsafe(1310));
         UIPopupList_main.AddItem(GameStringManager.get_unsafe(1312));
@@ -109,36 +804,30 @@ public class DeckManager : ServantWithCardDescription
         UIHelper.registEvent(UIPopupList_main.gameObject, onUIPopupList_main);
         UIHelper.registEvent(UIPopupList_second.gameObject, onUIPopupList_second);
         superScrollView = new SuperScrollView
-           (
-           UIHelper.getByName<UIPanel>(gameObjectSearch, "panel_"),
-           UIHelper.getByName<UIScrollBar>(gameObjectSearch, "bar_"),
-           itemOnListProducer,
-           86
-           );
-        Program.go(500, () => {
-            List<MonoCardInDeckManager> cs = new List<MonoCardInDeckManager>();
-            for (int i = 0; i < 300; i++)
-            {
-                cs.Add(createCard());
-            }
-            for (int i = 0; i < 300; i++)
-            {
-                destroyCard(cs[i]);
-            }
+        (
+            UIHelper.getByName<UIPanel>(gameObjectSearch, "panel_"),
+            UIHelper.getByName<UIScrollBar>(gameObjectSearch, "bar_"),
+            itemOnListProducer,
+            86
+        );
+        Program.go(500, () =>
+        {
+            var cs = new List<MonoCardInDeckManager>();
+            for (var i = 0; i < 300; i++) cs.Add(createCard());
+            for (var i = 0; i < 300; i++) destroyCard(cs[i]);
         });
-
-
     }
 
-    GameObject itemOnListProducer(string[] Args)
+    private GameObject itemOnListProducer(string[] Args)
     {
         GameObject returnValue = null;
-        returnValue = create(Program.I().new_ui_cardOnSearchList, Vector3.zero, Vector3.zero, false, Program.ui_back_ground_2d);
+        returnValue = create(Program.I().new_ui_cardOnSearchList, Vector3.zero, Vector3.zero, false,
+            Program.ui_back_ground_2d);
         UIHelper.getRealEventGameObject(returnValue).name = Args[0];
         UIHelper.trySetLableText(returnValue, Args[2]);
-        cardPicLoader cardPicLoader_ = UIHelper.getRealEventGameObject(returnValue).AddComponent<cardPicLoader>();
+        var cardPicLoader_ = UIHelper.getRealEventGameObject(returnValue).AddComponent<cardPicLoader>();
         cardPicLoader_.code = int.Parse(Args[0]);
-        cardPicLoader_.data = YGOSharp.CardsManager.Get(int.Parse(Args[0]));
+        cardPicLoader_.data = CardsManager.Get(int.Parse(Args[0]));
         cardPicLoader_.uiTexture = UIHelper.getByName<UITexture>(returnValue, "pic_");
         cardPicLoader_.ico = UIHelper.getByName<ban_icon>(returnValue);
         cardPicLoader_.ico.show(3);
@@ -149,7 +838,8 @@ public class DeckManager : ServantWithCardDescription
     {
         base.applyHideArrangement();
         Program.cameraFacing = false;
-        iTween.MoveTo(gameObjectSearch, Program.camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width + 600, Screen.height / 2, 600)), 1.2f);
+        iTween.MoveTo(gameObjectSearch,
+            Program.camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width + 600, Screen.height / 2, 600)), 1.2f);
         refreshDetail();
     }
 
@@ -157,15 +847,17 @@ public class DeckManager : ServantWithCardDescription
     {
         base.applyShowArrangement();
         Program.cameraFacing = true;
-        UITexture tex = UIHelper.getByName<UITexture>(gameObjectSearch, "under_");
+        var tex = UIHelper.getByName<UITexture>(gameObjectSearch, "under_");
         tex.height = Screen.height;
-        iTween.MoveTo(gameObjectSearch, Program.camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width - tex.width / 2, Screen.height / 2, 0)), 1.2f);
+        iTween.MoveTo(gameObjectSearch,
+            Program.camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width - tex.width / 2, Screen.height / 2, 0)),
+            1.2f);
         refreshDetail();
     }
 
-    void onLF()
+    private void onLF()
     {
-        currentBanlist = YGOSharp.BanlistManager.GetByName(UIPopupList_banlist.value);
+        currentBanlist = BanlistManager.GetByName(UIPopupList_banlist.value);
     }
 
     public void shiftCondition(Condition condition)
@@ -177,10 +869,10 @@ public class DeckManager : ServantWithCardDescription
                 UIHelper.setParent(gameObjectSearch, Program.ui_back_ground_2d);
                 SetBar(Program.I().new_bar_editDeck, 0, 230);
                 UIPopupList_banlist = UIHelper.getByName<UIPopupList>(toolBar, "lfList_");
-                var banlistNames = YGOSharp.BanlistManager.getAllName();
+                var banlistNames = BanlistManager.getAllName();
                 UIPopupList_banlist.items = banlistNames;
                 UIPopupList_banlist.value = UIPopupList_banlist.items[0];
-                currentBanlist = YGOSharp.BanlistManager.GetByName(UIPopupList_banlist.items[0]);
+                currentBanlist = BanlistManager.GetByName(UIPopupList_banlist.items[0]);
                 UIHelper.registEvent(toolBar, "rand_", rand);
                 UIHelper.registEvent(toolBar, "sort_", sort);
                 UIHelper.registEvent(toolBar, "clear_", clear);
@@ -198,107 +890,83 @@ public class DeckManager : ServantWithCardDescription
                 UIHelper.registEvent(toolBar, "finish_", home);
                 UIHelper.registEvent(toolBar, "input_", onChat);
                 break;
-            default:
-                break;
         }
     }
 
-    void onCopy()
+    private void onCopy()
     {
-        string deckName = Config.Get("deckInUse", "miaowu");
-        string newname = InterString.Get("[?]的副本", deckName);
-        string newnamer = newname;
-        int i = 1;
+        var deckName = Config.Get("deckInUse", "miaowu");
+        var newname = InterString.Get("[?]的副本", deckName);
+        var newnamer = newname;
+        var i = 1;
         while (File.Exists("deck/" + newnamer + ".ydk"))
         {
-            newnamer = newname + i.ToString();
+            newnamer = newname + i;
             i++;
         }
+
         RMSshow_input("onRename", InterString.Get("新的卡组名"), newnamer);
     }
 
-    public override void ES_RMS(string hashCode, List<messageSystemValue> result) 
+    public override void ES_RMS(string hashCode, List<messageSystemValue> result)
     {
         base.ES_RMS(hashCode, result);
         if (hashCode == "onRename")
         {
-            string raw = Config.Get("deckInUse", "miaowu");
+            var raw = Config.Get("deckInUse", "miaowu");
             Config.Set("deckInUse", result[0].value);
-            if (onSave()) 
-            {
-                ((CardDescription)Program.I().cardDescription).setTitle(result[0].value);
-            }
+            if (onSave())
+                Program.I().cardDescription.setTitle(result[0].value);
             else
-            {
                 Config.Set("deckInUse", raw);
-            }
         }
     }
 
     public Action returnAction = null;
 
-    public bool onSave()    
+    public bool onSave()
     {
         try
         {
             if (
-           deck.IMain.Count <= 60
-           &&
-           deck.IExtra.Count <= 15
-           &&
-           deck.ISide.Count <= 15
-           )
+                deck.IMain.Count <= 60
+                &&
+                deck.IExtra.Count <= 15
+                &&
+                deck.ISide.Count <= 15
+            )
             {
-                string deckInUse = Config.Get("deckInUse", "miaowu");
+                var deckInUse = Config.Get("deckInUse", "miaowu");
                 if (canSave)
                 {
                     ArrangeObjectDeck();
                     FromObjectDeckToCodedDeck(true);
-                    string value = "#created by ygopro2\r\n#main\r\n";
-                    for (int i = 0; i < deck.Main.Count; i++)
-                    {
-                        value += deck.Main[i].ToString() + "\r\n";
-                    }
+                    var value = "#created by ygopro2\r\n#main\r\n";
+                    for (var i = 0; i < deck.Main.Count; i++) value += deck.Main[i] + "\r\n";
                     value += "#extra\r\n";
-                    for (int i = 0; i < deck.Extra.Count; i++)
-                    {
-                        value += deck.Extra[i].ToString() + "\r\n";
-                    }
+                    for (var i = 0; i < deck.Extra.Count; i++) value += deck.Extra[i] + "\r\n";
                     value += "!side\r\n";
-                    for (int i = 0; i < deck.Side.Count; i++)
-                    {
-                        value += deck.Side[i].ToString() + "\r\n";
-                    }
-                    System.IO.File.WriteAllText("deck/" + deckInUse + ".ydk", value, System.Text.Encoding.UTF8);
+                    for (var i = 0; i < deck.Side.Count; i++) value += deck.Side[i] + "\r\n";
+                    File.WriteAllText("deck/" + deckInUse + ".ydk", value, Encoding.UTF8);
                 }
                 else
                 {
-                    string value = "#created by ygopro2\r\n#main\r\n";
-                    for (int i = 0; i < deck.Deck_O.Main.Count; i++)
-                    {
-                        value += deck.Deck_O.Main[i].ToString() + "\r\n";
-                    }
+                    var value = "#created by ygopro2\r\n#main\r\n";
+                    for (var i = 0; i < deck.Deck_O.Main.Count; i++) value += deck.Deck_O.Main[i] + "\r\n";
                     value += "#extra\r\n";
-                    for (int i = 0; i < deck.Deck_O.Extra.Count; i++)
-                    {
-                        value += deck.Deck_O.Extra[i].ToString() + "\r\n";
-                    }
+                    for (var i = 0; i < deck.Deck_O.Extra.Count; i++) value += deck.Deck_O.Extra[i] + "\r\n";
                     value += "!side\r\n";
-                    for (int i = 0; i < deck.Deck_O.Side.Count; i++)
-                    {
-                        value += deck.Deck_O.Side[i].ToString() + "\r\n";
-                    }
-                    System.IO.File.WriteAllText("deck/" + deckInUse + ".ydk", value, System.Text.Encoding.UTF8);
+                    for (var i = 0; i < deck.Deck_O.Side.Count; i++) value += deck.Deck_O.Side[i] + "\r\n";
+                    File.WriteAllText("deck/" + deckInUse + ".ydk", value, Encoding.UTF8);
                 }
+
                 deckDirty = false;
                 RMSshow_none(InterString.Get("卡组[?]已经被保存。", deckInUse));
                 return true;
             }
-            else
-            {
-                RMSshow_none(InterString.Get("卡组内卡片张数超过限制。"));
-                return false;
-            }
+
+            RMSshow_none(InterString.Get("卡组内卡片张数超过限制。"));
+            return false;
         }
         catch (Exception)
         {
@@ -313,15 +981,12 @@ public class DeckManager : ServantWithCardDescription
         UIHelper.getByName<UIInput>(toolBar, "input_").value = "";
     }
 
-    void home()
+    private void home()
     {
-        if (returnAction != null)
-        {
-            returnAction();
-        }
+        if (returnAction != null) returnAction();
     }
 
-    void sort()
+    private void sort()
     {
         //animationCameraPan();
         ArrangeObjectDeck();
@@ -329,7 +994,7 @@ public class DeckManager : ServantWithCardDescription
         ShowObjectDeck();
     }
 
-    void rand()
+    private void rand()
     {
         //animationCameraPan();
         ArrangeObjectDeck();
@@ -337,38 +1002,37 @@ public class DeckManager : ServantWithCardDescription
         ShowObjectDeck();
     }
 
-    void clear()
+    private void clear()
     {
         var deckTemp = deck.getAllObjectCard();
-        foreach (var item in deckTemp)  
-        {
+        foreach (var item in deckTemp)
             try
             {
                 UIHelper.clearITWeen(item.gameObject);
                 var rid = item.gameObject.GetComponent<Rigidbody>();
-                if (rid == null)
-                {
-                    rid= item.gameObject.AddComponent<Rigidbody>();
-                }
-                rid.AddForce(0.7f * (item.transform.position + new Vector3(0, 30 - Vector3.Distance(item.transform.position, Vector3.zero), 0)) / Program.deltaTime);
+                if (rid == null) rid = item.gameObject.AddComponent<Rigidbody>();
+                rid.AddForce(0.7f *
+                             (item.transform.position +
+                              new Vector3(0, 30 - Vector3.Distance(item.transform.position, Vector3.zero), 0)) /
+                             Program.deltaTime);
             }
             catch (Exception e)
             {
                 Debug.Log(e);
             }
-        }
+
         deckDirty = true;
     }
 
-    bool detailShowed = false;
+    private bool detailShowed;
 
-    void showDetail()
+    private void showDetail()
     {
         detailShowed = true;
         refreshDetail();
     }
 
-    void hideDetail()
+    private void hideDetail()
     {
         clearAll();
         detailShowed = false;
@@ -376,43 +1040,47 @@ public class DeckManager : ServantWithCardDescription
     }
 
 
-    bool detailPanelShiftedTemp = false;
-    void shiftDetailPanel(bool dragged) 
+    private bool detailPanelShiftedTemp;
+
+    private void shiftDetailPanel(bool dragged)
     {
         detailPanelShiftedTemp = dragged;
-        if (isShowed&&detailShowed) 
+        if (isShowed && detailShowed)
         {
             if (dragged)
-            {
-                gameObjectDetailedSearch.GetComponent<UITexture>().color = new Color(1,1,1,0.7f);
-            }
+                gameObjectDetailedSearch.GetComponent<UITexture>().color = new Color(1, 1, 1, 0.7f);
             else
-            {
                 gameObjectDetailedSearch.GetComponent<UITexture>().color = Color.white;
-            }
         }
     }
 
 
-    void refreshDetail()
+    private void refreshDetail()
     {
-        if (gameObjectDetailedSearch!=null) 
+        if (gameObjectDetailedSearch != null)
         {
             if (isShowed)
             {
                 if (Screen.height < 700)
                 {
-                    gameObjectDetailedSearch.transform.localScale = new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f);
+                    gameObjectDetailedSearch.transform.localScale = new Vector3(Screen.height / 700f,
+                        Screen.height / 700f, Screen.height / 700f);
                     if (detailShowed)
                     {
                         gameObjectDetailedSearch.GetComponent<UITexture>().height = 700;
-                        iTween.MoveTo(gameObjectDetailedSearch, Program.camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width - 230 - 115f * Screen.height / 700f, Screen.height * 0.5f, 0)), 0.6f);
+                        iTween.MoveTo(gameObjectDetailedSearch,
+                            Program.camera_main_2d.ScreenToWorldPoint(
+                                new Vector3(Screen.width - 230 - 115f * Screen.height / 700f, Screen.height * 0.5f, 0)),
+                            0.6f);
                         reShowBar(0, 230 + 230 * Screen.height / 700f);
                     }
                     else
                     {
                         gameObjectDetailedSearch.GetComponent<UITexture>().height = 700;
-                        iTween.MoveTo(gameObjectDetailedSearch, Program.camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width - 230 - 115f * Screen.height / 700f, Screen.height * 1.5f, 0)), 0.6f);
+                        iTween.MoveTo(gameObjectDetailedSearch,
+                            Program.camera_main_2d.ScreenToWorldPoint(
+                                new Vector3(Screen.width - 230 - 115f * Screen.height / 700f, Screen.height * 1.5f, 0)),
+                            0.6f);
                         reShowBar(0, 230);
                     }
                 }
@@ -422,17 +1090,20 @@ public class DeckManager : ServantWithCardDescription
                     if (detailShowed)
                     {
                         gameObjectDetailedSearch.GetComponent<UITexture>().height = Screen.height;
-                        iTween.MoveTo(gameObjectDetailedSearch, Program.camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width - 345f, Screen.height * 0.5f, 0)), 0.6f);
+                        iTween.MoveTo(gameObjectDetailedSearch,
+                            Program.camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width - 345f,
+                                Screen.height * 0.5f, 0)), 0.6f);
                         reShowBar(0, 460);
                     }
                     else
                     {
                         gameObjectDetailedSearch.GetComponent<UITexture>().height = Screen.height;
-                        iTween.MoveTo(gameObjectDetailedSearch, Program.camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width - 345f, Screen.height * 1.5f, 0)), 0.6f);
+                        iTween.MoveTo(gameObjectDetailedSearch,
+                            Program.camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width - 345f,
+                                Screen.height * 1.5f, 0)), 0.6f);
                         reShowBar(0, 230);
                     }
                 }
-
             }
             else
             {
@@ -441,16 +1112,12 @@ public class DeckManager : ServantWithCardDescription
         }
     }
 
-    void onClickDetail()
+    private void onClickDetail()
     {
         if (detailShowed)
-        {
             hideDetail();
-        }
         else
-        {
             showDetail();
-        }
     }
 
     public override void ES_mouseDownEmpty()
@@ -461,23 +1128,17 @@ public class DeckManager : ServantWithCardDescription
         //}
     }
 
-    void onExitDetail()
+    private void onExitDetail()
     {
-        if (detailShowed)
-        {
-            hideDetail();
-        }
+        if (detailShowed) hideDetail();
     }
 
-    void clearAll()
+    private void clearAll()
     {
         try
         {
             seconds.Clear();
-            for (int i = 0; i < 32; i++)
-            {
-                UIToggle_effects[i].value = false;
-            }
+            for (var i = 0; i < 32; i++) UIToggle_effects[i].value = false;
             UIPopupList_pack.value = GameStringManager.get_unsafe(1310);
             UIPopupList_main.value = GameStringManager.get_unsafe(1310);
             UIPopupList_ban.value = GameStringManager.get_unsafe(1310);
@@ -501,16 +1162,16 @@ public class DeckManager : ServantWithCardDescription
             UIHelper.getByName<UIInput>(gameObjectDetailedSearch, "atk_UP").value = "";
             UIHelper.getByName<UIInput>(gameObjectDetailedSearch, "def_UP").value = "";
             UIHelper.getByName<UIInput>(gameObjectDetailedSearch, "year_UP").value = "";
-
         }
-        catch (System.Exception e)
+        catch (Exception e)
         {
             //UnityEngine.Debug.Log(e);
         }
     }
 
-    List<string> seconds = new List<string>();
-    void onUIPopupList_second()
+    private readonly List<string> seconds = new List<string>();
+
+    private void onUIPopupList_second()
     {
         Program.notGo(printSecond);
         Program.go(100, printSecond);
@@ -529,15 +1190,9 @@ public class DeckManager : ServantWithCardDescription
             {
                 seconds.Remove(UIPopupList_second.value);
                 seconds.Add(UIPopupList_second.value);
-                string all = "";
-                foreach (var item in seconds)
-                {
-                    all += item + " ";
-                }
-                if (all == "")
-                {
-                    all = GameStringManager.get_unsafe(1310);
-                }
+                var all = "";
+                foreach (var item in seconds) all += item + " ";
+                if (all == "") all = GameStringManager.get_unsafe(1310);
                 UIPopupList_second.value = all;
             }
         }
@@ -548,12 +1203,12 @@ public class DeckManager : ServantWithCardDescription
         }
     }
 
-    void tempStep2()
+    private void tempStep2()
     {
         Program.notGo(printSecond);
     }
 
-    void onUIPopupList_main()
+    private void onUIPopupList_main()
     {
         UIPopupList_second.Clear();
         UIPopupList_second.AddItem(GameStringManager.get_unsafe(1310));
@@ -581,15 +1236,10 @@ public class DeckManager : ServantWithCardDescription
             UIPopupList_second.AddItem(GameStringManager.get_unsafe(1074));
             UIPopupList_second.AddItem(GameStringManager.get_unsafe(1075));
             UIPopupList_second.AddItem(GameStringManager.get_unsafe(1076));
-            for (int i = 1020; i <= 1044; i++)
-            {
-                UIPopupList_race.AddItem(GameStringManager.get_unsafe(i));
-            }
-            for (int i = 1010; i <= 1016; i++)
-            {
-                UIPopupList_attribute.AddItem(GameStringManager.get_unsafe(i));
-            }
+            for (var i = 1020; i <= 1044; i++) UIPopupList_race.AddItem(GameStringManager.get_unsafe(i));
+            for (var i = 1010; i <= 1016; i++) UIPopupList_attribute.AddItem(GameStringManager.get_unsafe(i));
         }
+
         if (UIPopupList_main.value == GameStringManager.get_unsafe(1313))
         {
             UIPopupList_second.AddItem(GameStringManager.get_unsafe(1054));
@@ -599,6 +1249,7 @@ public class DeckManager : ServantWithCardDescription
             UIPopupList_second.AddItem(GameStringManager.get_unsafe(1068));
             UIPopupList_second.AddItem(GameStringManager.get_unsafe(1069));
         }
+
         if (UIPopupList_main.value == GameStringManager.get_unsafe(1314))
         {
             UIPopupList_second.AddItem(GameStringManager.get_unsafe(1054));
@@ -607,16 +1258,16 @@ public class DeckManager : ServantWithCardDescription
         }
     }
 
-    void onClickSearch()
+    private void onClickSearch()
     {
         doSearch();
     }
 
-    int lastRefreshTime = 0;
+    private int lastRefreshTime;
 
-    string UIInput_searchValueLast = "";
+    private string UIInput_searchValueLast = "";
 
-    void doSearch()
+    private void doSearch()
     {
         superScrollView.toTop();
         Program.go(50, process);
@@ -624,300 +1275,205 @@ public class DeckManager : ServantWithCardDescription
 
     private void process()
     {
-        List<YGOSharp.Card> result = YGOSharp.CardsManager.searchAdvanced
-                    (
-                    getName(),
-                    getLevel(),
-                    getAttack(),
-                    getDefence(),
-                    getP(),
-                    getYear(),
-                    getLevel_UP(),
-                    getAttack_UP(),
-                    getDefence_UP(),
-                    getP_UP(),
-                    getYear_UP(),
-                    getOT(),
-                    getPack(),
-                    getBanFilter(),
-                    currentBanlist,
-                    getTypeFilter(),
-                    getTypeFilter2(),
-                    getRaceFilter(),
-                    getAttributeFilter(),
-                    getCatagoryFilter()
-                    );
+        var result = CardsManager.searchAdvanced
+        (
+            getName(),
+            getLevel(),
+            getAttack(),
+            getDefence(),
+            getP(),
+            getYear(),
+            getLevel_UP(),
+            getAttack_UP(),
+            getDefence_UP(),
+            getP_UP(),
+            getYear_UP(),
+            getOT(),
+            getPack(),
+            getBanFilter(),
+            currentBanlist,
+            getTypeFilter(),
+            getTypeFilter2(),
+            getRaceFilter(),
+            getAttributeFilter(),
+            getCatagoryFilter()
+        );
         print(result);
         UIHelper.trySetLableText(gameObjectSearch, "title_", result.Count.ToString());
         UIInput_search.isSelected = true;
     }
 
-    public YGOSharp.Banlist currentBanlist = null;
+    public Banlist currentBanlist;
 
-    bool checkBanlistAvail(int cardid)
+    private bool checkBanlistAvail(int cardid)
     {
         return deck.GetCardCount(cardid) < currentBanlist.GetQuantity(cardid);
     }
 
-    bool isBanned(int cardid)
+    private bool isBanned(int cardid)
     {
         return currentBanlist.GetQuantity(cardid) == 0;
     }
 
-    List<YGOSharp.Card> PrintedResult = new List<YGOSharp.Card>();
+    private List<Card> PrintedResult = new List<Card>();
 
-    void print(List<YGOSharp.Card> result)
+    private void print(List<Card> result)
     {
-        if (superScrollView!=null)
+        if (superScrollView != null)
         {
             PrintedResult = result;
-            if (condition == Condition.editDeck)
-            {
-                currentBanlist = YGOSharp.BanlistManager.GetByName(UIPopupList_banlist.value);
-            }
-            if (condition == Condition.changeSide)
-            {
-                currentBanlist = YGOSharp.BanlistManager.GetByHash(Program.I().room.lflist);
-            }
-            List<string[]> args = new List<string[]>();
+            if (condition == Condition.editDeck) currentBanlist = BanlistManager.GetByName(UIPopupList_banlist.value);
+            if (condition == Condition.changeSide) currentBanlist = BanlistManager.GetByHash(Program.I().room.lflist);
+            var args = new List<string[]>();
             foreach (var item in result)
             {
-                string[] arg = new string[5];
+                var arg = new string[5];
                 arg[0] = item.Id.ToString();
                 arg[1] = "3";
                 arg[2] = item.Name + "\n" + GameStringHelper.getSearchResult(item);
                 args.Add(arg);
             }
+
             superScrollView.print(args);
             superScrollView.toTop();
         }
     }
 
-    bool ifType(string str)
+    private bool ifType(string str)
     {
-        bool re = false;
-        foreach (var item in seconds)   
-        {
-            if (str==item)
+        var re = false;
+        foreach (var item in seconds)
+            if (str == item)
             {
                 re = true;
                 break;
             }
-        }
+
         return re;
     }
 
-    UInt32 getTypeFilter()
+    private uint getTypeFilter()
     {
-        UInt32 returnValue = 0;
-        if (UIPopupList_main.value == GameStringManager.get_unsafe(1312))
-        {
-            returnValue = (UInt32)CardType.Monster;
-        }
-        if (UIPopupList_main.value == GameStringManager.get_unsafe(1313))
-        {
-            returnValue = (UInt32)CardType.Spell;
-        }
-        if (UIPopupList_main.value == GameStringManager.get_unsafe(1314))
-        {
-            returnValue = (UInt32)CardType.Trap;
-        }
+        uint returnValue = 0;
+        if (UIPopupList_main.value == GameStringManager.get_unsafe(1312)) returnValue = (uint) CardType.Monster;
+        if (UIPopupList_main.value == GameStringManager.get_unsafe(1313)) returnValue = (uint) CardType.Spell;
+        if (UIPopupList_main.value == GameStringManager.get_unsafe(1314)) returnValue = (uint) CardType.Trap;
         return returnValue;
     }
 
-    UInt32 getTypeFilter2()
+    private uint getTypeFilter2()
     {
-        UInt32 returnValue = 0;
+        uint returnValue = 0;
         if (UIPopupList_main.value == GameStringManager.get_unsafe(1312))
         {
             if (ifType(GameStringManager.get_unsafe(1054)))
-            {
-                returnValue |= (UInt32)CardType.Monster + (UInt32)CardType.Normal;
-            }
+                returnValue |= (uint) CardType.Monster + (uint) CardType.Normal;
             if (ifType(GameStringManager.get_unsafe(1055)))
-            {
-                returnValue |= (UInt32)CardType.Monster + (UInt32)CardType.Effect;
-            }
+                returnValue |= (uint) CardType.Monster + (uint) CardType.Effect;
             if (ifType(GameStringManager.get_unsafe(1056)))
-            {
-                returnValue |= (UInt32)CardType.Monster + (UInt32)CardType.Fusion;
-            }
+                returnValue |= (uint) CardType.Monster + (uint) CardType.Fusion;
             if (ifType(GameStringManager.get_unsafe(1057)))
-            {
-                returnValue |= (UInt32)CardType.Monster + (UInt32)CardType.Ritual;
-            }
+                returnValue |= (uint) CardType.Monster + (uint) CardType.Ritual;
             if (ifType(GameStringManager.get_unsafe(1063)))
-            {
-                returnValue |= (UInt32)CardType.Monster + (UInt32)CardType.Synchro;
-            }
+                returnValue |= (uint) CardType.Monster + (uint) CardType.Synchro;
             if (ifType(GameStringManager.get_unsafe(1073)))
-            {
-                returnValue |= (UInt32)CardType.Monster + (UInt32)CardType.Xyz;
-            }
+                returnValue |= (uint) CardType.Monster + (uint) CardType.Xyz;
             if (ifType(GameStringManager.get_unsafe(1062)))
-            {
-                returnValue |= (UInt32)CardType.Monster + (UInt32)CardType.Tuner;
-            }
+                returnValue |= (uint) CardType.Monster + (uint) CardType.Tuner;
             if (ifType(GameStringManager.get_unsafe(1061)))
-            {
-                returnValue |= (UInt32)CardType.Monster + (UInt32)CardType.Dual;
-            }
+                returnValue |= (uint) CardType.Monster + (uint) CardType.Dual;
             if (ifType(GameStringManager.get_unsafe(1060)))
-            {
-                returnValue |= (UInt32)CardType.Monster + (UInt32)CardType.Union;
-            }
+                returnValue |= (uint) CardType.Monster + (uint) CardType.Union;
             if (ifType(GameStringManager.get_unsafe(1059)))
-            {
-                returnValue |= (UInt32)CardType.Monster + (UInt32)CardType.Spirit;
-            }
+                returnValue |= (uint) CardType.Monster + (uint) CardType.Spirit;
             if (ifType(GameStringManager.get_unsafe(1071)))
-            {
-                returnValue |= (UInt32)CardType.Monster + (UInt32)CardType.Flip;
-            }
+                returnValue |= (uint) CardType.Monster + (uint) CardType.Flip;
             if (ifType(GameStringManager.get_unsafe(1072)))
-            {
-                returnValue |= (UInt32)CardType.Monster + (UInt32)CardType.Toon;
-            }
+                returnValue |= (uint) CardType.Monster + (uint) CardType.Toon;
             if (ifType(GameStringManager.get_unsafe(1074)))
-            {
-                returnValue |= (UInt32)CardType.Monster + (UInt32)CardType.Pendulum;
-            }
+                returnValue |= (uint) CardType.Monster + (uint) CardType.Pendulum;
             if (ifType(GameStringManager.get_unsafe(1075)))
-            {
-                returnValue |= (UInt32)CardType.Monster + (UInt32)CardType.SpSummon;
-            }
+                returnValue |= (uint) CardType.Monster + (uint) CardType.SpSummon;
             if (ifType(GameStringManager.get_unsafe(1076)))
-            {
-                returnValue |= (UInt32)CardType.Monster + (UInt32)CardType.Link;
-            }
+                returnValue |= (uint) CardType.Monster + (uint) CardType.Link;
         }
+
         if (UIPopupList_main.value == GameStringManager.get_unsafe(1313))
         {
-            if (ifType(GameStringManager.get_unsafe(1054)))
-            {
-                returnValue |= (UInt32)CardType.Spell;
-            }
+            if (ifType(GameStringManager.get_unsafe(1054))) returnValue |= (uint) CardType.Spell;
             if (ifType(GameStringManager.get_unsafe(1066)))
-            {
-                returnValue |= (UInt32)CardType.Spell + (UInt32)CardType.QuickPlay;
-            }
+                returnValue |= (uint) CardType.Spell + (uint) CardType.QuickPlay;
             if (ifType(GameStringManager.get_unsafe(1067)))
-            {
-                returnValue |= (UInt32)CardType.Spell + (UInt32)CardType.Continuous;
-            }
+                returnValue |= (uint) CardType.Spell + (uint) CardType.Continuous;
             if (ifType(GameStringManager.get_unsafe(1057)))
-            {
-                returnValue |= (UInt32)CardType.Spell + (UInt32)CardType.Ritual;
-            }
+                returnValue |= (uint) CardType.Spell + (uint) CardType.Ritual;
             if (ifType(GameStringManager.get_unsafe(1068)))
-            {
-                returnValue |= (UInt32)CardType.Spell + (UInt32)CardType.Equip;
-            }
+                returnValue |= (uint) CardType.Spell + (uint) CardType.Equip;
             if (ifType(GameStringManager.get_unsafe(1069)))
-            {
-                returnValue |= (UInt32)CardType.Spell + (UInt32)CardType.Field;
-            }
+                returnValue |= (uint) CardType.Spell + (uint) CardType.Field;
         }
+
         if (UIPopupList_main.value == GameStringManager.get_unsafe(1314))
         {
-            if (ifType(GameStringManager.get_unsafe(1054)))
-            {
-                returnValue |= (UInt32)CardType.Trap;
-            }
+            if (ifType(GameStringManager.get_unsafe(1054))) returnValue |= (uint) CardType.Trap;
             if (ifType(GameStringManager.get_unsafe(1067)))
-            {
-                returnValue |= (UInt32)CardType.Trap + (UInt32)CardType.Continuous;
-            }
+                returnValue |= (uint) CardType.Trap + (uint) CardType.Continuous;
             if (ifType(GameStringManager.get_unsafe(1070)))
-            {
-                returnValue |= (UInt32)CardType.Trap + (UInt32)CardType.Counter;
-            }
+                returnValue |= (uint) CardType.Trap + (uint) CardType.Counter;
         }
+
         return returnValue;
     }
 
-    int getBanFilter()
+    private int getBanFilter()
     {
-        int returnValue = -233;
-        if (UIPopupList_ban.value == GameStringManager.get_unsafe(1316))
-        {
-            returnValue = 0;
-        }
-        if (UIPopupList_ban.value == GameStringManager.get_unsafe(1317))
-        {
-            returnValue = 1;
-        }
-        if (UIPopupList_ban.value == GameStringManager.get_unsafe(1318))
-        {
-            returnValue = 2;
-        }
+        var returnValue = -233;
+        if (UIPopupList_ban.value == GameStringManager.get_unsafe(1316)) returnValue = 0;
+        if (UIPopupList_ban.value == GameStringManager.get_unsafe(1317)) returnValue = 1;
+        if (UIPopupList_ban.value == GameStringManager.get_unsafe(1318)) returnValue = 2;
         return returnValue;
     }
 
-    int getOT()
+    private int getOT()
     {
-        int returnValue = -233;
-        if (UIPopupList_ban.value == GameStringManager.get_unsafe(1240))
-        {
-            returnValue = 1;
-        }
-        if (UIPopupList_ban.value == GameStringManager.get_unsafe(1241))
-        {
-            returnValue = 2;
-        }
-        if (UIPopupList_ban.value == GameStringManager.get_unsafe(1242))
-        {
-            returnValue = 3;
-        }
-        if (UIPopupList_ban.value == GameStringManager.get_unsafe(1243))
-        {
-            returnValue = 4;
-        }
+        var returnValue = -233;
+        if (UIPopupList_ban.value == GameStringManager.get_unsafe(1240)) returnValue = 1;
+        if (UIPopupList_ban.value == GameStringManager.get_unsafe(1241)) returnValue = 2;
+        if (UIPopupList_ban.value == GameStringManager.get_unsafe(1242)) returnValue = 3;
+        if (UIPopupList_ban.value == GameStringManager.get_unsafe(1243)) returnValue = 4;
         return returnValue;
     }
 
-    UInt32 getRaceFilter()
+    private uint getRaceFilter()
     {
-        UInt32 returnValue = 0;
-        for (int i = 0; i < 25; i++)
-        {
+        uint returnValue = 0;
+        for (var i = 0; i < 25; i++)
             if (UIPopupList_race.value == GameStringManager.get_unsafe(1020 + i))
-            {
-                returnValue |= (UInt32)Math.Pow(2, i);
-            }
-        }
+                returnValue |= (uint) Math.Pow(2, i);
         return returnValue;
     }
 
-    UInt32 getAttributeFilter()
+    private uint getAttributeFilter()
     {
-        UInt32 returnValue = 0;
-        for (int i = 0; i < 7; i++)
-        {
+        uint returnValue = 0;
+        for (var i = 0; i < 7; i++)
             if (UIPopupList_attribute.value == GameStringManager.get_unsafe(1010 + i))
-            {
-                returnValue |= (UInt32)Math.Pow(2, i);
-            }
-        }
+                returnValue |= (uint) Math.Pow(2, i);
         return returnValue;
     }
 
-    UInt32 getCatagoryFilter()
+    private uint getCatagoryFilter()
     {
-        UInt32 returnValue = 0;
-        for (int i = 0; i < 32; i++)
-        {
-            if (UIToggle_effects[i].value == true)
-            {
-                returnValue |= (UInt32)Math.Pow(2, i);
-            }
-        }
+        uint returnValue = 0;
+        for (var i = 0; i < 32; i++)
+            if (UIToggle_effects[i].value)
+                returnValue |= (uint) Math.Pow(2, i);
         return returnValue;
     }
 
-    int getAttack()
+    private int getAttack()
     {
-        int returnValue = 0;
+        var returnValue = 0;
         try
         {
             returnValue = int.Parse(UIHelper.getByName<UIInput>(gameObjectDetailedSearch, "atk_").value);
@@ -926,16 +1482,14 @@ public class DeckManager : ServantWithCardDescription
         {
             returnValue = -2;
         }
-        if (UIHelper.getByName<UIInput>(gameObjectDetailedSearch, "atk_").value == "")
-        {
-            returnValue = -233;
-        }
+
+        if (UIHelper.getByName<UIInput>(gameObjectDetailedSearch, "atk_").value == "") returnValue = -233;
         return returnValue;
     }
 
-    int getDefence()
+    private int getDefence()
     {
-        int returnValue = 0;
+        var returnValue = 0;
         try
         {
             returnValue = int.Parse(UIHelper.getByName<UIInput>(gameObjectDetailedSearch, "def_").value);
@@ -944,16 +1498,14 @@ public class DeckManager : ServantWithCardDescription
         {
             returnValue = -2;
         }
-        if (UIHelper.getByName<UIInput>(gameObjectDetailedSearch, "def_").value == "")
-        {
-            returnValue = -233;
-        }
+
+        if (UIHelper.getByName<UIInput>(gameObjectDetailedSearch, "def_").value == "") returnValue = -233;
         return returnValue;
     }
 
-    int getLevel()
+    private int getLevel()
     {
-        int returnValue = 0;
+        var returnValue = 0;
         try
         {
             returnValue = int.Parse(UIHelper.getByName<UIInput>(gameObjectDetailedSearch, "stars_").value);
@@ -962,16 +1514,14 @@ public class DeckManager : ServantWithCardDescription
         {
             returnValue = 0;
         }
-        if (UIHelper.getByName<UIInput>(gameObjectDetailedSearch, "stars_").value == "")
-        {
-            returnValue = -233;
-        }
+
+        if (UIHelper.getByName<UIInput>(gameObjectDetailedSearch, "stars_").value == "") returnValue = -233;
         return returnValue;
     }
 
-    int getP()
+    private int getP()
     {
-        int returnValue = 0;
+        var returnValue = 0;
         try
         {
             returnValue = int.Parse(UIHelper.getByName<UIInput>(gameObjectDetailedSearch, "p_").value);
@@ -980,16 +1530,14 @@ public class DeckManager : ServantWithCardDescription
         {
             returnValue = 0;
         }
-        if (UIHelper.getByName<UIInput>(gameObjectDetailedSearch, "p_").value == "")
-        {
-            returnValue = -233;
-        }
+
+        if (UIHelper.getByName<UIInput>(gameObjectDetailedSearch, "p_").value == "") returnValue = -233;
         return returnValue;
     }
 
-    int getYear()
+    private int getYear()
     {
-        int returnValue = 0;
+        var returnValue = 0;
         try
         {
             returnValue = int.Parse(UIHelper.getByName<UIInput>(gameObjectDetailedSearch, "year_").value);
@@ -998,16 +1546,14 @@ public class DeckManager : ServantWithCardDescription
         {
             returnValue = 0;
         }
-        if (UIHelper.getByName<UIInput>(gameObjectDetailedSearch, "year_").value == "")
-        {
-            returnValue = -233;
-        }
+
+        if (UIHelper.getByName<UIInput>(gameObjectDetailedSearch, "year_").value == "") returnValue = -233;
         return returnValue;
     }
 
-    int getAttack_UP()
+    private int getAttack_UP()
     {
-        int returnValue = 0;
+        var returnValue = 0;
         try
         {
             returnValue = int.Parse(UIHelper.getByName<UIInput>(gameObjectDetailedSearch, "atk_UP").value);
@@ -1016,16 +1562,14 @@ public class DeckManager : ServantWithCardDescription
         {
             returnValue = -2;
         }
-        if (UIHelper.getByName<UIInput>(gameObjectDetailedSearch, "atk_UP").value == "")
-        {
-            returnValue = -233;
-        }
+
+        if (UIHelper.getByName<UIInput>(gameObjectDetailedSearch, "atk_UP").value == "") returnValue = -233;
         return returnValue;
     }
 
-    int getDefence_UP()
+    private int getDefence_UP()
     {
-        int returnValue = 0;
+        var returnValue = 0;
         try
         {
             returnValue = int.Parse(UIHelper.getByName<UIInput>(gameObjectDetailedSearch, "def_UP").value);
@@ -1034,16 +1578,14 @@ public class DeckManager : ServantWithCardDescription
         {
             returnValue = -2;
         }
-        if (UIHelper.getByName<UIInput>(gameObjectDetailedSearch, "def_UP").value == "")
-        {
-            returnValue = -233;
-        }
+
+        if (UIHelper.getByName<UIInput>(gameObjectDetailedSearch, "def_UP").value == "") returnValue = -233;
         return returnValue;
     }
 
-    int getLevel_UP()
+    private int getLevel_UP()
     {
-        int returnValue = 0;
+        var returnValue = 0;
         try
         {
             returnValue = int.Parse(UIHelper.getByName<UIInput>(gameObjectDetailedSearch, "stars_UP").value);
@@ -1052,16 +1594,14 @@ public class DeckManager : ServantWithCardDescription
         {
             returnValue = 0;
         }
-        if (UIHelper.getByName<UIInput>(gameObjectDetailedSearch, "stars_UP").value == "")
-        {
-            returnValue = -233;
-        }
+
+        if (UIHelper.getByName<UIInput>(gameObjectDetailedSearch, "stars_UP").value == "") returnValue = -233;
         return returnValue;
     }
 
-    int getP_UP()
+    private int getP_UP()
     {
-        int returnValue = 0;
+        var returnValue = 0;
         try
         {
             returnValue = int.Parse(UIHelper.getByName<UIInput>(gameObjectDetailedSearch, "p_UP").value);
@@ -1070,16 +1610,14 @@ public class DeckManager : ServantWithCardDescription
         {
             returnValue = 0;
         }
-        if (UIHelper.getByName<UIInput>(gameObjectDetailedSearch, "p_UP").value == "")
-        {
-            returnValue = -233;
-        }
+
+        if (UIHelper.getByName<UIInput>(gameObjectDetailedSearch, "p_UP").value == "") returnValue = -233;
         return returnValue;
     }
 
-    int getYear_UP()
+    private int getYear_UP()
     {
-        int returnValue = 0;
+        var returnValue = 0;
         try
         {
             returnValue = int.Parse(UIHelper.getByName<UIInput>(gameObjectDetailedSearch, "year_UP").value);
@@ -1088,792 +1626,21 @@ public class DeckManager : ServantWithCardDescription
         {
             returnValue = 0;
         }
-        if (UIHelper.getByName<UIInput>(gameObjectDetailedSearch, "year_UP").value == "")
-        {
-            returnValue = -233;
-        }
+
+        if (UIHelper.getByName<UIInput>(gameObjectDetailedSearch, "year_UP").value == "") returnValue = -233;
         return returnValue;
     }
 
-    string getName()
+    private string getName()
     {
         return UIInput_search.value;
     }
 
-    string getPack()
+    private string getPack()
     {
-        if (UIPopupList_pack.value == GameStringManager.get_unsafe(1310))
-        {
-            return "";
-        }
+        if (UIPopupList_pack.value == GameStringManager.get_unsafe(1310)) return "";
         return UIPopupList_pack.value;
     }
 
     #endregion
-
-    GameObject gameObjectDesk = null;
-
-    number_loader main_unmber;
-
-    number_loader side_number;
-
-    number_loader extra_unmber;
-
-    number_loader m_unmber;
-
-    number_loader s_number;
-
-    number_loader t_unmber;
-
-    public override void show()
-    {
-        base.show();
-        Program.camera_game_main.transform.position = new Vector3(0, 35, 0);
-        Program.camera_game_main.transform.localEulerAngles = new Vector3(90, 0, 0);
-        cameraAngle = 90;
-        Program.cameraFacing = true;
-        Program.cameraPosition = Program.camera_game_main.transform.position;
-        camrem();
-        Program.I().light.transform.eulerAngles = new Vector3(50, 0, 0);
-        gameObjectDesk = create_s(Program.I().new_mod_tableInDeckManager);
-        gameObjectDesk.layer = 16;
-        gameObjectDesk.transform.position = new Vector3(0, 0, 0);
-        gameObjectDesk.transform.eulerAngles = new Vector3(90, 0, 0);
-        gameObjectDesk.transform.localScale = new Vector3(30, 30, 1);
-        gameObjectDesk.GetComponent<Renderer>().material.mainTexture = Program.GetTextureViaPath("texture/duel/deckTable.png");
-        //UIHelper.SetMaterialRenderingMode(gameObjectDesk.GetComponent<Renderer>().material, UIHelper.RenderingMode.Transparent);
-        Rigidbody rigidbody = gameObjectDesk.AddComponent<Rigidbody>();
-        rigidbody.useGravity = false;
-        rigidbody.isKinematic = true;
-        rigidbody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-        BoxCollider boxCollider = gameObjectDesk.AddComponent<BoxCollider>();
-        main_unmber = create_s(Program.I().mod_ocgcore_number, new Vector3(-16.5f, 0, 13.6f), new Vector3(90, 0, 0), true).GetComponent<number_loader>();
-        m_unmber = create_s(Program.I().mod_ocgcore_number, new Vector3(-16.5f, 0, 6.6f), new Vector3(90, 0, 0), true).GetComponent<number_loader>();
-        s_number = create_s(Program.I().mod_ocgcore_number, new Vector3(-16.5f, 0, 4.6f), new Vector3(90, 0, 0), true).GetComponent<number_loader>();
-        t_unmber = create_s(Program.I().mod_ocgcore_number, new Vector3(-16.5f, 0, 2.6f), new Vector3(90, 0, 0), true).GetComponent<number_loader>();
-        extra_unmber = create_s(Program.I().mod_ocgcore_number, new Vector3(-16.5f, 0, -5.3f), new Vector3(90, 0, 0), true).GetComponent<number_loader>();
-        side_number = create_s(Program.I().mod_ocgcore_number, new Vector3(-16.5f, 0, -11f), new Vector3(90, 0, 0), true).GetComponent<number_loader>();
-        switch (condition)  
-        {
-            case Condition.editDeck:
-                boxCollider.size = new Vector3(1, 1, 1);
-                break;
-            case Condition.changeSide:
-                boxCollider.size = new Vector3(100, 100, 1);
-                break;
-            default:
-                break;
-        }
-        clearAll();
-    }
-
-    public override void hide()
-    {
-        if (isShowed)
-        {
-            hideDetail();
-        }
-        for (int i = 0; i < deck.IMain.Count; i++)
-        {
-            destroyCard(deck.IMain[i]);
-        }
-        for (int i = 0; i < deck.IExtra.Count; i++)
-        {
-            destroyCard(deck.IExtra[i]);
-        }
-        for (int i = 0; i < deck.ISide.Count; i++)
-        {
-            destroyCard(deck.ISide[i]);
-        }
-        for (int i = 0; i < deck.IRemoved.Count; i++)
-        {
-            destroyCard(deck.IRemoved[i]);
-        }
-        deck = new YGOSharp.Deck();
-        deckDirty = false;
-        ((CardDescription)Program.I().cardDescription).setTitle("");
-        base.hide();
-    }
-
-    float cameraDistance = Vector3.Distance(new Vector3(0, 23f, -17.5f), Vector3.zero);
-
-    float cameraAngle = Mathf.Atan(23 / 17.5f);
-
-    public override void preFrameFunction()
-    {
-        base.preFrameFunction();
-        if (cardInDragging != null)
-        {
-            if (detailPanelShiftedTemp == false)
-            {
-                shiftDetailPanel(true);
-            }
-        }
-        else
-        {
-            if (detailPanelShiftedTemp == true)
-            {
-                shiftDetailPanel(false);
-            }
-        }
-        camrem();
-        if (Input.mousePosition.x < Screen.width - 280)
-        {
-            if (Input.mousePosition.x > 250)
-            {
-                cameraAngle += Program.wheelValue * 1.2f;
-                if (cameraAngle < 0f)
-                {
-                    cameraAngle = 0f;
-                }
-                if (cameraAngle > 90f)
-                {
-                    cameraAngle = 90f;
-                }
-            }
-        }
-        cameraDistance = 29 - 3.1415926f / 180f * (cameraAngle - 60f) * 13f;
-        Program.cameraPosition = new Vector3(0, cameraDistance * Mathf.Sin(3.1415926f / 180f * cameraAngle), -cameraDistance * Mathf.Cos(3.1415926f / 180f * cameraAngle));
-        if (Program.TimePassed() - lastRefreshTime > 80)
-        {
-            lastRefreshTime = Program.TimePassed();
-            FromObjectDeckToCodedDeck();
-            main_unmber.set_number(deck.Main.Count, 3);
-            side_number.set_number(deck.Side.Count, 4);
-            extra_unmber.set_number(deck.Extra.Count, 0);
-            int m = 0, s = 0, t = 0;
-            foreach (var item in deck.IMain)
-            {
-                if ((item.cardData.Type & (int)CardType.Monster) > 0) m++;
-                if ((item.cardData.Type & (int)CardType.Spell) > 0) s++;
-                if ((item.cardData.Type & (int)CardType.Trap) > 0) t++;
-            }
-            m_unmber.set_number(m, 1);
-            s_number.set_number(s, 2);
-            t_unmber.set_number(t, 5);
-        }
-        if (Program.InputEnterDown)
-        {
-            if (condition == Condition.editDeck)
-            {
-                onClickSearch();
-            }
-        }
-        if (Input.GetKeyDown(KeyCode.Tab) || Input.GetMouseButtonDown(2))
-        {
-            onClickDetail();
-        }
-    }
-
-    private void camrem()
-    {
-        float l = Program.I().cardDescription.width + ((float)Screen.width) * 0.03f;
-        float r = Screen.width - 230f;
-        if (detailShowed)
-        {
-            if (gameObjectDetailedSearch != null)
-            {
-                r -= 230 * gameObjectDetailedSearch.transform.localScale.x;
-            }
-        }
-        Program.reMoveCam((l + r) / 2f);
-    }
-
-    public override void ES_HoverOverGameObject(GameObject gameObject)
-    {
-        MonoCardInDeckManager cardInDeck = gameObject.GetComponent<MonoCardInDeckManager>();
-        if (cardInDeck != null)
-        {
-            ((CardDescription)(Program.I().cardDescription)).setData(cardInDeck.cardData, GameTextureManager.myBack);
-        }
-        cardPicLoader cardInSearchResult = gameObject.GetComponent<cardPicLoader>();
-        if (cardInSearchResult != null)
-        {
-            ((CardDescription)(Program.I().cardDescription)).setData(cardInSearchResult.data, GameTextureManager.myBack);
-        }
-    }
-
-    public MonoCardInDeckManager cardInDragging = null;
-    int timeLastDown = 0;
-    GameObject goLast = null;
-
-    public override void ES_mouseDownGameObject(GameObject gameObject)
-    {
-        bool doubleClick = false;
-        if (goLast == gameObject)
-        {
-            if (Program.TimePassed() - timeLastDown < 300)
-            {
-                doubleClick = true;
-            }
-        }
-        goLast = gameObject;
-        timeLastDown = Program.TimePassed();
-        MonoCardInDeckManager cardInDeck = gameObject.GetComponent<MonoCardInDeckManager>();
-        cardPicLoader cardInSearchResult = gameObject.GetComponent<cardPicLoader>();
-        if (cardInDeck != null && !cardInDeck.dying)
-        {
-            if (doubleClick && condition == Condition.editDeck && checkBanlistAvail(cardInDeck.cardData.Id))
-            {
-                MonoCardInDeckManager card = createCard();
-                card.transform.position = cardInDeck.transform.position;
-                cardInDeck.cardData.cloneTo(card.cardData);
-                card.gameObject.layer = 16;
-                deck.IMain.Add(card);
-                deckDirty = true;
-                ArrangeObjectDeck(true);
-                ShowObjectDeck();
-            }
-            else
-            {
-                cardInDragging = cardInDeck;
-                cardInDeck.beginDrag();
-            }
-        }
-        else if (cardInSearchResult != null)
-        {
-            if (condition == Condition.editDeck)
-            {
-                if (checkBanlistAvail(cardInSearchResult.data.Id))
-                {
-                    if ((cardInSearchResult.data.Type & (UInt32)CardType.Token) == 0)
-                    {
-                        MonoCardInDeckManager card = createCard();
-                        card.transform.position = card.getGoodPosition(4);
-                        card.cardData = cardInSearchResult.data;
-                        card.gameObject.layer = 16;
-                        deck.IMain.Add(card);
-                        cardInDragging = card;
-                        card.beginDrag();
-                    }
-                }
-            }
-        }
-    }
-
-    public override void ES_mouseUp()
-    {
-        if (cardInDragging != null)
-        {
-            if (Input.GetKey(KeyCode.LeftControl)|| Input.GetKey(KeyCode.RightControl))     
-            {
-                //
-            }
-            else
-            {
-                if (cardInDragging.getIfAlive())
-                    deckDirty = true;
-                ArrangeObjectDeck(true);
-                ShowObjectDeck();
-            }
-            cardInDragging.endDrag();
-            cardInDragging = null;
-        }
-    }
-
-    public override void ES_mouseUpRight()
-    {
-        if (Program.pointedGameObject != null)
-        {
-            if (condition == Condition.editDeck)
-            {
-                MonoCardInDeckManager cardInDeck = Program.pointedGameObject.GetComponent<MonoCardInDeckManager>();
-                if (cardInDeck != null)
-                {
-                    cardInDeck.killIt();
-                    ArrangeObjectDeck(true);
-                    ShowObjectDeck();
-                }
-                cardPicLoader cardInSearchResult = Program.pointedGameObject.GetComponent<cardPicLoader>();
-                if (cardInSearchResult != null)
-                {
-                    CreateMonoCard(cardInSearchResult.data);
-                    ShowObjectDeck();
-                }
-            }
-            else
-            {
-                MonoCardInDeckManager cardInDeck = Program.pointedGameObject.GetComponent<MonoCardInDeckManager>();
-                if (cardInDeck != null)
-                {
-                    bool isSide = false;
-                    for (int i = 0; i < deck.ISide.Count; i++)  
-                    {
-                        if (cardInDeck== deck.ISide[i])
-                        {
-                            isSide = true;
-                        }
-                    }
-                    if (isSide)
-                    {
-                        if (cardInDeck.cardData.IsExtraCard())
-                        {
-                            deck.IExtra.Add(cardInDeck);
-                            deck.ISide.Remove(cardInDeck);
-                        }
-                        else
-                        {
-                            deck.IMain.Add(cardInDeck);
-                            deck.ISide.Remove(cardInDeck);
-                        }
-                    }
-                    else
-                    {
-                        deck.ISide.Add(cardInDeck);
-                        deck.IMain.Remove(cardInDeck);
-                        deck.IExtra.Remove(cardInDeck);
-                    }
-                    ShowObjectDeck();
-                }
-            }
-        }
-    }
-
-    private void CreateMonoCard(YGOSharp.Card data)
-    {
-        if (checkBanlistAvail(data.Id))
-        {
-            MonoCardInDeckManager card = createCard();
-            card.transform.position = card.getGoodPosition(4);
-            card.cardData = data;
-            card.gameObject.layer = 16;
-            if (data.IsExtraCard())
-            {
-                deck.IExtra.Add(card);
-                deck.Extra.Add(card.cardData.Id);
-            }
-            else
-            {
-                deck.IMain.Add(card);
-                deck.Main.Add(card.cardData.Id);
-            }
-            deckDirty = true;
-        }
-    }
-
-    public YGOSharp.Deck deck = new YGOSharp.Deck();
-    public bool deckDirty = false;
-
-    public void loadDeckFromYDK(string path)
-    {
-        FromYDKtoCodedDeck(path, out deck);
-        FormCodedDeckToObjectDeck();
-        deckDirty = false;
-    }
-
-    public static void FromYDKtoCodedDeck(string path, out YGOSharp.Deck deck)
-    {
-        deck = new YGOSharp.Deck();
-        try
-        {
-            string text = System.IO.File.ReadAllText(path);
-            string st = text.Replace("\r", "");
-            string[] lines = st.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
-            int flag = -1;
-            foreach (string line in lines)
-            {
-                if (line == "#main")
-                {
-                    flag = 1;
-                }
-                else if (line == "#extra")
-                {
-                    flag = 2;
-                }
-                else if (line == "!side")
-                {
-                    flag = 3;
-                }
-                else
-                {
-                    int code = 0;
-                    try
-                    {
-                        code = Int32.Parse(line);
-                    }
-                    catch (Exception)
-                    {
-
-                    }
-                    if (code > 100)
-                    {
-                        YGOSharp.Card card = YGOSharp.CardsManager.Get(code);
-                        if (card.Id > 0 && flag != 3)
-                        {
-                            if (card.IsExtraCard())
-                            {
-                                deck.Extra.Add(code);
-                                deck.Deck_O.Extra.Add(code);
-                            }
-                            else
-                            {
-                                deck.Main.Add(code);
-                                deck.Deck_O.Main.Add(code);
-                            }
-                        }
-                        else
-                        switch (flag)
-                        {
-                            case 1:
-                                {
-                                    deck.Main.Add(code);
-                                    deck.Deck_O.Main.Add(code);
-                                }
-                                break;
-                            case 2:
-                                {
-                                    deck.Extra.Add(code);
-                                    deck.Deck_O.Extra.Add(code);
-                                }
-                                break;
-                            case 3:
-                                {
-                                    deck.Side.Add(code);
-                                    deck.Deck_O.Side.Add(code);
-                                }
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                }
-            }
-        }
-        catch (Exception e)
-        {
-        }
-    }
-
-    public YGOSharp.Deck getRealDeck()
-    {
-        if (canSave)
-        {
-            return deck;
-        }
-        else
-        {
-            YGOSharp.Deck r = new YGOSharp.Deck();
-            foreach (var item in deck.Deck_O.Main)  
-            {
-                r.Main.Add(item);
-                r.Deck_O.Main.Add(item);
-            }
-            foreach (var item in deck.Deck_O.Side)
-            {
-                r.Side.Add(item);
-                r.Deck_O.Side.Add(item);
-            }
-            foreach (var item in deck.Deck_O.Extra)
-            {
-                r.Extra.Add(item);
-                r.Deck_O.Extra.Add(item);
-            }
-            return r;   
-        }
-    }
-
-    void ArrangeObjectDeck(bool order = false)
-    {
-        var deckTemp = deck.getAllObjectCardAndDeload();
-        if (order)
-        {
-            deckTemp.Sort((left, right) =>
-            {
-                Vector3 leftPosition = left.gameObject.transform.position;
-                Vector3 rightPosition = right.gameObject.transform.position;
-                if (leftPosition.y > 3f)
-                {
-                    leftPosition = MonoCardInDeckManager.refLectPosition(leftPosition);
-                }
-                if (rightPosition.y > 3f)
-                {
-                    rightPosition = MonoCardInDeckManager.refLectPosition(rightPosition);
-                }
-                if (leftPosition.z > -3 && rightPosition.z > -3)
-                {
-                    float l = leftPosition.x + 1000f * (int)((13f - leftPosition.z) / 3.7f);
-                    float r = rightPosition.x + 1000f * (int)((13f - rightPosition.z) / 3.7f);
-                    if (l < r)
-                    {
-                        return -1;
-                    }
-                    else
-                    {
-                        return 1;
-                    }
-                }
-                else if (leftPosition.z > -3 && rightPosition.z < -3)
-                {
-                    return 1;
-                }
-                else if (leftPosition.z < -3 && rightPosition.z > -3)
-                {
-                    return -1;
-                }
-                else
-                {
-                    float l = leftPosition.x;
-                    float r = rightPosition.x;
-                    if (l < r)
-                    {
-                        return -1;
-                    }
-                    else
-                    {
-                        return 1;
-                    }
-                }
-            });
-        }
-        for (int i = 0; i < deckTemp.Count; i++)
-        {
-            Vector3 p = deckTemp[i].gameObject.transform.position;
-            if (deckTemp[i].getIfAlive() == true)
-            {
-                if (p.z > -8)
-                {
-                    if (deckTemp[i].cardData.IsExtraCard())
-                    {
-                        deck.IExtra.Add(deckTemp[i]);
-                    }
-                    else
-                    {
-                        deck.IMain.Add(deckTemp[i]);
-                    }
-                }
-                else
-                {
-                    deck.ISide.Add(deckTemp[i]);
-                }
-            }
-            else
-            {
-                deck.IRemoved.Add(deckTemp[i]);
-            }
-        }
-    }
-
-    void SortObjectDeck()
-    {
-        YGOSharp.Deck.sort((List<MonoCardInDeckManager>)deck.IMain);
-        YGOSharp.Deck.sort((List<MonoCardInDeckManager>)deck.IExtra);
-        YGOSharp.Deck.sort((List<MonoCardInDeckManager>)deck.ISide);
-        deckDirty = true;
-    }
-
-    void RandObjectDeck()
-    {
-        YGOSharp.Deck.rand((List<MonoCardInDeckManager>)deck.IMain);
-        deckDirty = true;
-    }
-
-
-
-    List<GameObject> diedCards = new List<GameObject>();
-
-    MonoCardInDeckManager createCard()
-    {
-        MonoCardInDeckManager r = null;
-        if (diedCards.Count>0)
-        {
-            r = diedCards[0].AddComponent<MonoCardInDeckManager>();
-            diedCards.RemoveAt(0);
-        }
-        if (r == null)
-        {
-            r = Program.I().create(Program.I().new_mod_cardInDeckManager).AddComponent<MonoCardInDeckManager>();
-            r.gameObject.transform.Find("back").gameObject.GetComponent<Renderer>().material.mainTexture = GameTextureManager.myBack;
-            r.gameObject.transform.Find("face").gameObject.GetComponent<Renderer>().material.mainTexture = GameTextureManager.myBack;
-        }
-        r.gameObject.transform.position = new Vector3(0, 5, 0);
-        r.gameObject.transform.eulerAngles = new Vector3(90, 0, 0);
-        r.gameObject.transform.localScale = new Vector3(0, 0, 0);
-        iTween.ScaleTo(r.gameObject, new Vector3(3, 4, 1), 0.4f);
-        r.gameObject.SetActive(true);
-        return r;
-    }
-
-    void destroyCard(MonoCardInDeckManager c)
-    {
-        try
-        {
-            c.gameObject.SetActive(false);
-            diedCards.Add(c.gameObject);
-            MonoBehaviour.DestroyImmediate(c);
-        }
-        catch (System.Exception e)
-        {
-            UnityEngine.Debug.Log(e);
-        }
-    }
-
-    bool canSave = false;
-
-    public void FormCodedDeckToObjectDeck()
-    {
-        canSave = false;
-        safeGogo(4000, () =>
-        {
-            canSave = true;
-        });
-        int indexOfLogic = 0;
-        int[] hangshu = UIHelper.get_decklieshuArray(deck.Main.Count);
-        foreach (var item in deck.Main) 
-        {
-            Vector2 v = UIHelper.get_hang_lieArry(indexOfLogic, hangshu);
-            Vector3 toVector = new Vector3(UIHelper.get_left_right_index(-12.5f, 12.5f, (int)v.y, hangshu[(int)v.x]), 0.5f + v.y / 3f + v.x / 3f, 11.8f - v.x * 4f);
-            YGOSharp.Card data = YGOSharp.CardsManager.Get(item);
-            safeGogo(indexOfLogic * 25, () =>
-            {
-                MonoCardInDeckManager card = createCard();
-                card.cardData = data;
-                card.gameObject.layer = 16;
-                deck.IMain.Add(card);
-                card.tweenToVectorAndFall(toVector,new Vector3(90,0,0));
-            });
-            indexOfLogic++;
-        }
-        indexOfLogic = 0;
-        foreach (var item in deck.Extra)
-        {
-            Vector3 toVector = new Vector3(UIHelper.get_left_right_indexZuo(-12.5f, 12.5f, indexOfLogic, deck.Extra.Count ,10), 0.5f + (float)indexOfLogic / 3f, -6.2f);
-            YGOSharp.Card data = YGOSharp.CardsManager.Get(item);
-            safeGogo(indexOfLogic * 90, () =>
-            {
-                MonoCardInDeckManager card = createCard();
-                card.cardData = data;
-                card.gameObject.layer = 16;
-                deck.IExtra.Add(card);
-                card.tweenToVectorAndFall(toVector, new Vector3(90, 0, 0));
-            });
-            indexOfLogic++;
-        }
-        indexOfLogic = 0;
-        foreach (var item in deck.Side)
-        {
-            Vector3 toVector = new Vector3(UIHelper.get_left_right_indexZuo(-12.5f, 12.5f, indexOfLogic, deck.Side.Count, 10), 0.5f + (float)indexOfLogic / 3f, -12f);
-            YGOSharp.Card data = YGOSharp.CardsManager.Get(item);
-            safeGogo(indexOfLogic * 90, () =>
-            {
-                MonoCardInDeckManager card = createCard();
-                card.cardData = data;
-                card.gameObject.layer = 16;
-                deck.ISide.Add(card);
-                card.tweenToVectorAndFall(toVector, new Vector3(90, 0, 0));
-            });
-            indexOfLogic++;
-        }
-    }
-
-    void ShowObjectDeck()
-    {
-        float k = (float)(1.5 * 0.1 / 0.130733633);
-        int[] hangshu = UIHelper.get_decklieshuArray(deck.IMain.Count);
-        for (int i = 0; i < deck.IMain.Count; i++)
-        {
-            Vector2 v = UIHelper.get_hang_lieArry(i, hangshu);
-            Vector3 toAngle = new Vector3(90, 0, 0);
-            if ((int)v.y > 0)
-            {
-                toAngle = new Vector3(87, -90, -90);
-                if (hangshu[(int)v.x] > 10)
-                {
-                    toAngle = new Vector3(87f - (hangshu[(int)v.x] - 10f) * 0.4f, -90, -90);
-                }
-            }
-            Vector3 toVector = new Vector3(UIHelper.get_left_right_indexZuo(-12.5f, 12.5f, (int)v.y, hangshu[(int)v.x], 10), 0.6f + Mathf.Sin((90 - toAngle.x) / 180f * Mathf.PI) * k, 11.8f - v.x * 4f);
-            deck.IMain[i].tweenToVectorAndFall(toVector, toAngle);
-        }
-        for (int i = 0; i < deck.IExtra.Count; i++)
-        {
-            Vector3 toAngle = new Vector3(90, 0, 0);
-            if (i > 0)
-            {
-                toAngle = new Vector3(87, -90, -90);
-                if (deck.IExtra.Count > 10)
-                {
-                    toAngle = new Vector3(87f - (deck.IExtra.Count - 10f) * 0.4f, -90, -90);
-                }
-            }
-            Vector3 toVector = new Vector3(UIHelper.get_left_right_indexZuo(-12.5f, 12.5f, i, deck.IExtra.Count, 10), 0.6f + Mathf.Sin((90 - toAngle.x) / 180f * Mathf.PI) * k, -6.2f);
-            deck.IExtra[i].tweenToVectorAndFall(toVector, toAngle);
-        }
-
-        for (int i = 0; i < deck.ISide.Count; i++)
-        {
-            Vector3 toAngle = new Vector3(90, 0, 0);
-            if (i > 0)
-            {
-                toAngle = new Vector3(87, -90, -90);
-                if (deck.ISide.Count > 10)
-                {
-                    toAngle = new Vector3(87f - (deck.ISide.Count - 10f) * 0.4f, -90, -90);
-                }
-            }
-            Vector3 toVector = new Vector3(UIHelper.get_left_right_indexZuo(-12.5f, 12.5f, i, deck.ISide.Count ,10), 0.6f + Mathf.Sin((90 - toAngle.x) / 180f * Mathf.PI) * k, -12f);
-            deck.ISide[i].tweenToVectorAndFall(toVector, toAngle);
-        }
-    }
-
-    public void FromObjectDeckToCodedDeck(bool order=false)
-    {
-        ArrangeObjectDeck(order);
-        deck.Main.Clear();
-        deck.Extra.Clear();
-        deck.Side.Clear();
-        foreach (var item in deck.IMain)
-        {
-            deck.Main.Add(item.cardData.Id);
-        }
-        foreach (var item in deck.IExtra)
-        {
-            deck.Extra.Add(item.cardData.Id);
-        }
-        foreach (var item in deck.ISide)
-        {
-            deck.Side.Add(item.cardData.Id);
-        }
-    }
-
-    public void setGoodLooking(bool side=false) 
-    {
-        try
-        {
-            ((CardDescription)(Program.I().cardDescription)).setData(YGOSharp.CardsManager.Get(deck.Main[0]), GameTextureManager.myBack);
-        }
-        catch (System.Exception e)
-        {
-            UnityEngine.Debug.Log(e);
-        }
-        if (side)   
-        {
-            List<YGOSharp.Card> result = new List<YGOSharp.Card>();
-            foreach (var item in Program.I().ocgcore.sideReference) 
-            {
-                result.Add(YGOSharp.CardsManager.Get(item.Value));
-            }
-            print(result);
-            UIHelper.trySetLableText(gameObjectSearch, "title_", result.Count.ToString());
-        }
-        else
-        {
-            UIHelper.trySetLableText(gameObjectSearch, "title_", InterString.Get("在此搜索卡片，拖动加入卡组"));
-        }
-        Program.go(50, superScrollView.toTop);
-        Program.go(100, superScrollView.toTop);
-        Program.go(200, superScrollView.toTop);
-        Program.go(300, superScrollView.toTop);
-        Program.go(400, superScrollView.toTop);
-        Program.go(500, superScrollView.toTop);
-        if (side)   
-        {
-            UIInput_search.value = InterString.Get("对手使用过的卡↓");
-            UIInput_search.isSelected = false;
-        }
-        else
-        {
-            UIInput_search.value = "";
-            UIInput_search.isSelected = true;
-        }
-    }
 }

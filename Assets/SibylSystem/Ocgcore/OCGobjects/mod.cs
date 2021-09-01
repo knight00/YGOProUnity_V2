@@ -1,9 +1,6 @@
-﻿using System;
-using UnityEngine;
-
-public class mod : OCGobject    
+﻿public class mod : OCGobject
 {
-    public mod()    
+    public mod()
     {
         Program.I().ocgcore.AddUpdateAction_s(Update);
     }
@@ -15,6 +12,5 @@ public class mod : OCGobject
 
     public void Update()
     {
-
     }
 }

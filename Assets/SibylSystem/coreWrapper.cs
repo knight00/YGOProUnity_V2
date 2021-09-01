@@ -1,84 +1,91 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using Meisui.Random;
 
 namespace Percy
 {
     #region DoNotCareAboutThis
-    class Deck
+
+    internal class Deck
     {
-        public List<int> Main = new List<int>();
         public List<int> Extra = new List<int>();
+        public List<int> Main = new List<int>();
         public List<int> Side = new List<int>();
     }
-    class Package
+
+    internal class Package
     {
-        public int Fuction = 0;
-        public BinaryMaster Data = null;
+        public BinaryMaster Data;
+        public int Fuction;
+
         public Package()
         {
-            Fuction = (int)0;
+            Fuction = 0;
             Data = new BinaryMaster();
         }
     }
-    class BinaryMaster
+
+    internal class BinaryMaster
     {
-        MemoryStream memstream = null;
-        public BinaryReader reader = null;
-        public BinaryWriter writer = null;
+        private MemoryStream memstream;
+        public BinaryReader reader;
+        public BinaryWriter writer;
+
         public BinaryMaster(byte[] raw = null)
         {
             if (raw == null)
-            {
                 memstream = new MemoryStream();
-            }
             else
-            {
                 memstream = new MemoryStream(raw);
-            }
             reader = new BinaryReader(memstream);
             writer = new BinaryWriter(memstream);
         }
+
         public void set(byte[] raw)
         {
             memstream = new MemoryStream(raw);
             reader = new BinaryReader(memstream);
             writer = new BinaryWriter(memstream);
         }
+
         public byte[] get()
         {
-            byte[] bytes = memstream.ToArray();
+            var bytes = memstream.ToArray();
             return bytes;
         }
+
         public int getLength()
         {
-            return (int)memstream.Length;
-        }
-        public override string ToString()
-        {
-            string return_value = "";
-            byte[] bytes = get();
-            for (int i = 0; i < bytes.Length; i++)
-            {
-                return_value += ((int)bytes[i]).ToString();
-                if (i < bytes.Length - 1) return_value += ",";
-            }
-            return return_value;
+            return (int) memstream.Length;
         }
 
+        public override string ToString()
+        {
+            var return_value = "";
+            var bytes = get();
+            for (var i = 0; i < bytes.Length; i++)
+            {
+                return_value += ((int) bytes[i]).ToString();
+                if (i < bytes.Length - 1) return_value += ",";
+            }
+
+            return return_value;
+        }
     }
-    class BinaryExtensions
+
+    internal class BinaryExtensions
     {
         public static byte[] ReadToEnd(BinaryReader reader)
         {
-            return reader.ReadBytes((int)(reader.BaseStream.Length - reader.BaseStream.Position));
+            return reader.ReadBytes((int) (reader.BaseStream.Length - reader.BaseStream.Position));
         }
     }
-    enum GameMessage
+
+    internal enum GameMessage
     {
         Retry = 1,
         Hint = 2,
@@ -174,9 +181,10 @@ namespace Percy
         PlayerHint = 165,
         MatchKill = 170,
         CustomMsg = 180,
-        DuelWinner = 200,
+        DuelWinner = 200
     }
-    enum CardLocation
+
+    internal enum CardLocation
     {
         Deck = 0x01,
         Hand = 0x02,
@@ -188,7 +196,8 @@ namespace Percy
         Overlay = 0x80,
         Onfield = 0x0C
     }
-    enum CardPosition
+
+    internal enum CardPosition
     {
         FaceUpAttack = 0x1,
         FaceDownAttack = 0x2,
@@ -199,6 +208,7 @@ namespace Percy
         Attack = 0x3,
         Defence = 0xC
     }
+
     public struct CardData
     {
         public int Code;
@@ -214,500 +224,178 @@ namespace Percy
         public int RScale;
         public int LinkMarker;
     }
+
     public struct ScriptData
     {
         public IntPtr buffer;
         public int len;
     }
-    unsafe static class dll
+
+    internal static unsafe class dll
     {
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        delegate IntPtr ScriptReader(String scriptName, Int32* len);
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        delegate UInt32 CardReader(UInt32 code, CardData* pData);
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        delegate UInt32 MessageHandler(IntPtr pDuel, UInt32 messageType);
+        private static smallYgopro.cardHandler card_handler;
+        private static smallYgopro.scriptHandler script_handler;
+        private static smallYgopro.chatHandler chat_handler;
+        private static readonly IntPtr _buffer_2 = Marshal.AllocHGlobal(65536);
+
         [DllImport("ocgcore", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        static extern void set_card_reader(CardReader f);
+        private static extern void set_card_reader(CardReader f);
+
         [DllImport("ocgcore", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        static extern void set_message_handler(MessageHandler f);
+        private static extern void set_message_handler(MessageHandler f);
+
         [DllImport("ocgcore", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        static extern void set_script_reader(ScriptReader f);
-        static smallYgopro.cardHandler card_handler;
+        private static extern void set_script_reader(ScriptReader f);
+
         public static void set_card_api(smallYgopro.cardHandler h)
         {
             card_handler = h;
             set_card_reader(OnCardReader);
         }
-        static smallYgopro.scriptHandler script_handler;
+
         public static void set_script_api(smallYgopro.scriptHandler h)
         {
             script_handler = h;
             set_script_reader(OnScriptHandler);
         }
+
         private static IntPtr OnScriptHandler(string scriptName, int* len)
         {
-            ScriptData ret = script_handler(scriptName);
+            var ret = script_handler(scriptName);
             *len = ret.len;
             return ret.buffer;
         }
-        static smallYgopro.chatHandler chat_handler;
+
         public static void set_chat_api(smallYgopro.chatHandler h)
         {
             chat_handler = h;
             set_message_handler(OnMessageHandler);
         }
-        private static UInt32 OnCardReader(UInt32 code, CardData* pData)
+
+        private static uint OnCardReader(uint code, CardData* pData)
         {
             *pData = card_handler(code);
             return code;
         }
-        static IntPtr _buffer_2 = Marshal.AllocHGlobal(65536);
-        private static UInt32 OnMessageHandler(IntPtr pDuel, UInt32 messageType)
+
+        private static uint OnMessageHandler(IntPtr pDuel, uint messageType)
         {
-            byte[] arr = new byte[256];
+            var arr = new byte[256];
             get_log_message(pDuel, _buffer_2);
             Marshal.Copy(_buffer_2, arr, 0, 256);
-            string message = System.Text.Encoding.UTF8.GetString(arr);
+            var message = Encoding.UTF8.GetString(arr);
             if (message.Contains("\0"))
                 message = message.Substring(0, message.IndexOf('\0'));
             chat_handler(message);
             return 0;
         }
+
         [DllImport("ocgcore", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr create_duel(UInt32 seed);
+        public static extern IntPtr create_duel(uint seed);
+
         [DllImport("ocgcore", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void start_duel(IntPtr pduel, Int32 options);
+        public static extern void start_duel(IntPtr pduel, int options);
+
         [DllImport("ocgcore", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern Int32 get_ai_going_first_second(IntPtr pduel, IntPtr deckname);
+        public static extern int get_ai_going_first_second(IntPtr pduel, IntPtr deckname);
+
         [DllImport("ocgcore", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern Int32 set_player_going_first_second(IntPtr pduel, Int32 first, IntPtr deckname);
+        public static extern int set_player_going_first_second(IntPtr pduel, int first, IntPtr deckname);
+
         [DllImport("ocgcore", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
         public static extern void set_ai_id(IntPtr pduel, int playerid);
+
         [DllImport("ocgcore", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
         public static extern void end_duel(IntPtr pduel);
+
         [DllImport("ocgcore", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void set_player_info(IntPtr pduel, Int32 playerid, Int32 lp, Int32 startcount, Int32 drawcount);
+        public static extern void set_player_info(IntPtr pduel, int playerid, int lp, int startcount, int drawcount);
+
         [DllImport("ocgcore", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void new_card(IntPtr pduel, UInt32 code, Byte owner, Byte playerid, Byte location, Byte sequence, Byte position);
+        public static extern void new_card(IntPtr pduel, uint code, byte owner, byte playerid, byte location,
+            byte sequence, byte position);
+
         [DllImport("ocgcore", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void new_tag_card(IntPtr pduel, UInt32 code, Byte owner, Byte location);
+        public static extern void new_tag_card(IntPtr pduel, uint code, byte owner, byte location);
+
         [DllImport("ocgcore", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern Int32 process(IntPtr pduel);
+        public static extern int process(IntPtr pduel);
+
         [DllImport("ocgcore", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern Int32 get_message(IntPtr pduel, IntPtr buf);
+        public static extern int get_message(IntPtr pduel, IntPtr buf);
+
         [DllImport("ocgcore", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
         public static extern void get_log_message(IntPtr pduel, IntPtr buf);
+
         [DllImport("ocgcore", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
         public static extern void set_responseb(IntPtr pduel, IntPtr buf);
+
         [DllImport("ocgcore", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void set_responsei(IntPtr pduel, UInt32 value);
+        public static extern void set_responsei(IntPtr pduel, uint value);
+
         [DllImport("ocgcore", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern Int32 query_card(IntPtr pduel, Byte playerid, Byte location, Byte sequence, Int32 queryFlag, IntPtr buf, Int32 useCache);
+        public static extern int query_card(IntPtr pduel, byte playerid, byte location, byte sequence, int queryFlag,
+            IntPtr buf, int useCache);
+
         [DllImport("ocgcore", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern Int32 query_field_count(IntPtr pduel, Byte playerid, Byte location);
+        public static extern int query_field_count(IntPtr pduel, byte playerid, byte location);
+
         [DllImport("ocgcore", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern Int32 query_field_card(IntPtr pduel, Byte playerid, Byte location, Int32 queryFlag, IntPtr buf, Int32 useCache);
+        public static extern int query_field_card(IntPtr pduel, byte playerid, byte location, int queryFlag, IntPtr buf,
+            int useCache);
+
         [DllImport("ocgcore", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern Int32 query_field_info(IntPtr pduel, IntPtr buf);
+        public static extern int query_field_info(IntPtr pduel, IntPtr buf);
+
         [DllImport("ocgcore", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern Int32 preload_script(IntPtr pduel, IntPtr script, Int32 len);
+        public static extern int preload_script(IntPtr pduel, IntPtr script, int len);
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate IntPtr ScriptReader(string scriptName, int* len);
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate uint CardReader(uint code, CardData* pData);
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate uint MessageHandler(IntPtr pDuel, uint messageType);
     }
+
     #endregion
+
     public class smallYgopro
     {
-        #region DoNotCareAboutThis
-
-        //public
-        public delegate CardData cardHandler(long code);
-        public delegate ScriptData scriptHandler(string name);
-        public delegate void chatHandler(string str);
-        chatHandler cast;
-
-        public Action<string> m_log;        
-
-        void DebugLog(string obj) 
-        {
-            if (m_log != null)  
-            {
-                m_log(obj);
-            }
-        }
-
-        public smallYgopro(Action<byte[]> HowToSendBufferToPlayer,cardHandler HowToReadCard, scriptHandler HowToReadScript,chatHandler HowToShowLog)
-        {
-            sendToPlayer = HowToSendBufferToPlayer;
-            dll.set_card_api(HowToReadCard);
-            dll.set_script_api(HowToReadScript);
-            dll.set_chat_api(HowToShowLog);
-            cast = HowToShowLog;
-            Random ran = new Random(Environment.TickCount);
-            duel = dll.create_duel((UInt32)ran.Next(100, 99999));
-        }
-
-        public void dispose()
-        {
-            dll.end_duel(duel);
-            Random ran = new Random(Environment.TickCount);
-            duel =dll.create_duel((UInt32)ran.Next(100, 99999));
-        }
-
-        public bool startPuzzle(System.String path)
-        {
-            godMode = true;
-            isFirst = true;
-           dll.set_player_info(duel, 0, 8000, 5, 1);
-           dll.set_player_info(duel, 1, 8000, 5, 1);
-            var reult = 0;
-            for (int i = 0; i < 10; i++)
-            {
-                reult =dll.preload_script(duel, getPtrString(path), 0);
-                if (reult > 0)
-                {
-                    break;
-                }
-            }
-            if (reult == 0)
-            {
-                return false;
-            }
-           dll.start_duel(duel, 0);
-            Refresh();
-            (new Thread(Process)).Start();
-            return true;
-        }
-
-        public bool startAI(string playerDek, string aiDeck, string aiScript, bool playerGoFirst, bool unrand, int life, bool god,int mr)
-        {
-            godMode = god;
-            isFirst = playerGoFirst;
-           dll.set_player_info(duel, 0, life, 5, 1);
-           dll.set_player_info(duel, 1, life, 5, 1);
-            var reult = 0;
-            for (int i = 0; i < 10; i++)
-            {
-                reult =dll.preload_script(duel, getPtrString(aiScript), 0);
-                if (reult > 0)
-                {
-                    break;
-                }
-            }
-            if (reult == 0)
-            {
-                return false;
-            }
-            addDeck(playerDek, (playerGoFirst ? 0 : 1), !unrand);
-            addDeck(aiDeck, (playerGoFirst ? 1 : 0), true);
-           dll.set_ai_id(duel, playerGoFirst ? 1 : 0);
-            int opt = 0;
-            opt |= 0x80;
-            if (unrand)
-            {
-                opt |= 0x10;
-            }
-            BinaryMaster master = new BinaryMaster();
-            master.writer.Write((char)GameMessage.Start);
-            master.writer.Write((byte)(playerGoFirst ? 0xf0 : 0xff));
-            master.writer.Write((int)life);
-            master.writer.Write((int)life);
-            master.writer.Write((UInt16)dll.query_field_count(duel, 0, 0x1));
-            master.writer.Write((UInt16)dll.query_field_count(duel, 0, 0x40));
-            master.writer.Write((UInt16)dll.query_field_count(duel, 1, 0x1));
-            master.writer.Write((UInt16)dll.query_field_count(duel, 1, 0x40));
-            sendToPlayer(master.get());
-            dll.start_duel(duel, (opt | (mr << 16)));
-            Refresh();
-            (new Thread(Process)).Start();
-            return true;
-        }
-
-        public void response(byte[] resp)
-        {
-            if (resp.Length > 64) return;
-            IntPtr buf = Marshal.AllocHGlobal(64);
-            Marshal.Copy(resp, 0, buf, resp.Length);
-           dll.set_responseb(duel, buf);
-            Marshal.FreeHGlobal(buf);
-            (new Thread(Process)).Start();
-        }
-
-        //private
-
-        private IntPtr _buffer = Marshal.AllocHGlobal(4096);
-
-        private IntPtr duel = default(IntPtr);
-
-        private Action<byte[]> sendToPlayer;
-
-        private bool godMode = false;
-
-        private IntPtr getPtrString(string path)
-        {
-            byte[] s = System.Text.Encoding.UTF8.GetBytes(path);
-            IntPtr ptrFileName = Marshal.AllocHGlobal(s.Length + 1);
-            Marshal.Copy(s, 0, ptrFileName, s.Length);
-            return ptrFileName;
-        }
-
-        private Deck FromYDKtoDeck(string path)
-        {
-            Deck deck = new Deck();
-            try
-            {
-                string text = System.IO.File.ReadAllText(path);
-                string st = text.Replace("\r", "");
-                string[] lines = st.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
-                int flag = -1;
-                foreach (string line in lines)
-                {
-                    if (line == "#main")
-                    {
-                        flag = 1;
-                    }
-                    else if (line == "#extra")
-                    {
-                        flag = 2;
-                    }
-                    else if (line == "!side")
-                    {
-                        flag = 3;
-                    }
-                    else
-                    {
-                        int code = 0;
-                        try
-                        {
-                            code = Int32.Parse(line);
-                        }
-                        catch (Exception)
-                        {
-
-                        }
-                        if (code > 100)
-                        {
-                            switch (flag)
-                            {
-                                case 1:
-                                    {
-                                        deck.Main.Add(code);
-                                    }
-                                    break;
-                                case 2:
-                                    {
-                                        deck.Extra.Add(code);
-                                    }
-                                    break;
-                                case 3:
-                                    {
-                                        deck.Side.Add(code);
-                                    }
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-            }
-            return deck;
-        }
-
-        private void addDeck(string playerDek, int playerId, bool rand)
-        {
-            var deck_player = FromYDKtoDeck(playerDek);
-            if (rand)
-            {
-                System.Random seed = new System.Random();
-                for (int i = 0; i < deck_player.Main.Count; i++)
-                {
-                    int random_index = seed.Next() % deck_player.Main.Count;
-                    var t = deck_player.Main[i];
-                    deck_player.Main[i] = deck_player.Main[random_index];
-                    deck_player.Main[random_index] = t;
-                }
-            }
-            for (int i = deck_player.Main.Count - 1; i >= 0; i--)
-            {
-               dll.new_card(duel, (uint)deck_player.Main[i],
-                    (byte)playerId, (byte)playerId, (byte)CardLocation.Deck, 0, (byte)CardPosition.FaceDownDefence);
-            }
-            for (int i = 0; i < deck_player.Extra.Count; i++)
-            {
-               dll.new_card(duel, (uint)deck_player.Extra[i],
-                    (byte)playerId, (byte)playerId, (byte)CardLocation.Extra, 0, (byte)CardPosition.FaceDownDefence);
-            }
-        }
-
-        void sendToYrp(byte[] buffer)
-        {
-            yrp3dbuilder.Write(buffer[0]);
-            yrp3dbuilder.Write(buffer.Length-1);
-            for (int i = 1; i < buffer.Length; i++) 
-            {
-                yrp3dbuilder.Write(buffer[i]);
-            }
-        }
-
-        BinaryWriter yrp3dbuilder;
-        public byte[] getYRP3dBuffer(YRP yrp)
-        {
-            var tempS = sendToPlayer;
-            sendToPlayer = sendToYrp;
-            MemoryStream stream = new MemoryStream();
-            yrp3dbuilder = new BinaryWriter(stream);
-            sendToPlayer(yrp.getNamePacket());
-            dll.end_duel(duel);
-            Meisui.Random.MersenneTwister mtrnd = new Meisui.Random.MersenneTwister(yrp.Seed);
-            duel = dll.create_duel(mtrnd.genrand_Int32());
-            godMode = true;
-            isFirst = true;
-            dll.set_player_info(duel, 0, yrp.StartLp, yrp.StartHand, yrp.DrawCount);
-            dll.set_player_info(duel, 1, yrp.StartLp, yrp.StartHand, yrp.DrawCount);
-            if (yrp.playerData.Count == 4)
-            {
-                foreach (var item in yrp.playerData[0].main)
-                {
-                    dll.new_card(duel, (uint)item, (byte)0, (byte)0, (byte)CardLocation.Deck, 0, (byte)CardPosition.FaceDownDefence);
-                }
-                foreach (var item in yrp.playerData[0].extra)
-                {
-                    dll.new_card(duel, (uint)item, (byte)0, (byte)0, (byte)CardLocation.Extra, 0, (byte)CardPosition.FaceDownDefence);
-                }
-                foreach (var item in yrp.playerData[1].main)
-                {
-                    dll.new_tag_card(duel, (uint)item, (byte)0, (byte)CardLocation.Deck);
-                }
-                foreach (var item in yrp.playerData[1].extra)
-                {
-                    dll.new_tag_card(duel, (uint)item, (byte)0, (byte)CardLocation.Extra);
-                }
-
-                foreach (var item in yrp.playerData[2].main)
-                {
-                    dll.new_card(duel, (uint)item, (byte)1, (byte)1, (byte)CardLocation.Deck, 0, (byte)CardPosition.FaceDownDefence);
-                }
-                foreach (var item in yrp.playerData[2].extra)
-                {
-                    dll.new_card(duel, (uint)item, (byte)1, (byte)1, (byte)CardLocation.Extra, 0, (byte)CardPosition.FaceDownDefence);
-                }
-                foreach (var item in yrp.playerData[3].main)
-                {
-                    dll.new_tag_card(duel, (uint)item, (byte)1, (byte)CardLocation.Deck);
-                }
-                foreach (var item in yrp.playerData[3].extra)
-                {
-                    dll.new_tag_card(duel, (uint)item, (byte)1, (byte)CardLocation.Extra);
-                }
-            }
-            else
-            {
-                foreach (var item in yrp.playerData[0].main)
-                {
-                    dll.new_card(duel, (uint)item, (byte)0, (byte)0, (byte)CardLocation.Deck, 0, (byte)CardPosition.FaceDownDefence);
-                }
-                foreach (var item in yrp.playerData[0].extra)
-                {
-                    dll.new_card(duel, (uint)item, (byte)0, (byte)0, (byte)CardLocation.Extra, 0, (byte)CardPosition.FaceDownDefence);
-                }
-
-                foreach (var item in yrp.playerData[1].main)
-                {
-                    dll.new_card(duel, (uint)item, (byte)1, (byte)1, (byte)CardLocation.Deck, 0, (byte)CardPosition.FaceDownDefence);
-                }
-                foreach (var item in yrp.playerData[1].extra)
-                {
-                    dll.new_card(duel, (uint)item, (byte)1, (byte)1, (byte)CardLocation.Extra, 0, (byte)CardPosition.FaceDownDefence);
-                }
-            }
-            BinaryMaster master = new BinaryMaster();
-            master.writer.Write((char)GameMessage.Start);
-            master.writer.Write((byte)0);
-            master.writer.Write((byte)(yrp.opt >> 16));
-            master.writer.Write(yrp.StartLp);
-            master.writer.Write(yrp.StartLp);
-            master.writer.Write((UInt16)dll.query_field_count(duel, 0, 0x1));
-            master.writer.Write((UInt16)dll.query_field_count(duel, 0, 0x40));
-            master.writer.Write((UInt16)dll.query_field_count(duel, 1, 0x1));
-            master.writer.Write((UInt16)dll.query_field_count(duel, 1, 0x40));
-            sendToPlayer(master.get());
-            dll.start_duel(duel, yrp.opt);
-            Refresh();
-            end = false;
-            err = false;
-            try
-            {
-                while (true)
-                {
-                    //log("process");
-                    Process();
-                    if (yrp.gameData.Count==0)  
-                    {
-                        break;
-                    }
-                    if (yrp.gameData[0].Length > 64) break;
-                    IntPtr buf = Marshal.AllocHGlobal(64);
-                    Marshal.Copy(yrp.gameData[0], 0, buf, yrp.gameData[0].Length);
-                    dll.set_responseb(duel, buf);
-                    Marshal.FreeHGlobal(buf);
-                    DebugLog("Push:  "+BitConverter.ToString(yrp.gameData[0]));
-                    yrp.gameData.RemoveAt(0);
-                    if (end)    
-                    {
-                        break;
-                    }
-                }
-            }
-            catch (Exception) 
-            {
-            }
-            if (err)    
-            {
-                if (cast != null)
-                {
-                    cast("Error Occurred.");
-                }
-            }
-
-            dispose();
-            sendToPlayer = tempS;
-            yrp3dbuilder.Close();
-            stream.Close();
-            return stream.ToArray();
-        }
-
-        #endregion
-
         //you can edit all codes safely after this line 
 
         //the HintInGame will be showed in ai mode window
         public static string HintInGame = "PercyAI Pro2Team 1033.D";
 
-        void Process()
+        private BinaryReader currentReader;
+
+        private BinaryWriter currentWriter;
+
+        private bool end;
+        private bool err;
+
+        private bool isFirst = true;
+
+        private void Process()
         {
             while (true)
             {
-                int result =dll.process(duel);
-                int len = result & 0xFFFF;
+                var result = dll.process(duel);
+                var len = result & 0xFFFF;
                 if (len > 0)
                 {
-                    byte[] arr = new byte[4096];
-                   dll.get_message(duel, _buffer);
+                    var arr = new byte[4096];
+                    dll.get_message(duel, _buffer);
                     Marshal.Copy(_buffer, arr, 0, 4096);
-                    bool breakOut = false;
-                    MemoryStream stream = new MemoryStream(arr);
-                    BinaryReader reader = new BinaryReader(stream);
+                    var breakOut = false;
+                    var stream = new MemoryStream(arr);
+                    var reader = new BinaryReader(stream);
                     while (stream.Position < len)
-                    {
                         //log("Analyse");
                         breakOut = Analyse(reader);
-                    }
-                    if (breakOut)
-                    {
-                        break;
-                    }
+                    if (breakOut) break;
                 }
                 //else
                 //{
@@ -718,67 +406,42 @@ namespace Percy
             }
         }
 
-        BinaryReader currentReader;
-
-        BinaryWriter currentWriter;
-
-        int move(int length, bool erase = false)
+        private int move(int length, bool erase = false)
         {
-            int returnValue = 0;
+            var returnValue = 0;
             if (length > 0)
-            {
                 if (currentReader != null)
-                {
                     if (currentWriter != null)
-                    {
                         try
                         {
-                            byte[] readed = currentReader.ReadBytes(length);
-                            if (readed.Length > 0)
-                            {
-                                returnValue = readed[0];
-                            }
+                            var readed = currentReader.ReadBytes(length);
+                            if (readed.Length > 0) returnValue = readed[0];
                             if (erase)
-                            {
-                                for (int i = 0; i < length; i++)
-                                {
-                                    currentWriter.Write((byte)0);
-                                }
-                            }
+                                for (var i = 0; i < length; i++)
+                                    currentWriter.Write((byte) 0);
                             else
-                            {
                                 currentWriter.Write(readed);
-                            }
                         }
                         catch (Exception e)
                         {
                         }
-                    }
-                }
-            }
+
             return returnValue;
         }
 
-        void flush()
+        private void flush()
         {
-            sendToPlayer(((MemoryStream)currentWriter.BaseStream).ToArray());
+            sendToPlayer(((MemoryStream) currentWriter.BaseStream).ToArray());
         }
 
-        bool isFirst = true;
-
-        int localPlayer(int p)
+        private int localPlayer(int p)
         {
             if (isFirst)
-            {
                 return p;
-            }
-            else
-            {
-                return 1 - p;
-            }
+            return 1 - p;
         }
 
-        void Refresh()
+        private void Refresh()
         {
             if (godMode)
             {
@@ -826,35 +489,35 @@ namespace Percy
             }
         }
 
-        byte[] QueryFieldCard(int player, CardLocation location, int flag, bool useCache)
+        private byte[] QueryFieldCard(int player, CardLocation location, int flag, bool useCache)
         {
-            int len =dll.query_field_card(duel, (byte)player, (byte)location, flag, _buffer, useCache ? 1 : 0);
-            byte[] result = new byte[len];
+            var len = dll.query_field_card(duel, (byte) player, (byte) location, flag, _buffer, useCache ? 1 : 0);
+            var result = new byte[len];
             Marshal.Copy(_buffer, result, 0, len);
             return result;
         }
 
-        void RefreshMonsters(int player, int flag = 0x81fff | 0x10000)
+        private void RefreshMonsters(int player, int flag = 0x81fff | 0x10000)
         {
-            byte[] result = QueryFieldCard(player, CardLocation.MonsterZone, flag, false);
+            var result = QueryFieldCard(player, CardLocation.MonsterZone, flag, false);
             var binary = new BinaryMaster();
-            binary.writer.Write((byte)GameMessage.UpdateData);
-            binary.writer.Write((byte)player);
-            binary.writer.Write((byte)CardLocation.MonsterZone);
+            binary.writer.Write((byte) GameMessage.UpdateData);
+            binary.writer.Write((byte) player);
+            binary.writer.Write((byte) CardLocation.MonsterZone);
 
-            MemoryStream ms = new MemoryStream(result);
-            BinaryReader reader = new BinaryReader(ms);
-            for (int i = 0; i < 7; i++)
+            var ms = new MemoryStream(result);
+            var reader = new BinaryReader(ms);
+            for (var i = 0; i < 7; i++)
             {
-                int len = reader.ReadInt32();
+                var len = reader.ReadInt32();
                 if (len == 4)
                 {
                     binary.writer.Write(4);
                     continue;
                 }
 
-                byte[] raw = reader.ReadBytes(len - 4);
-                if ((raw[11] & (int)CardPosition.FaceDown) != 0 && godMode == false && localPlayer(player) != 0)
+                var raw = reader.ReadBytes(len - 4);
+                if ((raw[11] & (int) CardPosition.FaceDown) != 0 && godMode == false && localPlayer(player) != 0)
                 {
                     binary.writer.Write(8);
                     binary.writer.Write(0);
@@ -869,27 +532,27 @@ namespace Percy
             sendToPlayer(binary.get());
         }
 
-        void RefreshSpells(int player, int flag = 0x681fff)
+        private void RefreshSpells(int player, int flag = 0x681fff)
         {
-            byte[] result = QueryFieldCard(player, CardLocation.SpellZone, flag, false);
+            var result = QueryFieldCard(player, CardLocation.SpellZone, flag, false);
             var binary = new BinaryMaster();
-            binary.writer.Write((byte)GameMessage.UpdateData);
-            binary.writer.Write((byte)player);
-            binary.writer.Write((byte)CardLocation.SpellZone);
+            binary.writer.Write((byte) GameMessage.UpdateData);
+            binary.writer.Write((byte) player);
+            binary.writer.Write((byte) CardLocation.SpellZone);
 
-            MemoryStream ms = new MemoryStream(result);
-            BinaryReader reader = new BinaryReader(ms);
-            for (int i = 0; i < 8; i++)
+            var ms = new MemoryStream(result);
+            var reader = new BinaryReader(ms);
+            for (var i = 0; i < 8; i++)
             {
-                int len = reader.ReadInt32();
+                var len = reader.ReadInt32();
                 if (len == 4)
                 {
                     binary.writer.Write(4);
                     continue;
                 }
 
-                byte[] raw = reader.ReadBytes(len - 4);
-                if ((raw[11] & (int)CardPosition.FaceDown) != 0 && godMode == false && localPlayer(player) != 0)
+                var raw = reader.ReadBytes(len - 4);
+                if ((raw[11] & (int) CardPosition.FaceDown) != 0 && godMode == false && localPlayer(player) != 0)
                 {
                     binary.writer.Write(8);
                     binary.writer.Write(0);
@@ -900,75 +563,74 @@ namespace Percy
                     binary.writer.Write(raw);
                 }
             }
+
             sendToPlayer(binary.get());
         }
 
-        void RefreshHand(int player, int flag = 0x181fff)
+        private void RefreshHand(int player, int flag = 0x181fff)
         {
-            byte[] result = QueryFieldCard(player, CardLocation.Hand, flag, false);
+            var result = QueryFieldCard(player, CardLocation.Hand, flag, false);
             var binary = new BinaryMaster();
-            binary.writer.Write((byte)GameMessage.UpdateData);
-            binary.writer.Write((byte)player);
-            binary.writer.Write((byte)CardLocation.Hand);
+            binary.writer.Write((byte) GameMessage.UpdateData);
+            binary.writer.Write((byte) player);
+            binary.writer.Write((byte) CardLocation.Hand);
             binary.writer.Write(result);
             sendToPlayer(binary.get());
         }
 
-        void RefreshGrave(int player, int flag = 0x81fff)
+        private void RefreshGrave(int player, int flag = 0x81fff)
         {
-            byte[] result = QueryFieldCard(player, CardLocation.Grave, flag, false);
+            var result = QueryFieldCard(player, CardLocation.Grave, flag, false);
             var binary = new BinaryMaster();
-            binary.writer.Write((byte)GameMessage.UpdateData);
-            binary.writer.Write((byte)player);
-            binary.writer.Write((byte)CardLocation.Grave);
+            binary.writer.Write((byte) GameMessage.UpdateData);
+            binary.writer.Write((byte) player);
+            binary.writer.Write((byte) CardLocation.Grave);
             binary.writer.Write(result);
             sendToPlayer(binary.get());
         }
 
-        void RefreshDeck(int player, int flag = 0x81fff)
+        private void RefreshDeck(int player, int flag = 0x81fff)
         {
-            byte[] result = QueryFieldCard(player, CardLocation.Deck, flag, false);
+            var result = QueryFieldCard(player, CardLocation.Deck, flag, false);
             var binary = new BinaryMaster();
-            binary.writer.Write((byte)GameMessage.UpdateData);
-            binary.writer.Write((byte)player);
-            binary.writer.Write((byte)CardLocation.Deck);
+            binary.writer.Write((byte) GameMessage.UpdateData);
+            binary.writer.Write((byte) player);
+            binary.writer.Write((byte) CardLocation.Deck);
             binary.writer.Write(result);
             sendToPlayer(binary.get());
         }
 
-        void RefreshExtra(int player, int flag = 0x81fff)
+        private void RefreshExtra(int player, int flag = 0x81fff)
         {
-            byte[] result = QueryFieldCard(player, CardLocation.Extra, flag, false);
+            var result = QueryFieldCard(player, CardLocation.Extra, flag, false);
             var binary = new BinaryMaster();
-            binary.writer.Write((byte)GameMessage.UpdateData);
-            binary.writer.Write((byte)player);
-            binary.writer.Write((byte)CardLocation.Extra);
+            binary.writer.Write((byte) GameMessage.UpdateData);
+            binary.writer.Write((byte) player);
+            binary.writer.Write((byte) CardLocation.Extra);
             binary.writer.Write(result);
             sendToPlayer(binary.get());
         }
 
-        void RefreshRemoved(int player, int flag = 0x81fff)
+        private void RefreshRemoved(int player, int flag = 0x81fff)
         {
-            byte[] result = QueryFieldCard(player, CardLocation.Removed, flag, false);
+            var result = QueryFieldCard(player, CardLocation.Removed, flag, false);
             var binary = new BinaryMaster();
-            binary.writer.Write((byte)GameMessage.UpdateData);
-            binary.writer.Write((byte)player);
-            binary.writer.Write((byte)CardLocation.Removed);
+            binary.writer.Write((byte) GameMessage.UpdateData);
+            binary.writer.Write((byte) player);
+            binary.writer.Write((byte) CardLocation.Removed);
             binary.writer.Write(result);
             sendToPlayer(binary.get());
         }
 
-        bool end = false;
-        bool err = false;   
-        bool Analyse(BinaryReader reader)
+        private bool Analyse(BinaryReader reader)
         {
-            bool returnValue = false;
+            var returnValue = false;
             currentReader = reader;
-            MemoryStream me = new MemoryStream();
+            var me = new MemoryStream();
             currentWriter = new BinaryWriter(me);
-            int player = 0;
-            int count = 0;
-            GameMessage mes = (GameMessage)move(1);
+            var player = 0;
+            var count = 0;
+            var mes = (GameMessage) move(1);
             //log(mes.ToString());
             switch (mes)
             {
@@ -1029,38 +691,41 @@ namespace Percy
                     player = move(1);
                     move(3);
                     count = move(1);
-                    for (int i = 0; i < count; i++)
+                    for (var i = 0; i < count; i++)
                     {
-                        int code = currentReader.ReadInt32();
+                        var code = currentReader.ReadInt32();
                         int p = currentReader.ReadByte();
-                        currentWriter.Write(((int)(p == player ? code : 0)));
-                        currentWriter.Write((byte)p);
+                        currentWriter.Write(p == player ? code : 0);
+                        currentWriter.Write((byte) p);
                         move(3);
                     }
+
                     returnValue = true;
                     break;
                 case GameMessage.SelectUnselectCard:
                     player = move(1);
-                    int buttonok = move(1);
+                    var buttonok = move(1);
                     move(3);
-                    int count1 = move(1);
-                    for (int i = 0; i < count1; i++)
+                    var count1 = move(1);
+                    for (var i = 0; i < count1; i++)
                     {
-                        int code = currentReader.ReadInt32();
+                        var code = currentReader.ReadInt32();
                         int p = currentReader.ReadByte();
-                        currentWriter.Write(((int)(p == player ? code : 0)));
-                        currentWriter.Write((byte)p);
+                        currentWriter.Write(p == player ? code : 0);
+                        currentWriter.Write((byte) p);
                         move(3);
                     }
-                    int count2 = move(1);
-                    for (int i = 0; i < count2; i++)
+
+                    var count2 = move(1);
+                    for (var i = 0; i < count2; i++)
                     {
-                        int code = currentReader.ReadInt32();
+                        var code = currentReader.ReadInt32();
                         int p = currentReader.ReadByte();
-                        currentWriter.Write(((int)(p == player ? code : 0)));
-                        currentWriter.Write((byte)p);
+                        currentWriter.Write(p == player ? code : 0);
+                        currentWriter.Write((byte) p);
                         move(3);
                     }
+
                     returnValue = true;
                     break;
                 case GameMessage.SelectChain:
@@ -1070,13 +735,14 @@ namespace Percy
                     move(1);
                     move(4);
                     move(4);
-                    for (int i = 0; i < count; i++)
+                    for (var i = 0; i < count; i++)
                     {
                         move(1);
                         move(4);
                         move(4);
                         move(4);
                     }
+
                     returnValue = true;
                     break;
                 case GameMessage.SelectDisfield:
@@ -1137,7 +803,7 @@ namespace Percy
                     move(2);
                     break;
                 case GameMessage.Move:
-                    byte[] raw = currentReader.ReadBytes(16);
+                    var raw = currentReader.ReadBytes(16);
                     int pc = raw[4];
                     int pl = raw[5];
                     int cc = raw[8];
@@ -1145,14 +811,16 @@ namespace Percy
                     int cs = raw[10];
                     int cp = raw[11];
 
-                    if (!Convert.ToBoolean((cl & ((int)CardLocation.Grave + (int)CardLocation.Overlay))) && Convert.ToBoolean((cl & ((int)CardLocation.Deck + (int)CardLocation.Hand)))
-                        || Convert.ToBoolean((cp & (int)CardPosition.FaceDown)))
+                    if (!Convert.ToBoolean(cl & ((int) CardLocation.Grave + (int) CardLocation.Overlay)) &&
+                        Convert.ToBoolean(cl & ((int) CardLocation.Deck + (int) CardLocation.Hand))
+                        || Convert.ToBoolean(cp & (int) CardPosition.FaceDown))
                     {
                         raw[0] = 0;
                         raw[1] = 0;
                         raw[2] = 0;
                         raw[3] = 0;
                     }
+
                     currentWriter.Write(raw);
                     break;
                 case GameMessage.PosChange:
@@ -1215,32 +883,25 @@ namespace Percy
                 case GameMessage.Draw:
                     player = move(1);
                     count = move(1);
-                    for (int i = 0; i < count; i++)
+                    for (var i = 0; i < count; i++)
                     {
-                        int code = currentReader.ReadInt32() & 0x7fffffff;
+                        var code = currentReader.ReadInt32() & 0x7fffffff;
                         if (isFirst)
                         {
                             if (player == 0)
-                            {
                                 currentWriter.Write(code);
-                            }
                             else
-                            {
                                 currentWriter.Write(0);
-                            }
                         }
                         else
                         {
                             if (player == 0)
-                            {
                                 currentWriter.Write(0);
-                            }
                             else
-                            {
                                 currentWriter.Write(code);
-                            }
                         }
                     }
+
                     break;
                 case GameMessage.PayLpCost:
                 case GameMessage.LpUpdate:
@@ -1308,40 +969,37 @@ namespace Percy
                 case GameMessage.TagSwap:
                     player = move(1);
                     move(1);
-                    int ecount = move(1);
+                    var ecount = move(1);
                     move(1);
-                    int hcount = move(1);
+                    var hcount = move(1);
                     move(4);
-                    for (int i = 0; i < hcount + ecount; i++)
+                    for (var i = 0; i < hcount + ecount; i++)
                     {
-                        uint code = currentReader.ReadUInt32();
+                        var code = currentReader.ReadUInt32();
                         if ((code & 0x80000000) != 0)
                             currentWriter.Write(code);
                         else
                             currentWriter.Write(0);
                     }
+
                     break;
                 case GameMessage.ReloadField:
                     move(1);
-                    for (int i_ = 0; i_ < 2; i_++)
+                    for (var i_ = 0; i_ < 2; i_++)
                     {
                         move(4);
-                        for (int i = 0; i < 7; i++)
+                        for (var i = 0; i < 7; i++)
                         {
-                            int val = move(1);
-                            if (val > 0)
-                            {
-                                move(2);
-                            }
+                            var val = move(1);
+                            if (val > 0) move(2);
                         }
-                        for (int i = 0; i < 8; i++)
+
+                        for (var i = 0; i < 8; i++)
                         {
-                            int val = move(1);
-                            if (val > 0)
-                            {
-                                move(1);
-                            }
+                            var val = move(1);
+                            if (val > 0) move(1);
                         }
+
                         move(1);
                         move(1);
                         move(1);
@@ -1350,6 +1008,7 @@ namespace Percy
                         move(1);
                         move(move(1) * 15);
                     }
+
                     break;
                 case GameMessage.AiName:
                     var length = currentReader.ReadUInt16();
@@ -1375,6 +1034,7 @@ namespace Percy
                     returnValue = true;
                     break;
             }
+
             flush();
             switch (mes)
             {
@@ -1401,37 +1061,354 @@ namespace Percy
                     Refresh();
                     break;
             }
-            DebugLog(mes.ToString() + (returnValue ? (" Wating Buffer:\n"+BitConverter.ToString(((MemoryStream)(currentWriter.BaseStream)).ToArray())) : ""));
+
+            DebugLog(mes + (returnValue
+                ? " Wating Buffer:\n" + BitConverter.ToString(((MemoryStream) currentWriter.BaseStream).ToArray())
+                : ""));
             return returnValue;
         }
-    }
-    public class YRP    
-    {
-        public int ID = 0;
-        public int Version = 0;
-        public int Flag = 0;
-        public uint Seed = 0;
-        public long DataSize = 0;
-        public int Hash = 0;
-        public byte[] Props = new byte[8];
-        public int StartLp = 0;
-        public int StartHand = 0;
-        public int DrawCount = 0;
-        public int opt = 0;
 
-        public class PlayerData
+        #region DoNotCareAboutThis
+
+        //public
+        public delegate CardData cardHandler(long code);
+
+        public delegate ScriptData scriptHandler(string name);
+
+        public delegate void chatHandler(string str);
+
+        private readonly chatHandler cast;
+
+        public Action<string> m_log;
+
+        private void DebugLog(string obj)
         {
-            public string name;
-            public List<int> main = new List<int>();
-            public List<int> extra = new List<int>();
+            if (m_log != null) m_log(obj);
         }
-        public List<PlayerData> playerData = new List<PlayerData>();
+
+        public smallYgopro(Action<byte[]> HowToSendBufferToPlayer, cardHandler HowToReadCard,
+            scriptHandler HowToReadScript, chatHandler HowToShowLog)
+        {
+            sendToPlayer = HowToSendBufferToPlayer;
+            dll.set_card_api(HowToReadCard);
+            dll.set_script_api(HowToReadScript);
+            dll.set_chat_api(HowToShowLog);
+            cast = HowToShowLog;
+            var ran = new Random(Environment.TickCount);
+            duel = dll.create_duel((uint) ran.Next(100, 99999));
+        }
+
+        public void dispose()
+        {
+            dll.end_duel(duel);
+            var ran = new Random(Environment.TickCount);
+            duel = dll.create_duel((uint) ran.Next(100, 99999));
+        }
+
+        public bool startPuzzle(string path)
+        {
+            godMode = true;
+            isFirst = true;
+            dll.set_player_info(duel, 0, 8000, 5, 1);
+            dll.set_player_info(duel, 1, 8000, 5, 1);
+            var reult = 0;
+            for (var i = 0; i < 10; i++)
+            {
+                reult = dll.preload_script(duel, getPtrString(path), 0);
+                if (reult > 0) break;
+            }
+
+            if (reult == 0) return false;
+            dll.start_duel(duel, 0);
+            Refresh();
+            new Thread(Process).Start();
+            return true;
+        }
+
+        public bool startAI(string playerDek, string aiDeck, string aiScript, bool playerGoFirst, bool unrand, int life,
+            bool god, int mr)
+        {
+            godMode = god;
+            isFirst = playerGoFirst;
+            dll.set_player_info(duel, 0, life, 5, 1);
+            dll.set_player_info(duel, 1, life, 5, 1);
+            var reult = 0;
+            for (var i = 0; i < 10; i++)
+            {
+                reult = dll.preload_script(duel, getPtrString(aiScript), 0);
+                if (reult > 0) break;
+            }
+
+            if (reult == 0) return false;
+            addDeck(playerDek, playerGoFirst ? 0 : 1, !unrand);
+            addDeck(aiDeck, playerGoFirst ? 1 : 0, true);
+            dll.set_ai_id(duel, playerGoFirst ? 1 : 0);
+            var opt = 0;
+            opt |= 0x80;
+            if (unrand) opt |= 0x10;
+            var master = new BinaryMaster();
+            master.writer.Write((char) GameMessage.Start);
+            master.writer.Write((byte) (playerGoFirst ? 0xf0 : 0xff));
+            master.writer.Write(life);
+            master.writer.Write(life);
+            master.writer.Write((ushort) dll.query_field_count(duel, 0, 0x1));
+            master.writer.Write((ushort) dll.query_field_count(duel, 0, 0x40));
+            master.writer.Write((ushort) dll.query_field_count(duel, 1, 0x1));
+            master.writer.Write((ushort) dll.query_field_count(duel, 1, 0x40));
+            sendToPlayer(master.get());
+            dll.start_duel(duel, opt | (mr << 16));
+            Refresh();
+            new Thread(Process).Start();
+            return true;
+        }
+
+        public void response(byte[] resp)
+        {
+            if (resp.Length > 64) return;
+            var buf = Marshal.AllocHGlobal(64);
+            Marshal.Copy(resp, 0, buf, resp.Length);
+            dll.set_responseb(duel, buf);
+            Marshal.FreeHGlobal(buf);
+            new Thread(Process).Start();
+        }
+
+        //private
+
+        private readonly IntPtr _buffer = Marshal.AllocHGlobal(4096);
+
+        private IntPtr duel;
+
+        private Action<byte[]> sendToPlayer;
+
+        private bool godMode;
+
+        private IntPtr getPtrString(string path)
+        {
+            var s = Encoding.UTF8.GetBytes(path);
+            var ptrFileName = Marshal.AllocHGlobal(s.Length + 1);
+            Marshal.Copy(s, 0, ptrFileName, s.Length);
+            return ptrFileName;
+        }
+
+        private Deck FromYDKtoDeck(string path)
+        {
+            var deck = new Deck();
+            try
+            {
+                var text = File.ReadAllText(path);
+                var st = text.Replace("\r", "");
+                var lines = st.Split(new[] {"\n"}, StringSplitOptions.RemoveEmptyEntries);
+                var flag = -1;
+                foreach (var line in lines)
+                    if (line == "#main")
+                    {
+                        flag = 1;
+                    }
+                    else if (line == "#extra")
+                    {
+                        flag = 2;
+                    }
+                    else if (line == "!side")
+                    {
+                        flag = 3;
+                    }
+                    else
+                    {
+                        var code = 0;
+                        try
+                        {
+                            code = int.Parse(line);
+                        }
+                        catch (Exception)
+                        {
+                        }
+
+                        if (code > 100)
+                            switch (flag)
+                            {
+                                case 1:
+                                {
+                                    deck.Main.Add(code);
+                                }
+                                    break;
+                                case 2:
+                                {
+                                    deck.Extra.Add(code);
+                                }
+                                    break;
+                                case 3:
+                                {
+                                    deck.Side.Add(code);
+                                }
+                                    break;
+                            }
+                    }
+            }
+            catch (Exception e)
+            {
+            }
+
+            return deck;
+        }
+
+        private void addDeck(string playerDek, int playerId, bool rand)
+        {
+            var deck_player = FromYDKtoDeck(playerDek);
+            if (rand)
+            {
+                var seed = new Random();
+                for (var i = 0; i < deck_player.Main.Count; i++)
+                {
+                    var random_index = seed.Next() % deck_player.Main.Count;
+                    var t = deck_player.Main[i];
+                    deck_player.Main[i] = deck_player.Main[random_index];
+                    deck_player.Main[random_index] = t;
+                }
+            }
+
+            for (var i = deck_player.Main.Count - 1; i >= 0; i--)
+                dll.new_card(duel, (uint) deck_player.Main[i],
+                    (byte) playerId, (byte) playerId, (byte) CardLocation.Deck, 0, (byte) CardPosition.FaceDownDefence);
+            for (var i = 0; i < deck_player.Extra.Count; i++)
+                dll.new_card(duel, (uint) deck_player.Extra[i],
+                    (byte) playerId, (byte) playerId, (byte) CardLocation.Extra, 0,
+                    (byte) CardPosition.FaceDownDefence);
+        }
+
+        private void sendToYrp(byte[] buffer)
+        {
+            yrp3dbuilder.Write(buffer[0]);
+            yrp3dbuilder.Write(buffer.Length - 1);
+            for (var i = 1; i < buffer.Length; i++) yrp3dbuilder.Write(buffer[i]);
+        }
+
+        private BinaryWriter yrp3dbuilder;
+
+        public byte[] getYRP3dBuffer(YRP yrp)
+        {
+            var tempS = sendToPlayer;
+            sendToPlayer = sendToYrp;
+            var stream = new MemoryStream();
+            yrp3dbuilder = new BinaryWriter(stream);
+            sendToPlayer(yrp.getNamePacket());
+            dll.end_duel(duel);
+            var mtrnd = new MersenneTwister(yrp.Seed);
+            duel = dll.create_duel(mtrnd.genrand_Int32());
+            godMode = true;
+            isFirst = true;
+            dll.set_player_info(duel, 0, yrp.StartLp, yrp.StartHand, yrp.DrawCount);
+            dll.set_player_info(duel, 1, yrp.StartLp, yrp.StartHand, yrp.DrawCount);
+            if (yrp.playerData.Count == 4)
+            {
+                foreach (var item in yrp.playerData[0].main)
+                    dll.new_card(duel, (uint) item, 0, 0, (byte) CardLocation.Deck, 0,
+                        (byte) CardPosition.FaceDownDefence);
+                foreach (var item in yrp.playerData[0].extra)
+                    dll.new_card(duel, (uint) item, 0, 0, (byte) CardLocation.Extra, 0,
+                        (byte) CardPosition.FaceDownDefence);
+                foreach (var item in yrp.playerData[1].main)
+                    dll.new_tag_card(duel, (uint) item, 0, (byte) CardLocation.Deck);
+                foreach (var item in yrp.playerData[1].extra)
+                    dll.new_tag_card(duel, (uint) item, 0, (byte) CardLocation.Extra);
+
+                foreach (var item in yrp.playerData[2].main)
+                    dll.new_card(duel, (uint) item, 1, 1, (byte) CardLocation.Deck, 0,
+                        (byte) CardPosition.FaceDownDefence);
+                foreach (var item in yrp.playerData[2].extra)
+                    dll.new_card(duel, (uint) item, 1, 1, (byte) CardLocation.Extra, 0,
+                        (byte) CardPosition.FaceDownDefence);
+                foreach (var item in yrp.playerData[3].main)
+                    dll.new_tag_card(duel, (uint) item, 1, (byte) CardLocation.Deck);
+                foreach (var item in yrp.playerData[3].extra)
+                    dll.new_tag_card(duel, (uint) item, 1, (byte) CardLocation.Extra);
+            }
+            else
+            {
+                foreach (var item in yrp.playerData[0].main)
+                    dll.new_card(duel, (uint) item, 0, 0, (byte) CardLocation.Deck, 0,
+                        (byte) CardPosition.FaceDownDefence);
+                foreach (var item in yrp.playerData[0].extra)
+                    dll.new_card(duel, (uint) item, 0, 0, (byte) CardLocation.Extra, 0,
+                        (byte) CardPosition.FaceDownDefence);
+
+                foreach (var item in yrp.playerData[1].main)
+                    dll.new_card(duel, (uint) item, 1, 1, (byte) CardLocation.Deck, 0,
+                        (byte) CardPosition.FaceDownDefence);
+                foreach (var item in yrp.playerData[1].extra)
+                    dll.new_card(duel, (uint) item, 1, 1, (byte) CardLocation.Extra, 0,
+                        (byte) CardPosition.FaceDownDefence);
+            }
+
+            var master = new BinaryMaster();
+            master.writer.Write((char) GameMessage.Start);
+            master.writer.Write((byte) 0);
+            master.writer.Write((byte) (yrp.opt >> 16));
+            master.writer.Write(yrp.StartLp);
+            master.writer.Write(yrp.StartLp);
+            master.writer.Write((ushort) dll.query_field_count(duel, 0, 0x1));
+            master.writer.Write((ushort) dll.query_field_count(duel, 0, 0x40));
+            master.writer.Write((ushort) dll.query_field_count(duel, 1, 0x1));
+            master.writer.Write((ushort) dll.query_field_count(duel, 1, 0x40));
+            sendToPlayer(master.get());
+            dll.start_duel(duel, yrp.opt);
+            Refresh();
+            end = false;
+            err = false;
+            try
+            {
+                while (true)
+                {
+                    //log("process");
+                    Process();
+                    if (yrp.gameData.Count == 0) break;
+                    if (yrp.gameData[0].Length > 64) break;
+                    var buf = Marshal.AllocHGlobal(64);
+                    Marshal.Copy(yrp.gameData[0], 0, buf, yrp.gameData[0].Length);
+                    dll.set_responseb(duel, buf);
+                    Marshal.FreeHGlobal(buf);
+                    DebugLog("Push:  " + BitConverter.ToString(yrp.gameData[0]));
+                    yrp.gameData.RemoveAt(0);
+                    if (end) break;
+                }
+            }
+            catch (Exception)
+            {
+            }
+
+            if (err)
+                if (cast != null)
+                    cast("Error Occurred.");
+
+            dispose();
+            sendToPlayer = tempS;
+            yrp3dbuilder.Close();
+            stream.Close();
+            return stream.ToArray();
+        }
+
+        #endregion
+    }
+
+    public class YRP
+    {
+        public long DataSize = 0;
+        public int DrawCount = 0;
+        public int Flag = 0;
         public List<byte[]> gameData = new List<byte[]>();
+        public int Hash = 0;
+        public int ID = 0;
+        public int opt = 0;
+        public List<PlayerData> playerData = new List<PlayerData>();
+        public byte[] Props = new byte[8];
+        public uint Seed = 0;
+        public int StartHand = 0;
+        public int StartLp = 0;
+        public int Version = 0;
 
         public byte[] getNamePacket()
         {
-            MemoryStream stream = new MemoryStream();
-            BinaryWriter writer = new BinaryWriter(stream);
+            var stream = new MemoryStream();
+            var writer = new BinaryWriter(stream);
             if (playerData.Count == 4)
             {
                 WriteUnicode(writer, playerData[0].name, 50);
@@ -1450,26 +1427,31 @@ namespace Percy
                 WriteUnicode(writer, playerData[1].name, 50);
                 WriteUnicode(writer, playerData[1].name, 50);
             }
-            writer.Write((Int32)(opt >> 16));
-            BinaryWriter Rwriter = new BinaryWriter(new MemoryStream());
-            Rwriter.Write((byte)YGOSharp.OCGWrapper.Enums.GameMessage.sibyl_name);
+
+            writer.Write(opt >> 16);
+            var Rwriter = new BinaryWriter(new MemoryStream());
+            Rwriter.Write((byte) YGOSharp.OCGWrapper.Enums.GameMessage.sibyl_name);
             Rwriter.Write(stream.ToArray());
-            return ((MemoryStream)(Rwriter.BaseStream)).ToArray();
+            return ((MemoryStream) Rwriter.BaseStream).ToArray();
         }
 
-        void WriteUnicode(BinaryWriter writer, string text, int len)
+        private void WriteUnicode(BinaryWriter writer, string text, int len)
         {
-            byte[] unicode = Encoding.Unicode.GetBytes(text);
-            byte[] result = new byte[len * 2];
-            for (int i = 0; i < result.Length; i++)
-            {
-                result[i] = 204;
-            }
-            int max = len * 2 - 2;
+            var unicode = Encoding.Unicode.GetBytes(text);
+            var result = new byte[len * 2];
+            for (var i = 0; i < result.Length; i++) result[i] = 204;
+            var max = len * 2 - 2;
             Array.Copy(unicode, result, unicode.Length > max ? max : unicode.Length);
             result[unicode.Length] = 0;
             result[unicode.Length + 1] = 0;
             writer.Write(result);
+        }
+
+        public class PlayerData
+        {
+            public List<int> extra = new List<int>();
+            public List<int> main = new List<int>();
+            public string name;
         }
     }
 }

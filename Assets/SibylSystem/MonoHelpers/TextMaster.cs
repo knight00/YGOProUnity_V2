@@ -1,10 +1,8 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class TextMaster
 {
-
-    GameObject gameObject;
+    private readonly GameObject gameObject;
 
     public TextMaster(string hint, Vector3 position, bool isWorld)
     {
@@ -17,7 +15,7 @@ public class TextMaster
                 true,
                 Program.ui_main_3d,
                 false
-                );
+            );
             UIHelper.clearITWeen(gameObject);
             iTween.ScaleTo(gameObject, new Vector3(0.03f, 0.03f, 0.03f), 0.6f);
         }
@@ -25,13 +23,13 @@ public class TextMaster
         {
             gameObject = Program.I().ocgcore.create_s(
                 Program.I().mod_simple_ngui_text,
-                (Program.camera_main_2d.ScreenToWorldPoint(position)),
+                Program.camera_main_2d.ScreenToWorldPoint(position),
                 new Vector3(0, 0, 0),
                 true,
-                Program.ui_main_2d,
-                true
-                );
+                Program.ui_main_2d
+            );
         }
+
         UIHelper.trySetLableText(gameObject, hint);
     }
 
@@ -39,5 +37,4 @@ public class TextMaster
     {
         Program.I().ocgcore.destroy(gameObject, 0.6f, true);
     }
-
 }
