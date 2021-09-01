@@ -123,6 +123,109 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &20656850
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 826725931}
+    m_Modifications:
+    - target: {fileID: 123392, guid: 829bf6713f5afeb40840803e21e03092, type: 3}
+      propertyPath: m_Name
+      value: new_toolBar_duel
+      objectReference: {fileID: 0}
+    - target: {fileID: 474958, guid: 829bf6713f5afeb40840803e21e03092, type: 3}
+      propertyPath: m_RootOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 474958, guid: 829bf6713f5afeb40840803e21e03092, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 683
+      objectReference: {fileID: 0}
+    - target: {fileID: 474958, guid: 829bf6713f5afeb40840803e21e03092, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -484
+      objectReference: {fileID: 0}
+    - target: {fileID: 474958, guid: 829bf6713f5afeb40840803e21e03092, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 474958, guid: 829bf6713f5afeb40840803e21e03092, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 474958, guid: 829bf6713f5afeb40840803e21e03092, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 474958, guid: 829bf6713f5afeb40840803e21e03092, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 474958, guid: 829bf6713f5afeb40840803e21e03092, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 474958, guid: 829bf6713f5afeb40840803e21e03092, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 474958, guid: 829bf6713f5afeb40840803e21e03092, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 474958, guid: 829bf6713f5afeb40840803e21e03092, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11409370, guid: 829bf6713f5afeb40840803e21e03092, type: 3}
+      propertyPath: mTexture
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 11414294, guid: 829bf6713f5afeb40840803e21e03092, type: 3}
+      propertyPath: mTexture
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 11416150, guid: 829bf6713f5afeb40840803e21e03092, type: 3}
+      propertyPath: mTexture
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 11421992, guid: 829bf6713f5afeb40840803e21e03092, type: 3}
+      propertyPath: mTexture
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 11432632, guid: 829bf6713f5afeb40840803e21e03092, type: 3}
+      propertyPath: mTexture
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 11435552, guid: 829bf6713f5afeb40840803e21e03092, type: 3}
+      propertyPath: mTexture
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 11447192, guid: 829bf6713f5afeb40840803e21e03092, type: 3}
+      propertyPath: mTexture
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 11451178, guid: 829bf6713f5afeb40840803e21e03092, type: 3}
+      propertyPath: mTexture
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 11471692, guid: 829bf6713f5afeb40840803e21e03092, type: 3}
+      propertyPath: mTexture
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 11489502, guid: 829bf6713f5afeb40840803e21e03092, type: 3}
+      propertyPath: mTexture
+      value: 
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 829bf6713f5afeb40840803e21e03092, type: 3}
+--- !u!1 &20656851 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 123392, guid: 829bf6713f5afeb40840803e21e03092,
+    type: 3}
+  m_PrefabInstance: {fileID: 20656850}
+  m_PrefabAsset: {fileID: 0}
 --- !u!20 &28483481 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 2064156, guid: 110e0a191727d5f4f8860ae0957652dd,
@@ -136,181 +239,13 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2097968815}
     m_Modifications:
-    - target: {fileID: 100786, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 102144, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 103504, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 104208, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 107192, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 107706, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 111296, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 113448, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 113916, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 114354, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 115272, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 123678, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 124334, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 124746, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 127262, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 130900, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 131190, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 132290, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 132374, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 134484, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 135374, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 136374, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 139142, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 139714, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 141180, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 145740, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 148926, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 149670, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 154260, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 155490, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 159982, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 160852, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 166722, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 166752, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 173118, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 174154, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
     - target: {fileID: 175342, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
       propertyPath: m_Name
       value: trans_selectDeck(Clone)
       objectReference: {fileID: 0}
     - target: {fileID: 175342, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 175342, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
       propertyPath: m_IsActive
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 177010, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 188732, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 189180, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 191390, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 196822, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-      propertyPath: m_Layer
-      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 407182, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
       propertyPath: m_LocalPosition.y
@@ -371,7 +306,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 139962, guid: 0f5784805788a664da2c92f42ec39685, type: 3}
       propertyPath: m_Name
-      value: new_ui_gameInfo
+      value: new_gameInfoRemaster
       objectReference: {fileID: 0}
     - target: {fileID: 139962, guid: 0f5784805788a664da2c92f42ec39685, type: 3}
       propertyPath: m_IsActive
@@ -443,6 +378,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4a5f0ae4297d5343b1daa1098a5bea9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1001 &154778457
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 826725931}
+    m_Modifications:
+    - target: {fileID: 133012, guid: b1ec81ad075831c4da5c2baaaa65594b, type: 3}
+      propertyPath: m_Name
+      value: trans_setting
+      objectReference: {fileID: 0}
+    - target: {fileID: 416260, guid: b1ec81ad075831c4da5c2baaaa65594b, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 416260, guid: b1ec81ad075831c4da5c2baaaa65594b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 416260, guid: b1ec81ad075831c4da5c2baaaa65594b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 768
+      objectReference: {fileID: 0}
+    - target: {fileID: 416260, guid: b1ec81ad075831c4da5c2baaaa65594b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 416260, guid: b1ec81ad075831c4da5c2baaaa65594b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 416260, guid: b1ec81ad075831c4da5c2baaaa65594b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 416260, guid: b1ec81ad075831c4da5c2baaaa65594b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 416260, guid: b1ec81ad075831c4da5c2baaaa65594b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 416260, guid: b1ec81ad075831c4da5c2baaaa65594b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 416260, guid: b1ec81ad075831c4da5c2baaaa65594b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 416260, guid: b1ec81ad075831c4da5c2baaaa65594b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b1ec81ad075831c4da5c2baaaa65594b, type: 3}
+--- !u!1 &154778458 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 133012, guid: b1ec81ad075831c4da5c2baaaa65594b,
+    type: 3}
+  m_PrefabInstance: {fileID: 154778457}
+  m_PrefabAsset: {fileID: 0}
 --- !u!850595691 &221277033
 LightingSettings:
   m_ObjectHideFlags: 0
@@ -743,185 +741,13 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2097968815}
     m_Modifications:
-    - target: {fileID: 103540, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 105536, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 106696, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 109944, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 112414, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 112898, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 115156, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 123452, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 129526, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 133068, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 133282, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 133504, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
     - target: {fileID: 137880, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
       propertyPath: m_Name
       value: trans_AIroom(Clone)
       objectReference: {fileID: 0}
     - target: {fileID: 137880, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 137880, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
       propertyPath: m_IsActive
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 138922, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 142490, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 143084, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 148394, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 149504, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 151164, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 151432, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 152334, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 158276, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 163506, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 165912, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 167856, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 168504, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 171532, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 176742, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 177012, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 177984, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 179250, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 184432, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 185246, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 185286, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 185978, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 186268, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 188040, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 188496, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 193644, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 194960, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 195202, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 198026, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 406716, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 149
       objectReference: {fileID: 0}
     - target: {fileID: 432260, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
       propertyPath: m_RootOrder
@@ -986,53 +812,9 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2097968815}
     m_Modifications:
-    - target: {fileID: 117088, guid: 888e20adbca53df4cb24411246bb1b11, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 120800, guid: 888e20adbca53df4cb24411246bb1b11, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 138976, guid: 888e20adbca53df4cb24411246bb1b11, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 143960, guid: 888e20adbca53df4cb24411246bb1b11, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 146150, guid: 888e20adbca53df4cb24411246bb1b11, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 156870, guid: 888e20adbca53df4cb24411246bb1b11, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 159956, guid: 888e20adbca53df4cb24411246bb1b11, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 165360, guid: 888e20adbca53df4cb24411246bb1b11, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 166220, guid: 888e20adbca53df4cb24411246bb1b11, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 170320, guid: 888e20adbca53df4cb24411246bb1b11, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
     - target: {fileID: 186134, guid: 888e20adbca53df4cb24411246bb1b11, type: 3}
       propertyPath: m_Name
       value: trans_selectPuzzle(Clone)
-      objectReference: {fileID: 0}
-    - target: {fileID: 186134, guid: 888e20adbca53df4cb24411246bb1b11, type: 3}
-      propertyPath: m_Layer
-      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 186134, guid: 888e20adbca53df4cb24411246bb1b11, type: 3}
       propertyPath: m_IsActive
@@ -1041,10 +823,6 @@ PrefabInstance:
     - target: {fileID: 411742, guid: 888e20adbca53df4cb24411246bb1b11, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430162, guid: 888e20adbca53df4cb24411246bb1b11, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 149
       objectReference: {fileID: 0}
     - target: {fileID: 432674, guid: 888e20adbca53df4cb24411246bb1b11, type: 3}
       propertyPath: m_RootOrder
@@ -1090,12 +868,55 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 11429688, guid: 888e20adbca53df4cb24411246bb1b11, type: 3}
-      propertyPath: aspectRatio
-      value: 0.031847134
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 888e20adbca53df4cb24411246bb1b11, type: 3}
+--- !u!28 &522152449
+Texture2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_ForcedFallbackFormat: 4
+  m_DownscaleFallback: 0
+  m_IsAlphaChannelOptional: 0
+  serializedVersion: 2
+  m_Width: 44
+  m_Height: 28
+  m_CompleteImageSize: 6540
+  m_MipsStripped: 0
+  m_TextureFormat: 5
+  m_MipCount: 6
+  m_IsReadable: 1
+  m_IsPreProcessed: 0
+  m_IgnoreMasterTextureLimit: 0
+  m_StreamingMipmaps: 0
+  m_StreamingMipmapsPriority: 0
+  m_VTOnly: 0
+  m_AlphaIsTransparency: 0
+  m_ImageCount: 1
+  m_TextureDimension: 2
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 0
+    m_WrapV: 0
+    m_WrapW: 0
+  m_LightmapFormat: 0
+  m_ColorSpace: 0
+  m_PlatformBlob: 
+  image data: 6540
+  _typelessdata: ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000
+  m_StreamData:
+    serializedVersion: 2
+    offset: 0
+    size: 0
+    path: 
 --- !u!1001 &524026219
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1103,137 +924,9 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2097968815}
     m_Modifications:
-    - target: {fileID: 100310, guid: 4e3c1289cf09fad40bde488731159a6a, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 105540, guid: 4e3c1289cf09fad40bde488731159a6a, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 107872, guid: 4e3c1289cf09fad40bde488731159a6a, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 108762, guid: 4e3c1289cf09fad40bde488731159a6a, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 111488, guid: 4e3c1289cf09fad40bde488731159a6a, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 112684, guid: 4e3c1289cf09fad40bde488731159a6a, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 114010, guid: 4e3c1289cf09fad40bde488731159a6a, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 117592, guid: 4e3c1289cf09fad40bde488731159a6a, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 123352, guid: 4e3c1289cf09fad40bde488731159a6a, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 125944, guid: 4e3c1289cf09fad40bde488731159a6a, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 129242, guid: 4e3c1289cf09fad40bde488731159a6a, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 129552, guid: 4e3c1289cf09fad40bde488731159a6a, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 129828, guid: 4e3c1289cf09fad40bde488731159a6a, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 130546, guid: 4e3c1289cf09fad40bde488731159a6a, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 132488, guid: 4e3c1289cf09fad40bde488731159a6a, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 133448, guid: 4e3c1289cf09fad40bde488731159a6a, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 140694, guid: 4e3c1289cf09fad40bde488731159a6a, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 149174, guid: 4e3c1289cf09fad40bde488731159a6a, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 153244, guid: 4e3c1289cf09fad40bde488731159a6a, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 164456, guid: 4e3c1289cf09fad40bde488731159a6a, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
     - target: {fileID: 167656, guid: 4e3c1289cf09fad40bde488731159a6a, type: 3}
       propertyPath: m_Name
       value: trans_menu(Clone)
-      objectReference: {fileID: 0}
-    - target: {fileID: 167656, guid: 4e3c1289cf09fad40bde488731159a6a, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 167656, guid: 4e3c1289cf09fad40bde488731159a6a, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 171564, guid: 4e3c1289cf09fad40bde488731159a6a, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 171908, guid: 4e3c1289cf09fad40bde488731159a6a, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 172182, guid: 4e3c1289cf09fad40bde488731159a6a, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 172396, guid: 4e3c1289cf09fad40bde488731159a6a, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 173658, guid: 4e3c1289cf09fad40bde488731159a6a, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 181230, guid: 4e3c1289cf09fad40bde488731159a6a, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 188558, guid: 4e3c1289cf09fad40bde488731159a6a, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 190674, guid: 4e3c1289cf09fad40bde488731159a6a, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 196438, guid: 4e3c1289cf09fad40bde488731159a6a, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 197076, guid: 4e3c1289cf09fad40bde488731159a6a, type: 3}
-      propertyPath: m_Layer
-      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 433428, guid: 4e3c1289cf09fad40bde488731159a6a, type: 3}
       propertyPath: m_RootOrder
@@ -1353,7 +1046,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 194658, guid: dd57848b7cec7c441b1e5e16bfaf237f, type: 3}
       propertyPath: m_Name
-      value: new_ui_cardDescription
+      value: new_cardDescriptionRemaster
       objectReference: {fileID: 0}
     - target: {fileID: 433886, guid: dd57848b7cec7c441b1e5e16bfaf237f, type: 3}
       propertyPath: m_RootOrder
@@ -1448,7 +1141,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 175576, guid: 589b9f7f12556814fb7cc2371ef35649, type: 3}
       propertyPath: m_Name
-      value: new_ui_search
+      value: new_search_remaster
       objectReference: {fileID: 0}
     - target: {fileID: 468652, guid: 589b9f7f12556814fb7cc2371ef35649, type: 3}
       propertyPath: m_RootOrder
@@ -1599,6 +1292,12 @@ Camera:
     type: 3}
   m_PrefabInstance: {fileID: 826725925}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &826725931 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 455926, guid: 110e0a191727d5f4f8860ae0957652dd,
+    type: 3}
+  m_PrefabInstance: {fileID: 826725925}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &863808012
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1696,6 +1395,53 @@ Camera:
     type: 3}
   m_PrefabInstance: {fileID: 863808012}
   m_PrefabAsset: {fileID: 0}
+--- !u!28 &936173309
+Texture2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_ForcedFallbackFormat: 4
+  m_DownscaleFallback: 0
+  m_IsAlphaChannelOptional: 0
+  serializedVersion: 2
+  m_Width: 44
+  m_Height: 28
+  m_CompleteImageSize: 6540
+  m_MipsStripped: 0
+  m_TextureFormat: 5
+  m_MipCount: 6
+  m_IsReadable: 1
+  m_IsPreProcessed: 0
+  m_IgnoreMasterTextureLimit: 0
+  m_StreamingMipmaps: 0
+  m_StreamingMipmapsPriority: 0
+  m_VTOnly: 0
+  m_AlphaIsTransparency: 0
+  m_ImageCount: 1
+  m_TextureDimension: 2
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 0
+    m_WrapV: 0
+    m_WrapW: 0
+  m_LightmapFormat: 0
+  m_ColorSpace: 0
+  m_PlatformBlob: 
+  image data: 6540
+  _typelessdata: ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000ac000000
+  m_StreamData:
+    serializedVersion: 2
+    offset: 0
+    size: 0
+    path: 
 --- !u!1 &1088360836 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 186134, guid: 888e20adbca53df4cb24411246bb1b11,
@@ -1782,6 +1528,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1283106570}
     - target: {fileID: 11419100, guid: 995e2fa1a1156d248955c5fb98502585, type: 3}
+      propertyPath: new_bar_duel
+      value: 
+      objectReference: {fileID: 20656851}
+    - target: {fileID: 11419100, guid: 995e2fa1a1156d248955c5fb98502585, type: 3}
+      propertyPath: new_bar_room
+      value: 
+      objectReference: {fileID: 2044813109}
+    - target: {fileID: 11419100, guid: 995e2fa1a1156d248955c5fb98502585, type: 3}
       propertyPath: new_ui_aiRoom
       value: 
       objectReference: {fileID: 373104645}
@@ -1802,6 +1556,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 863808014}
     - target: {fileID: 11419100, guid: 995e2fa1a1156d248955c5fb98502585, type: 3}
+      propertyPath: new_ui_setting
+      value: 
+      objectReference: {fileID: 154778458}
+    - target: {fileID: 11419100, guid: 995e2fa1a1156d248955c5fb98502585, type: 3}
       propertyPath: new_ui_gameInfo
       value: 
       objectReference: {fileID: 98754547}
@@ -1809,6 +1567,10 @@ PrefabInstance:
       propertyPath: ui_container_3d
       value: 
       objectReference: {fileID: 1681655558}
+    - target: {fileID: 11419100, guid: 995e2fa1a1156d248955c5fb98502585, type: 3}
+      propertyPath: new_bar_editDeck
+      value: 
+      objectReference: {fileID: 1803371002}
     - target: {fileID: 11419100, guid: 995e2fa1a1156d248955c5fb98502585, type: 3}
       propertyPath: camera_windows_2d
       value: 
@@ -1833,6 +1595,10 @@ PrefabInstance:
       propertyPath: camera_back_ground_2d
       value: 
       objectReference: {fileID: 28483481}
+    - target: {fileID: 11419100, guid: 995e2fa1a1156d248955c5fb98502585, type: 3}
+      propertyPath: new_ui_searchDetailed
+      value: 
+      objectReference: {fileID: 2124827356}
     - target: {fileID: 11419100, guid: 995e2fa1a1156d248955c5fb98502585, type: 3}
       propertyPath: new_ui_cardDescription
       value: 
@@ -2082,157 +1848,13 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2097968815}
     m_Modifications:
-    - target: {fileID: 103242, guid: 0ba65c521a7de0d46a9e31380654c3b4, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 106010, guid: 0ba65c521a7de0d46a9e31380654c3b4, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 109538, guid: 0ba65c521a7de0d46a9e31380654c3b4, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 119902, guid: 0ba65c521a7de0d46a9e31380654c3b4, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 127402, guid: 0ba65c521a7de0d46a9e31380654c3b4, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 135414, guid: 0ba65c521a7de0d46a9e31380654c3b4, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 138506, guid: 0ba65c521a7de0d46a9e31380654c3b4, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 139390, guid: 0ba65c521a7de0d46a9e31380654c3b4, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 142890, guid: 0ba65c521a7de0d46a9e31380654c3b4, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 146808, guid: 0ba65c521a7de0d46a9e31380654c3b4, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 154106, guid: 0ba65c521a7de0d46a9e31380654c3b4, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 159382, guid: 0ba65c521a7de0d46a9e31380654c3b4, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 159698, guid: 0ba65c521a7de0d46a9e31380654c3b4, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 160140, guid: 0ba65c521a7de0d46a9e31380654c3b4, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 160474, guid: 0ba65c521a7de0d46a9e31380654c3b4, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 160632, guid: 0ba65c521a7de0d46a9e31380654c3b4, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 163040, guid: 0ba65c521a7de0d46a9e31380654c3b4, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 163392, guid: 0ba65c521a7de0d46a9e31380654c3b4, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 165644, guid: 0ba65c521a7de0d46a9e31380654c3b4, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 167166, guid: 0ba65c521a7de0d46a9e31380654c3b4, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 172030, guid: 0ba65c521a7de0d46a9e31380654c3b4, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 176104, guid: 0ba65c521a7de0d46a9e31380654c3b4, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 177364, guid: 0ba65c521a7de0d46a9e31380654c3b4, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 178582, guid: 0ba65c521a7de0d46a9e31380654c3b4, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 180038, guid: 0ba65c521a7de0d46a9e31380654c3b4, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 181490, guid: 0ba65c521a7de0d46a9e31380654c3b4, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 182110, guid: 0ba65c521a7de0d46a9e31380654c3b4, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 192592, guid: 0ba65c521a7de0d46a9e31380654c3b4, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 194552, guid: 0ba65c521a7de0d46a9e31380654c3b4, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 195592, guid: 0ba65c521a7de0d46a9e31380654c3b4, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 196772, guid: 0ba65c521a7de0d46a9e31380654c3b4, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 197572, guid: 0ba65c521a7de0d46a9e31380654c3b4, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
     - target: {fileID: 197804, guid: 0ba65c521a7de0d46a9e31380654c3b4, type: 3}
       propertyPath: m_Name
       value: trans_selectReplay(Clone)
       objectReference: {fileID: 0}
     - target: {fileID: 197804, guid: 0ba65c521a7de0d46a9e31380654c3b4, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 197804, guid: 0ba65c521a7de0d46a9e31380654c3b4, type: 3}
       propertyPath: m_IsActive
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 197966, guid: 0ba65c521a7de0d46a9e31380654c3b4, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 199906, guid: 0ba65c521a7de0d46a9e31380654c3b4, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 441638, guid: 0ba65c521a7de0d46a9e31380654c3b4, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 149
       objectReference: {fileID: 0}
     - target: {fileID: 478984, guid: 0ba65c521a7de0d46a9e31380654c3b4, type: 3}
       propertyPath: m_RootOrder
@@ -2284,6 +1906,97 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0ba65c521a7de0d46a9e31380654c3b4, type: 3}
+--- !u!1001 &1803371001
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 826725931}
+    m_Modifications:
+    - target: {fileID: 178988, guid: 765dbdb0e4818974a91597f4abb24ee1, type: 3}
+      propertyPath: m_Name
+      value: new_toolBar_editDeck
+      objectReference: {fileID: 0}
+    - target: {fileID: 494708, guid: 765dbdb0e4818974a91597f4abb24ee1, type: 3}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 494708, guid: 765dbdb0e4818974a91597f4abb24ee1, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 453
+      objectReference: {fileID: 0}
+    - target: {fileID: 494708, guid: 765dbdb0e4818974a91597f4abb24ee1, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -484
+      objectReference: {fileID: 0}
+    - target: {fileID: 494708, guid: 765dbdb0e4818974a91597f4abb24ee1, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 494708, guid: 765dbdb0e4818974a91597f4abb24ee1, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 494708, guid: 765dbdb0e4818974a91597f4abb24ee1, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 494708, guid: 765dbdb0e4818974a91597f4abb24ee1, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 494708, guid: 765dbdb0e4818974a91597f4abb24ee1, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 494708, guid: 765dbdb0e4818974a91597f4abb24ee1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 494708, guid: 765dbdb0e4818974a91597f4abb24ee1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 494708, guid: 765dbdb0e4818974a91597f4abb24ee1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11405112, guid: 765dbdb0e4818974a91597f4abb24ee1, type: 3}
+      propertyPath: mTexture
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 11423592, guid: 765dbdb0e4818974a91597f4abb24ee1, type: 3}
+      propertyPath: mTexture
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 11429580, guid: 765dbdb0e4818974a91597f4abb24ee1, type: 3}
+      propertyPath: mTexture
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 11445246, guid: 765dbdb0e4818974a91597f4abb24ee1, type: 3}
+      propertyPath: mTexture
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 11445334, guid: 765dbdb0e4818974a91597f4abb24ee1, type: 3}
+      propertyPath: mTexture
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 11446162, guid: 765dbdb0e4818974a91597f4abb24ee1, type: 3}
+      propertyPath: mTexture
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490246, guid: 765dbdb0e4818974a91597f4abb24ee1, type: 3}
+      propertyPath: mTexture
+      value: 
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 765dbdb0e4818974a91597f4abb24ee1, type: 3}
+--- !u!1 &1803371002 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 178988, guid: 765dbdb0e4818974a91597f4abb24ee1,
+    type: 3}
+  m_PrefabInstance: {fileID: 1803371001}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1891339901
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2291,141 +2004,13 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2097968815}
     m_Modifications:
-    - target: {fileID: 100960, guid: 66c270580b57825498511f78f7bc78bb, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 102046, guid: 66c270580b57825498511f78f7bc78bb, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 102722, guid: 66c270580b57825498511f78f7bc78bb, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 117902, guid: 66c270580b57825498511f78f7bc78bb, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 120042, guid: 66c270580b57825498511f78f7bc78bb, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 120982, guid: 66c270580b57825498511f78f7bc78bb, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 130882, guid: 66c270580b57825498511f78f7bc78bb, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 131890, guid: 66c270580b57825498511f78f7bc78bb, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 132988, guid: 66c270580b57825498511f78f7bc78bb, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 137576, guid: 66c270580b57825498511f78f7bc78bb, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 140802, guid: 66c270580b57825498511f78f7bc78bb, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 142072, guid: 66c270580b57825498511f78f7bc78bb, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 142764, guid: 66c270580b57825498511f78f7bc78bb, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 146030, guid: 66c270580b57825498511f78f7bc78bb, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 147938, guid: 66c270580b57825498511f78f7bc78bb, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 147966, guid: 66c270580b57825498511f78f7bc78bb, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 151184, guid: 66c270580b57825498511f78f7bc78bb, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 155230, guid: 66c270580b57825498511f78f7bc78bb, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
     - target: {fileID: 165948, guid: 66c270580b57825498511f78f7bc78bb, type: 3}
       propertyPath: m_Name
       value: trans_selectServer(Clone)
       objectReference: {fileID: 0}
     - target: {fileID: 165948, guid: 66c270580b57825498511f78f7bc78bb, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 165948, guid: 66c270580b57825498511f78f7bc78bb, type: 3}
       propertyPath: m_IsActive
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 166188, guid: 66c270580b57825498511f78f7bc78bb, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 167790, guid: 66c270580b57825498511f78f7bc78bb, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 168808, guid: 66c270580b57825498511f78f7bc78bb, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 170670, guid: 66c270580b57825498511f78f7bc78bb, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 172044, guid: 66c270580b57825498511f78f7bc78bb, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 175616, guid: 66c270580b57825498511f78f7bc78bb, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 178178, guid: 66c270580b57825498511f78f7bc78bb, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 181140, guid: 66c270580b57825498511f78f7bc78bb, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 186076, guid: 66c270580b57825498511f78f7bc78bb, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 193448, guid: 66c270580b57825498511f78f7bc78bb, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 194394, guid: 66c270580b57825498511f78f7bc78bb, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 196120, guid: 66c270580b57825498511f78f7bc78bb, type: 3}
-      propertyPath: m_Layer
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 197492, guid: 66c270580b57825498511f78f7bc78bb, type: 3}
-      propertyPath: m_Layer
-      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 430838, guid: 66c270580b57825498511f78f7bc78bb, type: 3}
       propertyPath: m_RootOrder
@@ -2473,6 +2058,77 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 66c270580b57825498511f78f7bc78bb, type: 3}
+--- !u!1001 &2044813108
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 826725931}
+    m_Modifications:
+    - target: {fileID: 154124, guid: 4450e27d91ca638499a5b7792d561372, type: 3}
+      propertyPath: m_Name
+      value: new_toolBar_Room
+      objectReference: {fileID: 0}
+    - target: {fileID: 453226, guid: 4450e27d91ca638499a5b7792d561372, type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 453226, guid: 4450e27d91ca638499a5b7792d561372, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 683
+      objectReference: {fileID: 0}
+    - target: {fileID: 453226, guid: 4450e27d91ca638499a5b7792d561372, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -484
+      objectReference: {fileID: 0}
+    - target: {fileID: 453226, guid: 4450e27d91ca638499a5b7792d561372, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 453226, guid: 4450e27d91ca638499a5b7792d561372, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 453226, guid: 4450e27d91ca638499a5b7792d561372, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 453226, guid: 4450e27d91ca638499a5b7792d561372, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 453226, guid: 4450e27d91ca638499a5b7792d561372, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 453226, guid: 4450e27d91ca638499a5b7792d561372, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 453226, guid: 4450e27d91ca638499a5b7792d561372, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 453226, guid: 4450e27d91ca638499a5b7792d561372, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11411146, guid: 4450e27d91ca638499a5b7792d561372, type: 3}
+      propertyPath: mTexture
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 11424074, guid: 4450e27d91ca638499a5b7792d561372, type: 3}
+      propertyPath: mTexture
+      value: 
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 4450e27d91ca638499a5b7792d561372, type: 3}
+--- !u!1 &2044813109 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 154124, guid: 4450e27d91ca638499a5b7792d561372,
+    type: 3}
+  m_PrefabInstance: {fileID: 2044813108}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2097968809
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2563,6 +2219,77 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 455926, guid: 110e0a191727d5f4f8860ae0957652dd,
     type: 3}
   m_PrefabInstance: {fileID: 2097968809}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &2124827355
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 826725931}
+    m_Modifications:
+    - target: {fileID: 108072, guid: 78d905a01dddef64b9cb440dc62b50a9, type: 3}
+      propertyPath: m_Name
+      value: trans_detailSearch
+      objectReference: {fileID: 0}
+    - target: {fileID: 498954, guid: 78d905a01dddef64b9cb440dc62b50a9, type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 498954, guid: 78d905a01dddef64b9cb440dc62b50a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 683
+      objectReference: {fileID: 0}
+    - target: {fileID: 498954, guid: 78d905a01dddef64b9cb440dc62b50a9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1152
+      objectReference: {fileID: 0}
+    - target: {fileID: 498954, guid: 78d905a01dddef64b9cb440dc62b50a9, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 498954, guid: 78d905a01dddef64b9cb440dc62b50a9, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 498954, guid: 78d905a01dddef64b9cb440dc62b50a9, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 498954, guid: 78d905a01dddef64b9cb440dc62b50a9, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 498954, guid: 78d905a01dddef64b9cb440dc62b50a9, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 498954, guid: 78d905a01dddef64b9cb440dc62b50a9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 498954, guid: 78d905a01dddef64b9cb440dc62b50a9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 498954, guid: 78d905a01dddef64b9cb440dc62b50a9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11414644, guid: 78d905a01dddef64b9cb440dc62b50a9, type: 3}
+      propertyPath: mTexture
+      value: 
+      objectReference: {fileID: 936173309}
+    - target: {fileID: 11476212, guid: 78d905a01dddef64b9cb440dc62b50a9, type: 3}
+      propertyPath: aspectRatio
+      value: 0.0028571428
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 78d905a01dddef64b9cb440dc62b50a9, type: 3}
+--- !u!1 &2124827356 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 108072, guid: 78d905a01dddef64b9cb440dc62b50a9,
+    type: 3}
+  m_PrefabInstance: {fileID: 2124827355}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1360968357697421714
 PrefabInstance:

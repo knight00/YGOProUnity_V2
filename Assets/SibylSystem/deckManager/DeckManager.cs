@@ -738,14 +738,7 @@ public class DeckManager : ServantWithCardDescription
     public override void initialize()
     {
         gameObjectSearch = Program.I().new_ui_search;
-        gameObjectDetailedSearch = create
-        (
-            Program.I().new_ui_searchDetailed,
-            Program.I().camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height * 2f, 0)),
-            new Vector3(0, 0, 0),
-            false,
-            Program.I().ui_main_2d
-        );
+        gameObjectDetailedSearch = Program.I().new_ui_searchDetailed;
         UIHelper.InterGameObject(gameObjectSearch);
         UIHelper.InterGameObject(gameObjectDetailedSearch);
         shiftCondition(Condition.editDeck);

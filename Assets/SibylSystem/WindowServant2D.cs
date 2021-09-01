@@ -37,14 +37,7 @@ public class WindowServant2D : Servant
 
     public static GameObject createWindow(Servant servant, GameObject mod)
     {
-        var re = servant.create
-        (
-            mod,
-            Program.I().camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height * 1.5f, 600)),
-            new Vector3(0, 0, 0),
-            false,
-            Program.I().ui_main_2d
-        );
+        var re = mod;
         UIHelper.InterGameObject(re);
         return re;
     }

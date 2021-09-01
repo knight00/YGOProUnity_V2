@@ -23,7 +23,6 @@ public class Program : MonoBehaviour
     public GameObject ui_back_ground_2d;
     public GameObject ui_windows_2d;
     public GameObject ui_main_2d;
-    public Camera camera_main_2d;
     public GameObject ui_container_3d;
     public Camera camera_container_3d;
     public GameObject ui_main_3d;
@@ -44,6 +43,14 @@ public class Program : MonoBehaviour
     public GameObject remaster_replayManager;
     public GameObject remaster_puzzleManager;
     public GameObject new_ui_aiRoom;
+    
+    [Header("ui_main_2d")]
+    public Camera camera_main_2d;
+    public GameObject new_ui_setting;
+    public GameObject new_bar_room;
+    public GameObject new_ui_searchDetailed;
+    public GameObject new_bar_editDeck;
+    public GameObject new_bar_duel;
 
     [Header("Prefab")] public facer face;
     public AudioClip zhankai;
@@ -113,14 +120,9 @@ public class Program : MonoBehaviour
     public GameObject mod_ocgcore_ss_dark_hole;
     public GameObject mod_ocgcore_ss_link_mark;
     
-    public GameObject new_ui_setting;
     public GameObject new_ui_book;
-    public GameObject new_ui_searchDetailed;
     public GameObject new_ui_cardOnSearchList;
     public GameObject new_bar_changeSide;
-    public GameObject new_bar_duel;
-    public GameObject new_bar_room;
-    public GameObject new_bar_editDeck;
     public GameObject new_bar_watchDuel;
     public GameObject new_bar_watchRecord;
     public GameObject new_mod_cardInDeckManager;

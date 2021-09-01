@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
 using YGOSharp.OCGWrapper.Enums;
 using Object = UnityEngine.Object;
 
@@ -118,7 +119,8 @@ public class Servant
         if (toolBar != null)
         {
             var vectorOfShowedBar_Screen = new Vector3(Screen.width - RightToScreen, buttomToScreen, 0);
-            iTween.MoveTo(toolBar, Program.I().camera_back_ground_2d.ScreenToWorldPoint(vectorOfShowedBar_Screen), 0.6f);
+            iTween.MoveTo(toolBar, Program.I().camera_back_ground_2d.ScreenToWorldPoint(vectorOfShowedBar_Screen),
+                0.6f);
             toolBar.transform.localScale =
                 new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f);
             var items = toolBar.GetComponentsInChildren<toolShift>();
@@ -251,15 +253,9 @@ public class Servant
     {
         this.buttomToScreen = buttomToScreen;
         this.RightToScreen = RightToScreen;
-        if (toolBar != null) Object.DestroyImmediate(toolBar);
-        toolBar = create
-        (
-            mod,
-            Program.I().camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width - RightToScreen, -100, 0)),
-            new Vector3(0, 0, 0),
-            false,
-            Program.I().ui_main_2d
-        );
+        // if (toolBar != null) Object.DestroyImmediate(toolBar);
+        // 可能会有多次调用出错的东西，可能需要在初始化过的对象上跳过一部分操作
+        toolBar = mod;
         UIHelper.InterGameObject(toolBar);
         fixScreenProblem();
     }

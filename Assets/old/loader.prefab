@@ -44,12 +44,35 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   main_camera: {fileID: 0}
-  face: {fileID: 11468716, guid: faf0ce5c46e971049a20f2597b5f6194, type: 3}
   light: {fileID: 0}
   audio: {fileID: 0}
+  ui_back_ground_2d: {fileID: 0}
+  ui_windows_2d: {fileID: 0}
+  ui_main_2d: {fileID: 0}
+  ui_container_3d: {fileID: 0}
+  camera_container_3d: {fileID: 0}
+  ui_main_3d: {fileID: 0}
+  camera_main_3d: {fileID: 0}
+  camera_back_ground_2d: {fileID: 0}
+  mod_simple_ngui_background_texture: {fileID: 0}
+  new_ui_cardDescription: {fileID: 0}
+  new_ui_search: {fileID: 0}
+  new_ui_gameInfo: {fileID: 0}
+  camera_windows_2d: {fileID: 0}
+  new_ui_menu: {fileID: 0}
+  remaster_deckManager: {fileID: 0}
+  new_ui_selectServer: {fileID: 0}
+  remaster_replayManager: {fileID: 0}
+  remaster_puzzleManager: {fileID: 0}
+  new_ui_aiRoom: {fileID: 0}
+  camera_main_2d: {fileID: 0}
+  new_ui_setting: {fileID: 0}
+  new_bar_room: {fileID: 0}
+  new_ui_searchDetailed: {fileID: 0}
+  new_bar_editDeck: {fileID: 0}
+  new_bar_duel: {fileID: 0}
+  face: {fileID: 11468716, guid: faf0ce5c46e971049a20f2597b5f6194, type: 3}
   zhankai: {fileID: 8300000, guid: cab912f3009b43843b0a48ac3120c6ad, type: 3}
-  mod_ui_2d: {fileID: 115194, guid: 110e0a191727d5f4f8860ae0957652dd, type: 3}
-  mod_ui_3d: {fileID: 195504, guid: c5a2efa85dfe2e241aeb34c422f115e5, type: 3}
   mod_winExplode: {fileID: 100000, guid: d0bd642121bd8624ea5f79bc25a0be69, type: 3}
   mod_loseExplode: {fileID: 100000, guid: aeb251af760080f47baeb0265cc0e81f, type: 3}
   mod_audio_effect: {fileID: 147400, guid: ef457fec355425b4fbbcaee0c3f8e24e, type: 3}
@@ -65,8 +88,6 @@ MonoBehaviour:
   mod_ocgcore_coin: {fileID: 116782, guid: 46b964b7c9b416348a9b4f55c97a3b5e, type: 3}
   mod_ocgcore_dice: {fileID: 192632, guid: 8ba8e306049b10a4dabc04533d2b59c3, type: 3}
   mod_simple_quad: {fileID: 153178, guid: 7e032b6b717b6594ca1d7a2f7c279f0a, type: 3}
-  mod_simple_ngui_background_texture: {fileID: 197510, guid: 4bcf544bc00b6e84daf5bf79d2238069,
-    type: 3}
   mod_simple_ngui_text: {fileID: 151012, guid: dd963d913f8da854093ea817838d4e6e, type: 3}
   mod_ocgcore_number: {fileID: 174198, guid: f65670976d5ffc0469cafb02eb365281, type: 3}
   mod_ocgcore_decoration_chain_selecting: {fileID: 113922, guid: 7f3c7b73f5951bc46b55a925c39e5100,
@@ -164,22 +185,10 @@ MonoBehaviour:
     type: 3}
   mod_ocgcore_ss_link_mark: {fileID: 193842, guid: 31f237d5f58cc3d44b8c6f489981cdbe,
     type: 3}
-  new_ui_menu: {fileID: 167656, guid: 4e3c1289cf09fad40bde488731159a6a, type: 3}
-  new_ui_setting: {fileID: 133012, guid: b1ec81ad075831c4da5c2baaaa65594b, type: 3}
   new_ui_book: {fileID: 154202, guid: 26b8ac8b01eea214c9aa2dda03224bf8, type: 3}
-  new_ui_selectServer: {fileID: 165948, guid: 66c270580b57825498511f78f7bc78bb, type: 3}
-  new_ui_gameInfo: {fileID: 139962, guid: 0f5784805788a664da2c92f42ec39685, type: 3}
-  new_ui_cardDescription: {fileID: 194658, guid: dd57848b7cec7c441b1e5e16bfaf237f,
-    type: 3}
-  new_ui_search: {fileID: 175576, guid: 589b9f7f12556814fb7cc2371ef35649, type: 3}
-  new_ui_searchDetailed: {fileID: 108072, guid: 78d905a01dddef64b9cb440dc62b50a9,
-    type: 3}
   new_ui_cardOnSearchList: {fileID: 121738, guid: 2b6ccbb323c719640a5956255df6e60f,
     type: 3}
   new_bar_changeSide: {fileID: 122638, guid: 63e044f7c8ec2f941bdf744dfc74c476, type: 3}
-  new_bar_duel: {fileID: 123392, guid: 829bf6713f5afeb40840803e21e03092, type: 3}
-  new_bar_room: {fileID: 154124, guid: 4450e27d91ca638499a5b7792d561372, type: 3}
-  new_bar_editDeck: {fileID: 178988, guid: 765dbdb0e4818974a91597f4abb24ee1, type: 3}
   new_bar_watchDuel: {fileID: 117332, guid: c31923f847d652f428563c70ae9126c0, type: 3}
   new_bar_watchRecord: {fileID: 101550, guid: c2bfacfbd9e90a145a2e44e65731cecf, type: 3}
   new_mod_cardInDeckManager: {fileID: 189694, guid: 6747c695cb6d93142b1f445a7896ea98,
@@ -191,17 +200,11 @@ MonoBehaviour:
   new_ui_superButton: {fileID: 175034, guid: d0dca316780477b4fab4ba9122bdbc5e, type: 3}
   new_ui_superButtonTransparent: {fileID: 175034, guid: 1a9f43e6666f73d499018b0bc50fa87f,
     type: 3}
-  new_ui_aiRoom: {fileID: 137880, guid: eaffbd8c582dbcb4b82ee73629e34013, type: 3}
   new_ocgcore_field: {fileID: 110048, guid: b1633e26122bb4749a19a5c38826336b, type: 3}
   new_ocgcore_chainCircle: {fileID: 139058, guid: d32a4ff301257644a9d5e19d14ba7010,
     type: 3}
   new_ocgcore_wait: {fileID: 192526, guid: ebe9fe8493cc48b4d8fc206976a5e897, type: 3}
   new_mouse: {fileID: 136044, guid: 19638d3f760fa38429c40cca2b503881, type: 3}
-  remaster_deckManager: {fileID: 175342, guid: e0266c76a82b162439c48c7fe64921ab, type: 3}
-  remaster_replayManager: {fileID: 197804, guid: 0ba65c521a7de0d46a9e31380654c3b4,
-    type: 3}
-  remaster_puzzleManager: {fileID: 186134, guid: 888e20adbca53df4cb24411246bb1b11,
-    type: 3}
   remaster_tagRoom: {fileID: 154246, guid: 95580b5915bf1eb4eaf9b6b19a82f92d, type: 3}
   remaster_room: {fileID: 154246, guid: fa04b5d4defb9284aa6b679865c5b9f1, type: 3}
   ES_1: {fileID: 152348, guid: 49504cab875642a4a89768cf637df4e0, type: 3}
