@@ -16,10 +16,10 @@ TagManager:
   - UI
   - 
   - 
-  - layer_8
-  - layer_9
-  - layer_10
-  - layer_11
+  - ui_back_ground_2d
+  - ui_container_3d
+  - ui_main_3d
+  - ui_main_2d
   - layer_12
   - layer_13
   - layer_14
@@ -27,7 +27,7 @@ TagManager:
   - card_data_manager
   - mouse
   - debug
-  - windows
+  - ui_windows_2d
   - 
   - 
   - 

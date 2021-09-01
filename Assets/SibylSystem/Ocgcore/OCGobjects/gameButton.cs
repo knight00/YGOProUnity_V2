@@ -28,8 +28,8 @@ public class gameButton : OCGobject
     {
         if (gameObject == null)
         {
-            gameObject = create(Program.I().new_ui_superButton, Program.camera_main_2d.ScreenToWorldPoint(v),
-                Vector3.zero, false, Program.ui_main_2d);
+            gameObject = create(Program.I().new_ui_superButton, Program.I().camera_main_2d.ScreenToWorldPoint(v),
+                Vector3.zero, false, Program.I().ui_main_2d);
             gameObjectEvent = UIHelper.getRealEventGameObject(gameObject);
             UIHelper.registEvent(gameObject, clicked);
             gameObject.GetComponent<iconSetForButton>().setTexture(type);
@@ -40,7 +40,7 @@ public class gameButton : OCGobject
                 0.2f);
         }
 
-        gameObject.transform.position = Program.camera_main_2d.ScreenToWorldPoint(v);
+        gameObject.transform.position = Program.I().camera_main_2d.ScreenToWorldPoint(v);
     }
 
     private void clicked()

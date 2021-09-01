@@ -8,7 +8,7 @@ public class BackGroundPic : Servant
     public override void initialize()
     {
         backGround = create(Program.I().mod_simple_ngui_background_texture, Vector3.zero, Vector3.zero, false,
-            Program.ui_back_ground_2d);
+            Program.I().ui_back_ground_2d);
         var file = new FileStream("texture/common/desk.jpg", FileMode.Open, FileAccess.Read);
         file.Seek(0, SeekOrigin.Begin);
         var data = new byte[file.Length];
@@ -24,8 +24,7 @@ public class BackGroundPic : Servant
 
     public override void applyShowArrangement()
     {
-        var root = Program.ui_back_ground_2d.GetComponent<UIRoot>();
-        var s = (float) root.activeHeight / Screen.height;
+        var s = (float) Utils.UIHeight() / Screen.height;
         var tex = backGround.GetComponent<UITexture>().mainTexture;
         var ss = tex.height / (float) tex.width;
         var width = (int) (Screen.width * s);

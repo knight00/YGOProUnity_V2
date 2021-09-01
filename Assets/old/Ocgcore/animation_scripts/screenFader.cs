@@ -16,7 +16,7 @@ public class screenFader : MonoBehaviour
     void Update()
     {
 
-        screen_point = Program.camera_game_main.WorldToScreenPoint(Vector3.zero);
+        screen_point = Program.I().main_camera.WorldToScreenPoint(Vector3.zero);
         screen_point.z = 8f;
         int bun = Screen.height / 3;
         if (screen_point.y > Screen.height / 2 + bun)
@@ -27,7 +27,7 @@ public class screenFader : MonoBehaviour
         {
             screen_point.y = Screen.height / 2 - bun;
         }
-        Vector3 to = Program.camera_game_main.ScreenToWorldPoint(screen_point);
+        Vector3 to = Program.I().main_camera.ScreenToWorldPoint(screen_point);
 
 
 

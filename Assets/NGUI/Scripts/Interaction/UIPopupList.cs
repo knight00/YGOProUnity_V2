@@ -1102,25 +1102,25 @@ public class UIPopupList : UIWidgetContainer
 
             //if (gameObject.layer == Program.ui_back_ground_2d.layer)
             //{
-            //    mChild.transform.SetParent(Program.ui_main_2d.transform, true);
+            //    mChild.transform.SetParent(Program.I().ui_main_2d.transform, true);
             //    var trans = mChild.GetComponentsInChildren<Transform>();
             //    foreach (var item in trans) 
             //    {
-            //        item.gameObject.layer = Program.ui_main_2d.layer;
+            //        item.gameObject.layer = Program.I().ui_main_2d.layer;
             //    }
             //}
             
-            if (gameObject.layer == Program.ui_main_3d.layer)
+            if (gameObject.layer == Program.I().ui_main_3d.layer)
             {
-                mChild.transform.SetParent(Program.ui_main_3d.transform, true);
+                mChild.transform.SetParent(Program.I().ui_main_3d.transform, true);
             }
-            if (gameObject.layer == Program.ui_windows_2d.layer)
+            if (gameObject.layer == Program.I().ui_windows_2d.layer)
             {
-                mChild.transform.SetParent(Program.ui_windows_2d.transform, true);
+                mChild.transform.SetParent(Program.I().ui_windows_2d.transform, true);
             }
-            if (gameObject.layer == Program.ui_main_2d.layer)
+            if (gameObject.layer == Program.I().ui_main_2d.layer)
             {
-                mChild.transform.SetParent(Program.ui_main_2d.transform, true);
+                mChild.transform.SetParent(Program.I().ui_main_2d.transform, true);
             }
         }
     }
@@ -1131,7 +1131,7 @@ public class UIPopupList : UIWidgetContainer
     {
 
         var a = go.transform.parent.localPosition;
-        if (go.layer != Program.ui_main_2d.layer&& go.layer != Program.ui_windows_2d.layer)
+        if (go.layer != Program.I().ui_main_2d.layer&& go.layer != Program.I().ui_windows_2d.layer)
         {
             a.y -= delta * 100f;
             a.z -= delta * 100f * 1.732f;
@@ -1140,7 +1140,7 @@ public class UIPopupList : UIWidgetContainer
         {
             float whole = items.Count * 20;
             float l=delta *100f;
-            if (go.layer == Program.ui_windows_2d.layer)
+            if (go.layer == Program.I().ui_windows_2d.layer)
             {
                 l = delta * 50f;
             }

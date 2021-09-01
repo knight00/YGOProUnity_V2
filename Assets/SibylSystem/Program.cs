@@ -15,13 +15,24 @@ public class Program : MonoBehaviour
 
     #region Resources
 
-    public Camera main_camera;
-    public facer face;
+    [Header("场景里的对象引用")] public Camera main_camera;
     public Light light;
     public AudioSource audio;
+
+    public GameObject ui_back_ground_2d;
+    public Camera camera_back_ground_2d;
+    public GameObject ui_windows_2d;
+    public Camera camera_windows_2d;
+    public GameObject ui_main_2d;
+    public Camera camera_main_2d;
+
+    public GameObject ui_container_3d;
+    public Camera camera_container_3d;
+    public GameObject ui_main_3d;
+    public Camera camera_main_3d;
+
+    [Header("Prefab")] public facer face;
     public AudioClip zhankai;
-    public GameObject mod_ui_2d;
-    public GameObject mod_ui_3d;
     public GameObject mod_winExplode;
     public GameObject mod_loseExplode;
     public GameObject mod_audio_effect;
@@ -257,17 +268,6 @@ public class Program : MonoBehaviour
         return transparency;
     }
 
-    public static GameObject ui_back_ground_2d;
-    public static Camera camera_back_ground_2d;
-    public static GameObject ui_container_3d;
-    public static Camera camera_container_3d;
-    public static Camera camera_game_main;
-    public static GameObject ui_windows_2d;
-    public static Camera camera_windows_2d;
-    public static GameObject ui_main_2d;
-    public static Camera camera_main_2d;
-    public static GameObject ui_main_3d;
-    public static Camera camera_main_3d;
 
     public static Vector3 cameraPosition = new Vector3(0, 23, -23);
     public static Vector3 cameraRotation = new Vector3(60, 0, 0);
@@ -549,102 +549,6 @@ public class Program : MonoBehaviour
             if (i == 15) continue;
             rayFilter |= (int) Math.Pow(2, i);
         }
-
-        if (camera_game_main == null) camera_game_main = main_camera;
-        camera_game_main.transform.position = new Vector3(0, 23, -23);
-        camera_game_main.transform.eulerAngles = new Vector3(60, 0, 0);
-        camera_game_main.transform.localScale = new Vector3(1, 1, 1);
-        camera_game_main.rect = new Rect(0, 0, 1, 1);
-        camera_game_main.depth = 0;
-        camera_game_main.gameObject.layer = 0;
-        camera_game_main.clearFlags = CameraClearFlags.Depth;
-
-        if (ui_back_ground_2d == null)
-        {
-            ui_back_ground_2d = create(mod_ui_2d);
-            camera_back_ground_2d = ui_back_ground_2d.transform.Find("Camera").GetComponent<Camera>();
-        }
-
-        camera_back_ground_2d.depth = -2;
-        ui_back_ground_2d.layer = 8;
-        ui_back_ground_2d.transform.Find("Camera").gameObject.layer = 8;
-        camera_back_ground_2d.cullingMask = (int) Mathf.Pow(2, 8);
-        camera_back_ground_2d.clearFlags = CameraClearFlags.Depth;
-
-        if (ui_container_3d == null)
-        {
-            ui_container_3d = create(mod_ui_3d);
-            camera_container_3d = ui_container_3d.transform.Find("Camera").GetComponent<Camera>();
-        }
-
-        camera_container_3d.depth = -1;
-        ui_container_3d.layer = 9;
-        ui_container_3d.transform.Find("Camera").gameObject.layer = 9;
-        camera_container_3d.cullingMask = (int) Mathf.Pow(2, 9);
-        camera_container_3d.fieldOfView = 75;
-        camera_container_3d.rect = camera_game_main.rect;
-        camera_container_3d.transform.position = new Vector3(0, 23, -23);
-        camera_container_3d.transform.eulerAngles = new Vector3(60, 0, 0);
-        camera_container_3d.transform.localScale = new Vector3(1, 1, 1);
-        camera_container_3d.rect = new Rect(0, 0, 1, 1);
-        camera_container_3d.clearFlags = CameraClearFlags.Depth;
-
-
-        if (ui_main_2d == null)
-        {
-            ui_main_2d = create(mod_ui_2d);
-            camera_main_2d = ui_main_2d.transform.Find("Camera").GetComponent<Camera>();
-        }
-
-        camera_main_2d.depth = 3;
-        ui_main_2d.layer = 11;
-        ui_main_2d.transform.Find("Camera").gameObject.layer = 11;
-        camera_main_2d.cullingMask = (int) Mathf.Pow(2, 11);
-        camera_main_2d.clearFlags = CameraClearFlags.Depth;
-
-
-        if (ui_windows_2d == null)
-        {
-            ui_windows_2d = create(mod_ui_2d);
-            camera_windows_2d = ui_windows_2d.transform.Find("Camera").GetComponent<Camera>();
-        }
-
-        camera_windows_2d.depth = 2;
-        ui_windows_2d.layer = 19;
-        ui_windows_2d.transform.Find("Camera").gameObject.layer = 19;
-        camera_windows_2d.cullingMask = (int) Mathf.Pow(2, 19);
-        camera_windows_2d.clearFlags = CameraClearFlags.Depth;
-
-
-        if (ui_main_3d == null)
-        {
-            ui_main_3d = create(mod_ui_3d);
-            camera_main_3d = ui_main_3d.transform.Find("Camera").GetComponent<Camera>();
-        }
-
-        camera_main_3d.depth = 1;
-        ui_main_3d.layer = 10;
-        ui_main_3d.transform.Find("Camera").gameObject.layer = 10;
-        camera_main_3d.cullingMask = (int) Mathf.Pow(2, 10);
-        camera_main_3d.fieldOfView = 75;
-        camera_main_3d.rect = new Rect(0, 0, 1, 1);
-        camera_main_3d.transform.position = new Vector3(0, 23, -23);
-        camera_main_3d.transform.eulerAngles = new Vector3(60, 0, 0);
-        camera_main_3d.transform.localScale = new Vector3(1, 1, 1);
-        camera_main_3d.clearFlags = CameraClearFlags.Depth;
-
-
-        camera_main_3d.transform.localPosition = camera_game_main.transform.position;
-        camera_container_3d.transform.localPosition = camera_game_main.transform.position;
-
-        camera_main_3d.transform.localEulerAngles = camera_game_main.transform.localEulerAngles;
-        camera_container_3d.transform.localEulerAngles = camera_game_main.transform.localEulerAngles;
-
-        camera_main_3d.fieldOfView = camera_game_main.fieldOfView;
-        camera_container_3d.fieldOfView = camera_game_main.fieldOfView;
-
-        camera_main_3d.rect = camera_game_main.rect;
-        camera_container_3d.rect = camera_game_main.rect;
     }
 
     public static float deltaTime = 1f / 120f;
@@ -653,25 +557,26 @@ public class Program : MonoBehaviour
     {
         deltaTime = Time.deltaTime;
         if (deltaTime > 1f / 40f) deltaTime = 1f / 40f;
-        if (camera_game_main != null)
+        if (main_camera != null)
         {
-            camera_game_main.transform.position +=
-                (cameraPosition - camera_game_main.transform.position) * deltaTime * 3.5f;
-            camera_container_3d.transform.localPosition = camera_game_main.transform.position;
+            main_camera.transform.position +=
+                (cameraPosition - main_camera.transform.position) * deltaTime * 3.5f;
+            camera_container_3d.transform.localPosition = main_camera.transform.position;
             if (cameraFacing == false)
-                camera_game_main.transform.localEulerAngles +=
-                    (cameraRotation - camera_game_main.transform.localEulerAngles) * deltaTime * 3.5f;
+                main_camera.transform.localEulerAngles +=
+                    (cameraRotation - main_camera.transform.localEulerAngles) * deltaTime * 3.5f;
             else
-                camera_game_main.transform.LookAt(Vector3.zero);
-            camera_container_3d.transform.localEulerAngles = camera_game_main.transform.localEulerAngles;
-            camera_container_3d.fieldOfView = camera_game_main.fieldOfView;
-            camera_container_3d.rect = camera_game_main.rect;
+                main_camera.transform.LookAt(Vector3.zero);
+            camera_container_3d.transform.localEulerAngles = main_camera.transform.localEulerAngles;
+            camera_container_3d.fieldOfView = main_camera.fieldOfView;
+            camera_container_3d.rect = main_camera.rect;
         }
     }
 
     public void fixScreenProblems()
     {
-        for (var i = 0; i < servants.Count; i++) servants[i].fixScreenProblem();
+        foreach (var t in servants)
+            t.fixScreenProblem();
     }
 
     public GameObject create(
@@ -774,9 +679,9 @@ public class Program : MonoBehaviour
         var all = Screen.width / 2f;
         var it = xINscreen - Screen.width / 2f;
         var val = it / all;
-        camera_game_main.rect = new Rect(val, 0, 1, 1);
-        camera_container_3d.rect = camera_game_main.rect;
-        camera_main_3d.rect = camera_game_main.rect;
+        I().main_camera.rect = new Rect(val, 0, 1, 1);
+        I().camera_container_3d.rect = I().main_camera.rect;
+        I().camera_main_3d.rect = I().main_camera.rect;
     }
 
     public static void ShiftUIenabled(GameObject ui, bool enabled)

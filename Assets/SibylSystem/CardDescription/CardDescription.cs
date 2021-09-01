@@ -48,10 +48,10 @@ public class CardDescription : Servant
         gameObject = create
         (
             Program.I().new_ui_cardDescription,
-            Program.camera_main_2d.ScreenToWorldPoint(new Vector3(-256, Screen.height / 2, 600)),
+            Program.I().camera_main_2d.ScreenToWorldPoint(new Vector3(-256, 0, 600)),
             new Vector3(0, 0, 0),
             true,
-            Program.ui_back_ground_2d
+            Program.I().ui_back_ground_2d
         );
         picLoader = gameObject.AddComponent<cardPicLoader>();
         picLoader.code = 0;
@@ -124,9 +124,10 @@ public class CardDescription : Servant
     {
         if (gameObject != null)
         {
-            underSprite.height = Screen.height + 4;
+            underSprite.height = Utils.UIHeight() + 4;
             iTween.MoveTo(gameObject,
-                Program.camera_main_2d.ScreenToWorldPoint(new Vector3(-underSprite.width - 20, Screen.height / 2, 0)),
+                Program.I().camera_main_2d.ScreenToWorldPoint(new Vector3(-underSprite.width - 20,
+                    (float) Utils.UIHeight() / 2, 0)),
                 1.2f);
             setTitle("");
             resizer.gameObject.GetComponent<BoxCollider>().enabled = false;
@@ -137,8 +138,9 @@ public class CardDescription : Servant
     {
         if (gameObject != null)
         {
-            underSprite.height = Screen.height + 4;
-            iTween.MoveTo(gameObject, Program.camera_main_2d.ScreenToWorldPoint(new Vector3(-2, Screen.height / 2, 0)),
+            underSprite.height = Utils.UIHeight() + 4;
+            iTween.MoveTo(gameObject,
+                Program.I().camera_main_2d.ScreenToWorldPoint(new Vector3(-2, (float) Utils.UIHeight() / 2, 0)),
                 1.2f);
             resizer.gameObject.GetComponent<BoxCollider>().enabled = true;
         }
@@ -150,10 +152,10 @@ public class CardDescription : Servant
         {
             var ca = int.Parse(Config.Get("CA", "230"));
             var cb = int.Parse(Config.Get("CB", "270"));
-            if (cb > Screen.height)
+            if (cb > Utils.UIHeight())
             {
                 // some dumb ass repack the program and set the pic size so large that small screen users can't realize there is card description under it.
-                cb = Screen.height / 2;
+                cb = Utils.UIHeight() / 2;
                 ca = (int) (cb * 0.68) + 50;
             }
 

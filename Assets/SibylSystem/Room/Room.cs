@@ -381,7 +381,7 @@ public class Room : WindowServantSP
         int opResult = r.ReadByte();
         Program.I().new_ui_handShower.GetComponent<handShower>().me = meResult - 1;
         Program.I().new_ui_handShower.GetComponent<handShower>().op = opResult - 1;
-        handres = create(Program.I().new_ui_handShower, Vector3.zero, Vector3.zero, false, Program.ui_main_2d);
+        handres = create(Program.I().new_ui_handShower, Vector3.zero, Vector3.zero, false, Program.I().ui_main_2d);
         destroy(handres, 10f);
         animationTime = 1300;
     }
@@ -560,7 +560,7 @@ public class Room : WindowServantSP
 
         if (Program.I().ocgcore.isShowed == false)
         {
-            Program.camera_game_main.transform.position = new Vector3(0, 230, -230);
+            Program.I().main_camera.transform.position = new Vector3(0, 230, -230);
             if (mode != 2)
             {
                 if (selftype == 1)

@@ -47,7 +47,7 @@ public class Book : WindowServant2D
         base.preFrameFunction();
         if (isShowed)
         {
-            gameObject.transform.position = Program.camera_main_2d.ScreenToWorldPoint(
+            gameObject.transform.position = Program.I().camera_main_2d.ScreenToWorldPoint(
                 new Vector3(Program.I().cardDescription.width / 2,
                     (Screen.height - Program.I().cardDescription.cHeight) / 2, 0));
             texts.back.width = (int) Program.I().cardDescription.width;

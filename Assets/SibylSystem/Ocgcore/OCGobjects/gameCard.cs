@@ -273,10 +273,10 @@ public class gameCard : OCGobject
             {
                 var screenposition = Vector3.zero;
                 if (cardDecorations[i].up_of_card)
-                    screenposition = Program.camera_game_main.WorldToScreenPoint(gameObject_face.transform.position +
+                    screenposition = Program.I().main_camera.WorldToScreenPoint(gameObject_face.transform.position +
                         new Vector3(0, 1.2f, 1.2f * 1.732f));
                 else
-                    screenposition = Program.camera_game_main.WorldToScreenPoint(gameObject_face.transform.position);
+                    screenposition = Program.I().main_camera.WorldToScreenPoint(gameObject_face.transform.position);
                 var worldposition = Camera.main.ScreenToWorldPoint(new Vector3(screenposition.x, screenposition.y,
                     screenposition.z - cardDecorations[i].relative_position));
                 cardDecorations[i].game_object.transform.eulerAngles = cardDecorations[i].rotation;
@@ -291,7 +291,7 @@ public class gameCard : OCGobject
         if (obj_number != null)
         {
             var screenposition =
-                Program.camera_game_main.WorldToScreenPoint(gameObject_face.transform.position +
+                Program.I().main_camera.WorldToScreenPoint(gameObject_face.transform.position +
                                                             new Vector3(0, 1f * 2.4f, 1.732f * 2.4f));
             var worldposition =
                 Camera.main.ScreenToWorldPoint(new Vector3(screenposition.x, screenposition.y, screenposition.z - 5));
@@ -548,7 +548,7 @@ public class gameCard : OCGobject
     //    {
     //        deltaTimeCloseUp = faT;
     //    }
-    //    Vector3 screenposition = Program.camera_game_main.WorldToScreenPoint(accurate_position);
+    //    Vector3 screenposition = Program.I().main_camera.WorldToScreenPoint(accurate_position);
     //    Vector3 worldposition = Camera.main.ScreenToWorldPoint(new Vector3(screenposition.x, screenposition.y, screenposition.z - 10));
     //    gameObject.transform.position = new Vector3
     //        (
@@ -564,7 +564,7 @@ public class gameCard : OCGobject
 
     private void ES_excited_handler_close_up_handler()
     {
-        var screenposition = Program.camera_game_main.WorldToScreenPoint(accurate_position);
+        var screenposition = Program.I().main_camera.WorldToScreenPoint(accurate_position);
         var worldposition =
             Camera.main.ScreenToWorldPoint(new Vector3(screenposition.x, screenposition.y, screenposition.z - 10));
         gameObject.transform.position += (worldposition - gameObject.transform.position) * 35f * Program.deltaTime;
@@ -580,7 +580,7 @@ public class gameCard : OCGobject
                 vector_of_begin = gameObject_face.transform.position + new Vector3(0, 0, -2f);
             else
                 vector_of_begin = gameObject_face.transform.position + new Vector3(0, 0, -1.5f);
-            vector_of_begin = Program.camera_game_main.WorldToScreenPoint(vector_of_begin);
+            vector_of_begin = Program.I().main_camera.WorldToScreenPoint(vector_of_begin);
             for (var i = 0; i < buttons.Count; i++)
                 buttons[i].show(vector_of_begin - i * new Vector3(0, 65f * 0.7f * Screen.height / 700f) -
                                 new Vector3(0, 20f * 0.7f * Screen.height / 700f));
@@ -590,7 +590,7 @@ public class gameCard : OCGobject
         if (condition == gameCardCondition.floating_clickable)
         {
             var vector_of_begin = gameObject_face.transform.position + new Vector3(0, 1, 1.732f);
-            vector_of_begin = Program.camera_game_main.WorldToScreenPoint(vector_of_begin);
+            vector_of_begin = Program.I().main_camera.WorldToScreenPoint(vector_of_begin);
             for (var i = 0; i < buttons.Count; i++)
                 buttons[i].show(vector_of_begin + i * new Vector3(0, 65f * 0.7f * Screen.height / 700f) +
                                 new Vector3(0, 35f * 0.7f * Screen.height / 700f));
@@ -606,7 +606,7 @@ public class gameCard : OCGobject
                     vector_of_begin = gameObject_face.transform.position + new Vector3(0, 0, 2);
                 else
                     vector_of_begin = gameObject_face.transform.position + new Vector3(0, 0, 1.5f);
-                vector_of_begin = Program.camera_game_main.WorldToScreenPoint(vector_of_begin);
+                vector_of_begin = Program.I().main_camera.WorldToScreenPoint(vector_of_begin);
                 for (var i = 0; i < buttons.Count; i++)
                     buttons[i].show(vector_of_begin + i * new Vector3(0, 65f * 0.7f * Screen.height / 700f) +
                                     new Vector3(0, 35f * 0.7f * Screen.height / 700f));
@@ -617,7 +617,7 @@ public class gameCard : OCGobject
                 var vector_of_begin = Vector3.zero;
                 var l = 0.5f * game_object_verticle_drawing.transform.localScale.y * (h - 0.5f);
                 vector_of_begin = game_object_verticle_drawing.transform.position + new Vector3(0, l, l * 1.732f);
-                vector_of_begin = Program.camera_game_main.WorldToScreenPoint(vector_of_begin);
+                vector_of_begin = Program.I().main_camera.WorldToScreenPoint(vector_of_begin);
                 for (var i = 0; i < buttons.Count; i++)
                     buttons[i].show(vector_of_begin + i * new Vector3(0, 65f * 0.7f * Screen.height / 700f) +
                                     new Vector3(0, 35f * 0.7f * Screen.height / 700f));
@@ -655,7 +655,7 @@ public class gameCard : OCGobject
         ES_excited_unsafe_should_not_be_changed_dont_touch_this = true;
         showMeLeft(true);
         var overlayed_cards = Program.I().ocgcore.GCS_cardGetOverlayElements(this);
-        var screen = Program.camera_game_main.WorldToScreenPoint(gameObject.transform.position);
+        var screen = Program.I().main_camera.WorldToScreenPoint(gameObject.transform.position);
         screen.z = 0;
         var k = Screen.height / 700f;
         for (var x = 0; x < overlayed_cards.Count; x++)
@@ -1049,7 +1049,7 @@ public class gameCard : OCGobject
         if (game_object_monster_cloude != null)
             if (game_object_monster_cloude_ParticleSystem != null)
             {
-                var screenposition = Program.camera_game_main.WorldToScreenPoint(gameObject.transform.position);
+                var screenposition = Program.I().main_camera.WorldToScreenPoint(gameObject.transform.position);
                 game_object_monster_cloude.transform.position =
                     Camera.main.ScreenToWorldPoint(
                         new Vector3(screenposition.x, screenposition.y, screenposition.z + 3));
@@ -1277,33 +1277,33 @@ public class gameCard : OCGobject
                 Vector3 screen_number_pos;
                 screen_number_pos = 2 * gameObject_face.transform.position - cardHint.gameObject.transform.position;
                 screen_number_pos =
-                    Program.camera_game_main.WorldToScreenPoint(screen_number_pos + new Vector3(-0.25f, 0, -0.7f));
+                    Program.I().main_camera.WorldToScreenPoint(screen_number_pos + new Vector3(-0.25f, 0, -0.7f));
                 screen_number_pos.z -= 2f;
-                verticle_number.transform.position = Program.camera_game_main.ScreenToWorldPoint(screen_number_pos);
+                verticle_number.transform.position = Program.I().main_camera.ScreenToWorldPoint(screen_number_pos);
                 if (game_object_verticle_Star != null)
                 {
                     screen_number_pos = 2 * gameObject_face.transform.position - cardHint.gameObject.transform.position;
                     screen_number_pos =
-                        Program.camera_game_main.WorldToScreenPoint(screen_number_pos + new Vector3(-1.5f, 0, -0.7f));
+                        Program.I().main_camera.WorldToScreenPoint(screen_number_pos + new Vector3(-1.5f, 0, -0.7f));
                     screen_number_pos.z -= 2f;
                     game_object_verticle_Star.transform.position =
-                        Program.camera_game_main.ScreenToWorldPoint(screen_number_pos);
+                        Program.I().main_camera.ScreenToWorldPoint(screen_number_pos);
                 }
             }
             else
             {
                 Vector3 screen_number_pos;
-                screen_number_pos = Program.camera_game_main.WorldToScreenPoint(cardHint.gameObject.transform.position +
+                screen_number_pos = Program.I().main_camera.WorldToScreenPoint(cardHint.gameObject.transform.position +
                     new Vector3(-0.61f, 0.65f, 0.65f * 1.732f));
                 screen_number_pos.z -= 2f;
-                verticle_number.transform.position = Program.camera_game_main.ScreenToWorldPoint(screen_number_pos);
+                verticle_number.transform.position = Program.I().main_camera.ScreenToWorldPoint(screen_number_pos);
                 if (game_object_verticle_Star != null)
                 {
-                    screen_number_pos = Program.camera_game_main.WorldToScreenPoint(
+                    screen_number_pos = Program.I().main_camera.WorldToScreenPoint(
                         cardHint.gameObject.transform.position + new Vector3(-1.86f, 0.65f, 0.65f * 1.732f));
                     screen_number_pos.z -= 2f;
                     game_object_verticle_Star.transform.position =
-                        Program.camera_game_main.ScreenToWorldPoint(screen_number_pos);
+                        Program.I().main_camera.ScreenToWorldPoint(screen_number_pos);
                 }
             }
 
@@ -1810,7 +1810,7 @@ public class gameCard : OCGobject
     private FlashingController insFlashONE(string color)
     {
         FlashingController flash = null;
-        Program.camera_game_main.GetComponent<HighlightingEffect>().enabled = true;
+        Program.I().main_camera.GetComponent<HighlightingEffect>().enabled = true;
         flash = Program.I().create(Program.I().mod_ocgcore_card_figure_line).GetComponent<FlashingController>();
         flash.transform.SetParent(gameObject_face.transform, false);
         flash.transform.localPosition = Vector3.zero;
@@ -1824,7 +1824,7 @@ public class gameCard : OCGobject
 
     public void flash_line_on()
     {
-        Program.camera_game_main.GetComponent<HighlightingEffect>().enabled = true;
+        Program.I().main_camera.GetComponent<HighlightingEffect>().enabled = true;
         if (MouseFlash == null)
         {
             MouseFlash = create(Program.I().mod_ocgcore_card_figure_line).GetComponent<FlashingController>();
@@ -1849,7 +1849,7 @@ public class gameCard : OCGobject
 
     public void p_line_on()
     {
-        Program.camera_game_main.GetComponent<HighlightingEffect>().enabled = true;
+        Program.I().main_camera.GetComponent<HighlightingEffect>().enabled = true;
         if (p_line != null) destroy(p_line);
         p_line = create(Program.I().mod_ocgcore_card_figure_line);
         p_line.transform.SetParent(gameObject_face.transform, false);
@@ -2057,7 +2057,7 @@ public class gameCard : OCGobject
                 refreshFunctions.Remove(SOH_act);
                 var shower =
                     create(Program.I().Pro1_superCardShowerA, Program.I().ocgcore.centre(true), Vector3.zero, false,
-                        Program.ui_main_2d).GetComponent<YGO1superShower>();
+                        Program.I().ui_main_2d).GetComponent<YGO1superShower>();
                 shower.card.mainTexture = tex;
                 shower.closeup.mainTexture = texc;
                 shower.closeup.height = (int) (500f / k);
@@ -2075,7 +2075,7 @@ public class gameCard : OCGobject
             refreshFunctions.Remove(SOH_nAct);
             var shower =
                 create(Program.I().Pro1_CardShower, Program.I().ocgcore.centre(), Vector3.zero, false,
-                    Program.ui_main_2d).GetComponent<pro1CardShower>();
+                    Program.I().ui_main_2d).GetComponent<pro1CardShower>();
             shower.card.mainTexture = tex;
             shower.mask.mainTexture = GameTextureManager.Mask;
             shower.disable.mainTexture = GameTextureManager.negated;
@@ -2099,7 +2099,7 @@ public class gameCard : OCGobject
                 refreshFunctions.Remove(SOH_sum);
                 var shower =
                     create(Program.I().Pro1_superCardShower, Program.I().ocgcore.centre(true), Vector3.zero, false,
-                        Program.ui_main_2d).GetComponent<YGO1superShower>();
+                        Program.I().ui_main_2d).GetComponent<YGO1superShower>();
                 shower.card.mainTexture = tex;
                 shower.closeup.mainTexture = texc;
                 shower.closeup.height = (int) (500f / k);
@@ -2117,7 +2117,7 @@ public class gameCard : OCGobject
             refreshFunctions.Remove(SOH_nSum);
             var shower =
                 create(Program.I().Pro1_CardShower, Program.I().ocgcore.centre(), Vector3.zero, false,
-                    Program.ui_main_2d).GetComponent<pro1CardShower>();
+                    Program.I().ui_main_2d).GetComponent<pro1CardShower>();
             shower.card.mainTexture = tex;
             shower.mask.mainTexture = GameTextureManager.Mask;
             shower.disable.mainTexture = GameTextureManager.negated;
@@ -2141,7 +2141,7 @@ public class gameCard : OCGobject
             refreshFunctions.Remove(SOH_dis);
             var shower =
                 create(Program.I().Pro1_CardShower, Program.I().ocgcore.centre(), Vector3.zero, false,
-                    Program.ui_main_2d).GetComponent<pro1CardShower>();
+                    Program.I().ui_main_2d).GetComponent<pro1CardShower>();
             shower.card.mainTexture = tex;
             shower.mask.mainTexture = GameTextureManager.Mask;
             shower.disable.mainTexture = GameTextureManager.negated;
@@ -2296,7 +2296,7 @@ public class gameCard : OCGobject
             if (ballChain != null)
             {
                 del_all_decoration_by_string("chaining");
-                var pos = UIHelper.get_close(gameObject.transform.position, Program.camera_game_main, 5);
+                var pos = UIHelper.get_close(gameObject.transform.position, Program.I().main_camera, 5);
                 if (Program.I().setting.setting.Vchain.value)
                     Object.Destroy(Object.Instantiate(Program.I().mod_ocgcore_cs_end, pos, Quaternion.identity), 5f);
                 if (ballChain != null) destroy(ballChain);

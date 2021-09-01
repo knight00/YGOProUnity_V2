@@ -86,7 +86,7 @@ public class WindowServantSP : Servant
             Vector3.zero,
             Vector3.zero,
             false,
-            Program.ui_windows_2d
+            Program.I().ui_windows_2d
         );
         UIHelper.InterGameObject(gameObject);
         var v = new Vector3();

@@ -13,7 +13,7 @@ public class TextMaster
                 position,
                 new Vector3(60, 0, 0),
                 true,
-                Program.ui_main_3d,
+                Program.I().ui_main_3d,
                 false
             );
             UIHelper.clearITWeen(gameObject);
@@ -23,10 +23,10 @@ public class TextMaster
         {
             gameObject = Program.I().ocgcore.create_s(
                 Program.I().mod_simple_ngui_text,
-                Program.camera_main_2d.ScreenToWorldPoint(position),
+                Program.I().camera_main_2d.ScreenToWorldPoint(position),
                 new Vector3(0, 0, 0),
                 true,
-                Program.ui_main_2d
+                Program.I().ui_main_2d
             );
         }
 

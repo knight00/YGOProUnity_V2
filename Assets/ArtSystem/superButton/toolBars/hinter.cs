@@ -21,11 +21,11 @@ public class hinter : MonoBehaviour {
 
     void in_()
     {
-        Vector3 screenPosition = Program.camera_main_2d.WorldToScreenPoint(gameObject.GetComponentInChildren<UITexture>().gameObject.transform.position);
+        Vector3 screenPosition = Program.I().camera_main_2d.WorldToScreenPoint(gameObject.GetComponentInChildren<UITexture>().gameObject.transform.position);
         screenPosition.y += 45;
         screenPosition.z = 0;
-        Vector3 worldPositin = Program.camera_main_2d.ScreenToWorldPoint(screenPosition);
-        obj = Program.I().create(Program.I().mod_simple_ngui_text, worldPositin, Vector3.zero, true, Program.ui_main_2d, true);
+        Vector3 worldPositin = Program.I().camera_main_2d.ScreenToWorldPoint(screenPosition);
+        obj = Program.I().create(Program.I().mod_simple_ngui_text, worldPositin, Vector3.zero, true, Program.I().ui_main_2d, true);
         obj.GetComponent<UILabel>().text = str;
         obj.GetComponent<UILabel>().effectStyle = UILabel.Effect.Outline;
         Program.I().destroy(obj, 5f, false, false);

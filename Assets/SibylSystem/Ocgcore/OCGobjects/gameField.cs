@@ -83,7 +83,7 @@ public class GameField : OCGobject
     public GameField()
     {
         gameObject = create(Program.I().new_ocgcore_field, getGoodPosition(), Vector3.zero, false,
-            Program.ui_container_3d, false);
+            Program.I().ui_container_3d, false);
         UIHelper.getByName(gameObject, "obj_0").transform.localScale = Vector3.zero;
         UIHelper.getByName(gameObject, "obj_1").transform.localScale = Vector3.zero;
         Phase = gameObject.GetComponentInChildren<phaser>();
@@ -138,7 +138,7 @@ public class GameField : OCGobject
 
 
         label = create(Program.I().mod_simple_ngui_text, new Vector3(0, 0, -14.5f), new Vector3(60, 0, 0), false,
-            Program.ui_container_3d, false).GetComponent<UILabel>();
+            Program.I().ui_container_3d, false).GetComponent<UILabel>();
         label.fontSize = 40;
         label.overflowMethod = UILabel.Overflow.ShrinkContent;
         label.alignment = NGUIText.Alignment.Left;
@@ -573,7 +573,7 @@ public class GameField : OCGobject
         if (Ocgcore.inSkiping) return;
         if (only) destroy(big_string);
         big_string = create(Program.I().New_phase, Program.I().ocgcore.centre(), Vector3.zero, false,
-            Program.ui_main_2d, true,
+            Program.I().ui_main_2d, true,
             new Vector3(Screen.height / 1000f * Program.fieldSize, Screen.height / 1000f * Program.fieldSize,
                 Screen.height / 1000f * Program.fieldSize));
         big_string.GetComponentInChildren<UITexture>().mainTexture = tex;
@@ -705,13 +705,13 @@ public class GameField : OCGobject
         if (player == 0)
         {
             screen_p = new Vector3(Program.I().ocgcore.getScreenCenter(), 100f, 5);
-            position = Program.camera_game_main.ScreenToWorldPoint(new Vector3(Program.I().ocgcore.getScreenCenter(),
+            position = Program.I().main_camera.ScreenToWorldPoint(new Vector3(Program.I().ocgcore.getScreenCenter(),
                 100f, 5));
         }
         else
         {
             screen_p = new Vector3(Program.I().ocgcore.getScreenCenter(), Screen.height - 100f, 5);
-            position = Program.camera_game_main.ScreenToWorldPoint(new Vector3(Program.I().ocgcore.getScreenCenter(),
+            position = Program.I().main_camera.ScreenToWorldPoint(new Vector3(Program.I().ocgcore.getScreenCenter(),
                 Screen.height - 100f, 5));
         }
 
@@ -754,7 +754,7 @@ public class GameField : OCGobject
         if (player == 0)
         {
             Program.I().ocgcore.Sleep((int) (60 * (float) amount / 2500f));
-            iTween.ShakePosition(Program.camera_game_main.gameObject, iTween.Hash(
+            iTween.ShakePosition(Program.I().main_camera.gameObject, iTween.Hash(
                 "x", amount / 1500f,
                 "y", amount / 1500f,
                 "z", amount / 1500f,
@@ -796,7 +796,7 @@ public class GameField : OCGobject
     //    text_mesh.alignment = TMPro.TextAlignmentOptions.Center;
 
 
-    //    Vector3 screenP = Program.camera_game_main.WorldToScreenPoint(Vector3.zero);
+    //    Vector3 screenP = Program.I().main_camera.WorldToScreenPoint(Vector3.zero);
     //    screenP.z = 18f;
     //    int bun = Screen.height / 3;
     //    if (screenP.y > Screen.height / 2 + bun)
@@ -807,7 +807,7 @@ public class GameField : OCGobject
     //    {
     //        screenP.y = Screen.height / 2 - bun;
     //    }
-    //    big_string.transform.position = Program.camera_game_main.ScreenToWorldPoint(screenP);
+    //    big_string.transform.position = Program.I().main_camera.ScreenToWorldPoint(screenP);
 
     //    big_string.AddComponent<animation_screen_lock2>();
     //    big_string.transform.localScale = Vector3.zero;

@@ -165,7 +165,7 @@ public class gameHiddenButton : OCGobject
 
 
                     Program.I().book.lab =
-                        create(Program.I().New_decker, Vector3.zero, Vector3.zero, false, Program.ui_main_2d)
+                        create(Program.I().New_decker, Vector3.zero, Vector3.zero, false, Program.I().ui_main_2d)
                             .GetComponent<UILabel>();
                     Program.I().book.realize();
 
@@ -174,7 +174,7 @@ public class gameHiddenButton : OCGobject
                     screenPosition.x -= 90;
                     screenPosition.y += Program.I().book.lab.height / 4;
                     screenPosition.z = 0;
-                    var worldPositin = Program.camera_main_2d.ScreenToWorldPoint(screenPosition);
+                    var worldPositin = Program.I().camera_main_2d.ScreenToWorldPoint(screenPosition);
                     Program.I().book.lab.transform.position = worldPositin;
 
                     return;
@@ -192,7 +192,7 @@ public class gameHiddenButton : OCGobject
 
 
                 Program.I().book.labop =
-                    create(Program.I().New_decker, Vector3.zero, Vector3.zero, false, Program.ui_main_2d)
+                    create(Program.I().New_decker, Vector3.zero, Vector3.zero, false, Program.I().ui_main_2d)
                         .GetComponent<UILabel>();
                 Program.I().book.realize();
 
@@ -201,7 +201,7 @@ public class gameHiddenButton : OCGobject
                 screenPosition.x -= 90;
                 screenPosition.y -= Program.I().book.labop.height / 4;
                 screenPosition.z = 0;
-                var worldPositin = Program.camera_main_2d.ScreenToWorldPoint(screenPosition);
+                var worldPositin = Program.I().camera_main_2d.ScreenToWorldPoint(screenPosition);
                 Program.I().book.labop.transform.position = worldPositin;
 
                 return;

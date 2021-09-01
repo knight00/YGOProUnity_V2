@@ -118,7 +118,7 @@ public class Servant
         if (toolBar != null)
         {
             var vectorOfShowedBar_Screen = new Vector3(Screen.width - RightToScreen, buttomToScreen, 0);
-            iTween.MoveTo(toolBar, Program.camera_back_ground_2d.ScreenToWorldPoint(vectorOfShowedBar_Screen), 0.6f);
+            iTween.MoveTo(toolBar, Program.I().camera_back_ground_2d.ScreenToWorldPoint(vectorOfShowedBar_Screen), 0.6f);
             toolBar.transform.localScale =
                 new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f);
             var items = toolBar.GetComponentsInChildren<toolShift>();
@@ -131,7 +131,7 @@ public class Servant
         if (toolBar != null)
         {
             var vectorOfHidedBar_Screen = new Vector3(Screen.width - RightToScreen, -100, 0);
-            iTween.MoveTo(toolBar, Program.camera_back_ground_2d.ScreenToWorldPoint(vectorOfHidedBar_Screen), 0.6f);
+            iTween.MoveTo(toolBar, Program.I().camera_back_ground_2d.ScreenToWorldPoint(vectorOfHidedBar_Screen), 0.6f);
             toolBar.transform.localScale =
                 new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f);
             var items = toolBar.GetComponentsInChildren<toolShift>();
@@ -255,10 +255,10 @@ public class Servant
         toolBar = create
         (
             mod,
-            Program.camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width - RightToScreen, -100, 0)),
+            Program.I().camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width - RightToScreen, -100, 0)),
             new Vector3(0, 0, 0),
             false,
-            Program.ui_main_2d
+            Program.I().ui_main_2d
         );
         UIHelper.InterGameObject(toolBar);
         fixScreenProblem();
@@ -287,7 +287,7 @@ public class Servant
     {
         if (Program.I().ocgcore.isShowed || Program.I().deckManager.isShowed)
         {
-            var screenP = Program.camera_game_main.WorldToScreenPoint(Vector3.zero);
+            var screenP = Program.I().main_camera.WorldToScreenPoint(Vector3.zero);
             screenP.z = 0;
             if (fix)
             {
@@ -295,10 +295,10 @@ public class Servant
                 if (screenP.y < 350f) screenP.y = 350f;
             }
 
-            return Program.camera_main_2d.ScreenToWorldPoint(screenP);
+            return Program.I().camera_main_2d.ScreenToWorldPoint(screenP);
         }
 
-        return Program.camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2, 0));
+        return Program.I().camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2, 0));
     }
 
     private Vector3 MSentre()
@@ -306,19 +306,19 @@ public class Servant
         if (Program.I().ocgcore.isShowed)
         {
             var real = (Program.fieldSize - 1) * 0.9f + 1f;
-            var screenP = Program.camera_game_main.WorldToScreenPoint(new Vector3(0, 0, -5.65f * real));
+            var screenP = Program.I().main_camera.WorldToScreenPoint(new Vector3(0, 0, -5.65f * real));
             screenP.z = 0;
-            return Program.camera_main_2d.ScreenToWorldPoint(screenP);
+            return Program.I().camera_main_2d.ScreenToWorldPoint(screenP);
         }
 
         if (Program.I().deckManager.isShowed)
         {
-            var screenP = Program.camera_game_main.WorldToScreenPoint(Vector3.zero);
+            var screenP = Program.I().main_camera.WorldToScreenPoint(Vector3.zero);
             screenP.z = 0;
-            return Program.camera_main_2d.ScreenToWorldPoint(screenP);
+            return Program.I().camera_main_2d.ScreenToWorldPoint(screenP);
         }
 
-        return Program.camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2, 0));
+        return Program.I().camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2, 0));
     }
 
     private enum messageSystemType
@@ -438,7 +438,7 @@ public class Servant
             MSentre(),
             Vector3.zero,
             true,
-            Program.ui_main_2d,
+            Program.I().ui_main_2d,
             true,
             new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f)
         );
@@ -458,7 +458,7 @@ public class Servant
             MSentre(),
             Vector3.zero,
             true,
-            Program.ui_main_2d,
+            Program.I().ui_main_2d,
             true,
             new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f)
         );
@@ -479,7 +479,7 @@ public class Servant
             MSentre(),
             Vector3.zero,
             true,
-            Program.ui_main_2d,
+            Program.I().ui_main_2d,
             true,
             new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f)
         );
@@ -510,7 +510,7 @@ public class Servant
             MSentre(),
             Vector3.zero,
             true,
-            Program.ui_main_2d,
+            Program.I().ui_main_2d,
             true,
             new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f)
         );
@@ -531,7 +531,7 @@ public class Servant
             MSentre(),
             Vector3.zero,
             true,
-            Program.ui_main_2d,
+            Program.I().ui_main_2d,
             true,
             new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f)
         );
@@ -553,7 +553,7 @@ public class Servant
             MSentre(),
             Vector3.zero,
             true,
-            Program.ui_main_2d,
+            Program.I().ui_main_2d,
             true,
             new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f)
         );
@@ -594,7 +594,7 @@ public class Servant
             MSentre(),
             Vector3.zero,
             true,
-            Program.ui_main_2d,
+            Program.I().ui_main_2d,
             true,
             new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f)
         );
@@ -633,7 +633,7 @@ public class Servant
             MSentre(),
             Vector3.zero,
             true,
-            Program.ui_main_2d,
+            Program.I().ui_main_2d,
             true,
             new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f)
         );
@@ -674,7 +674,7 @@ public class Servant
             MSentre(),
             Vector3.zero,
             true,
-            Program.ui_main_2d,
+            Program.I().ui_main_2d,
             true,
             new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f)
         );
@@ -695,7 +695,7 @@ public class Servant
             MSentre(),
             Vector3.zero,
             true,
-            Program.ui_main_2d,
+            Program.I().ui_main_2d,
             true,
             new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f)
         );
@@ -722,7 +722,7 @@ public class Servant
             MSentre(),
             Vector3.zero,
             true,
-            Program.ui_main_2d,
+            Program.I().ui_main_2d,
             true,
             new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f)
         );

@@ -42,11 +42,11 @@ public class DeckManager : ServantWithCardDescription
     public override void show()
     {
         base.show();
-        Program.camera_game_main.transform.position = new Vector3(0, 35, 0);
-        Program.camera_game_main.transform.localEulerAngles = new Vector3(90, 0, 0);
+        Program.I().main_camera.transform.position = new Vector3(0, 35, 0);
+        Program.I().main_camera.transform.localEulerAngles = new Vector3(90, 0, 0);
         cameraAngle = 90;
         Program.cameraFacing = true;
-        Program.cameraPosition = Program.camera_game_main.transform.position;
+        Program.cameraPosition = Program.I().main_camera.transform.position;
         camrem();
         Program.I().light.transform.eulerAngles = new Vector3(50, 0, 0);
         gameObjectDesk = create_s(Program.I().new_mod_tableInDeckManager);
@@ -747,18 +747,18 @@ public class DeckManager : ServantWithCardDescription
         gameObjectSearch = create
         (
             Program.I().new_ui_search,
-            Program.camera_back_ground_2d.ScreenToWorldPoint(new Vector3(Screen.width + 600, Screen.height / 2, 600)),
+            Program.I().camera_back_ground_2d.ScreenToWorldPoint(new Vector3(Screen.width + 600, Screen.height / 2, 600)),
             new Vector3(0, 0, 0),
             false,
-            Program.ui_back_ground_2d
+            Program.I().ui_back_ground_2d
         );
         gameObjectDetailedSearch = create
         (
             Program.I().new_ui_searchDetailed,
-            Program.camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height * 2f, 0)),
+            Program.I().camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height * 2f, 0)),
             new Vector3(0, 0, 0),
             false,
-            Program.ui_main_2d
+            Program.I().ui_main_2d
         );
         UIHelper.InterGameObject(gameObjectSearch);
         UIHelper.InterGameObject(gameObjectDetailedSearch);
@@ -822,7 +822,7 @@ public class DeckManager : ServantWithCardDescription
     {
         GameObject returnValue = null;
         returnValue = create(Program.I().new_ui_cardOnSearchList, Vector3.zero, Vector3.zero, false,
-            Program.ui_back_ground_2d);
+            Program.I().ui_back_ground_2d);
         UIHelper.getRealEventGameObject(returnValue).name = Args[0];
         UIHelper.trySetLableText(returnValue, Args[2]);
         var cardPicLoader_ = UIHelper.getRealEventGameObject(returnValue).AddComponent<cardPicLoader>();
@@ -839,7 +839,7 @@ public class DeckManager : ServantWithCardDescription
         base.applyHideArrangement();
         Program.cameraFacing = false;
         iTween.MoveTo(gameObjectSearch,
-            Program.camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width + 600, Screen.height / 2, 600)), 1.2f);
+            Program.I().camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width + 600, Screen.height / 2, 600)), 1.2f);
         refreshDetail();
     }
 
@@ -850,7 +850,7 @@ public class DeckManager : ServantWithCardDescription
         var tex = UIHelper.getByName<UITexture>(gameObjectSearch, "under_");
         tex.height = Screen.height;
         iTween.MoveTo(gameObjectSearch,
-            Program.camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width - tex.width / 2, Screen.height / 2, 0)),
+            Program.I().camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width - tex.width / 2, Screen.height / 2, 0)),
             1.2f);
         refreshDetail();
     }
@@ -866,7 +866,7 @@ public class DeckManager : ServantWithCardDescription
         switch (condition)
         {
             case Condition.editDeck:
-                UIHelper.setParent(gameObjectSearch, Program.ui_back_ground_2d);
+                UIHelper.setParent(gameObjectSearch, Program.I().ui_back_ground_2d);
                 SetBar(Program.I().new_bar_editDeck, 0, 230);
                 UIPopupList_banlist = UIHelper.getByName<UIPopupList>(toolBar, "lfList_");
                 var banlistNames = BanlistManager.getAllName();
@@ -882,7 +882,7 @@ public class DeckManager : ServantWithCardDescription
                 UIHelper.registEvent(toolBar, "copy_", onCopy);
                 break;
             case Condition.changeSide:
-                UIHelper.setParent(gameObjectSearch, Program.ui_main_2d);
+                UIHelper.setParent(gameObjectSearch, Program.I().ui_main_2d);
                 SetBar(Program.I().new_bar_changeSide, 0, 230);
                 UIPopupList_banlist = null;
                 UIHelper.registEvent(toolBar, "rand_", rand);
@@ -1069,7 +1069,7 @@ public class DeckManager : ServantWithCardDescription
                     {
                         gameObjectDetailedSearch.GetComponent<UITexture>().height = 700;
                         iTween.MoveTo(gameObjectDetailedSearch,
-                            Program.camera_main_2d.ScreenToWorldPoint(
+                            Program.I().camera_main_2d.ScreenToWorldPoint(
                                 new Vector3(Screen.width - 230 - 115f * Screen.height / 700f, Screen.height * 0.5f, 0)),
                             0.6f);
                         reShowBar(0, 230 + 230 * Screen.height / 700f);
@@ -1078,7 +1078,7 @@ public class DeckManager : ServantWithCardDescription
                     {
                         gameObjectDetailedSearch.GetComponent<UITexture>().height = 700;
                         iTween.MoveTo(gameObjectDetailedSearch,
-                            Program.camera_main_2d.ScreenToWorldPoint(
+                            Program.I().camera_main_2d.ScreenToWorldPoint(
                                 new Vector3(Screen.width - 230 - 115f * Screen.height / 700f, Screen.height * 1.5f, 0)),
                             0.6f);
                         reShowBar(0, 230);
@@ -1091,7 +1091,7 @@ public class DeckManager : ServantWithCardDescription
                     {
                         gameObjectDetailedSearch.GetComponent<UITexture>().height = Screen.height;
                         iTween.MoveTo(gameObjectDetailedSearch,
-                            Program.camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width - 345f,
+                            Program.I().camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width - 345f,
                                 Screen.height * 0.5f, 0)), 0.6f);
                         reShowBar(0, 460);
                     }
@@ -1099,7 +1099,7 @@ public class DeckManager : ServantWithCardDescription
                     {
                         gameObjectDetailedSearch.GetComponent<UITexture>().height = Screen.height;
                         iTween.MoveTo(gameObjectDetailedSearch,
-                            Program.camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width - 345f,
+                            Program.I().camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width - 345f,
                                 Screen.height * 1.5f, 0)), 0.6f);
                         reShowBar(0, 230);
                     }

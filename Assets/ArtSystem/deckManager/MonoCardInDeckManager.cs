@@ -73,15 +73,15 @@ public class MonoCardInDeckManager : MonoBehaviour {
     {
         float x = Input.mousePosition.x;
         float y = Input.mousePosition.y;
-        Vector3 to_ltemp = Program.camera_game_main.ScreenToWorldPoint(new Vector3(x, y, 1));
-        Vector3 dv = to_ltemp - Program.camera_game_main.transform.position;
+        Vector3 to_ltemp = Program.I().main_camera.ScreenToWorldPoint(new Vector3(x, y, 1));
+        Vector3 dv = to_ltemp - Program.I().main_camera.transform.position;
         if (dv.y == 0) dv.y = 0.01f;
-        to_ltemp.x = ((height - Program.camera_game_main.transform.position.y)
-            * (dv.x) / dv.y + Program.camera_game_main.transform.position.x);
-        to_ltemp.y = ((height - Program.camera_game_main.transform.position.y)
-            * (dv.y) / dv.y + Program.camera_game_main.transform.position.y);
-        to_ltemp.z = ((height - Program.camera_game_main.transform.position.y)
-            * (dv.z) / dv.y + Program.camera_game_main.transform.position.z);
+        to_ltemp.x = ((height - Program.I().main_camera.transform.position.y)
+            * (dv.x) / dv.y + Program.I().main_camera.transform.position.x);
+        to_ltemp.y = ((height - Program.I().main_camera.transform.position.y)
+            * (dv.y) / dv.y + Program.I().main_camera.transform.position.y);
+        to_ltemp.z = ((height - Program.I().main_camera.transform.position.y)
+            * (dv.z) / dv.y + Program.I().main_camera.transform.position.z);
         return to_ltemp;
     }
 
@@ -202,14 +202,14 @@ public class MonoCardInDeckManager : MonoBehaviour {
     public static Vector3 refLectPosition(Vector3 pos)
     {
         Vector3 to_ltemp = pos;
-        Vector3 dv = to_ltemp - Program.camera_game_main.transform.position;
+        Vector3 dv = to_ltemp - Program.I().main_camera.transform.position;
         if (dv.y == 0) dv.y = 0.01f;
-        to_ltemp.x = ((0 - Program.camera_game_main.transform.position.y)
-            * (dv.x) / dv.y + Program.camera_game_main.transform.position.x);
-        to_ltemp.y = ((0 - Program.camera_game_main.transform.position.y)
-            * (dv.y) / dv.y + Program.camera_game_main.transform.position.y);
-        to_ltemp.z = ((0 - Program.camera_game_main.transform.position.y)
-            * (dv.z) / dv.y + Program.camera_game_main.transform.position.z);
+        to_ltemp.x = ((0 - Program.I().main_camera.transform.position.y)
+            * (dv.x) / dv.y + Program.I().main_camera.transform.position.x);
+        to_ltemp.y = ((0 - Program.I().main_camera.transform.position.y)
+            * (dv.y) / dv.y + Program.I().main_camera.transform.position.y);
+        to_ltemp.z = ((0 - Program.I().main_camera.transform.position.y)
+            * (dv.z) / dv.y + Program.I().main_camera.transform.position.z);
         return to_ltemp;
     }
 }

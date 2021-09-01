@@ -480,7 +480,7 @@ public class Ocgcore : ServantWithCardDescription
             Vector3.zero,
             Vector3.zero,
             false,
-            Program.ui_back_ground_2d
+            Program.I().ui_back_ground_2d
         ).GetComponent<gameInfo>();
         gameInfo.ini();
         UIHelper.InterGameObject(gameInfo.gameObject);
@@ -1666,7 +1666,7 @@ public class Ocgcore : ServantWithCardDescription
                 }
 
                 var handres = create(Program.I().new_ui_handShower, Vector3.zero, Vector3.zero, false,
-                    Program.ui_main_2d);
+                    Program.I().ui_main_2d);
                 destroy(handres, 10f);
                 Sleep(60);
                 break;
@@ -2339,7 +2339,7 @@ public class Ocgcore : ServantWithCardDescription
                     EventDelegate.Execute(UIHelper.getByName<UIButton>(toolBar, "stop_").onClick);
             RMSshow_clear();
             var real = (Program.fieldSize - 1) * 0.9f + 1f;
-            var point = Program.camera_game_main.WorldToScreenPoint(new Vector3(0, 0, -5.65f * real));
+            var point = Program.I().main_camera.WorldToScreenPoint(new Vector3(0, 0, -5.65f * real));
             point.z = 2;
             if (Program.I().setting.setting.Vwin.value)
             {
@@ -2356,10 +2356,10 @@ public class Ocgcore : ServantWithCardDescription
                 winCaculator = create
                 (
                     Program.I().New_winCaculatorRecord,
-                    Program.camera_main_2d.ScreenToWorldPoint(point),
+                    Program.I().camera_main_2d.ScreenToWorldPoint(point),
                     new Vector3(0, 0, 0),
                     true,
-                    Program.ui_main_2d,
+                    Program.I().ui_main_2d,
                     true,
                     new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f)
                 ).GetComponent<lazyWin>();
@@ -2369,10 +2369,10 @@ public class Ocgcore : ServantWithCardDescription
                 winCaculator = create
                 (
                     Program.I().New_winCaculator,
-                    Program.camera_main_2d.ScreenToWorldPoint(point),
+                    Program.I().camera_main_2d.ScreenToWorldPoint(point),
                     new Vector3(0, 0, 0),
                     true,
-                    Program.ui_main_2d,
+                    Program.I().ui_main_2d,
                     true,
                     new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f)
                 ).GetComponent<lazyWin>();
@@ -4343,7 +4343,7 @@ public class Ocgcore : ServantWithCardDescription
                         UIHelper.playSound("addcounter", 1);
                         //if (Program.YGOPro1 == false)
                         {
-                            var pos = UIHelper.get_close(card.gameObject.transform.position, Program.camera_game_main,
+                            var pos = UIHelper.get_close(card.gameObject.transform.position, Program.I().main_camera,
                                 5);
                             Object.Destroy(Object.Instantiate(Program.I().mod_ocgcore_cs_end, pos, Quaternion.identity),
                                 5f);
@@ -4365,7 +4365,7 @@ public class Ocgcore : ServantWithCardDescription
                         UIHelper.playSound("removecounter", 1);
                         //if (Program.YGOPro1 == false)
                         {
-                            var pos = UIHelper.get_close(card.gameObject.transform.position, Program.camera_game_main,
+                            var pos = UIHelper.get_close(card.gameObject.transform.position, Program.I().main_camera,
                                 5);
                             Object.Destroy(Object.Instantiate(Program.I().mod_ocgcore_cs_end, pos, Quaternion.identity),
                                 5f);
@@ -4483,7 +4483,7 @@ public class Ocgcore : ServantWithCardDescription
                     r.ReadByte();
                     UIHelper.playSound("explode", 0.4f);
                     var amount = (int) (Mathf.Clamp(attackCard.get_data().Attack, 0, 3500) * 0.8f);
-                    iTween.ShakePosition(Program.camera_game_main.gameObject, iTween.Hash(
+                    iTween.ShakePosition(Program.I().main_camera.gameObject, iTween.Hash(
                         "x", amount / 1500f,
                         "y", amount / 1500f,
                         "z", amount / 1500f,
@@ -4787,9 +4787,9 @@ public class Ocgcore : ServantWithCardDescription
     {
         if (waitObject == null)
             waitObject = create_s(Program.I().new_ocgcore_wait,
-                Program.camera_main_2d.ScreenToWorldPoint(new Vector3(getScreenCenter(),
+                Program.I().camera_main_2d.ScreenToWorldPoint(new Vector3(getScreenCenter(),
                     Screen.height - 15f - 15f * (1.21f - Program.fieldSize) / 0.21f)), Vector3.zero, true,
-                Program.ui_main_2d);
+                Program.I().ui_main_2d);
     }
 
     private void removeAttackHandler()
@@ -6848,9 +6848,9 @@ public class Ocgcore : ServantWithCardDescription
         base.show();
         Program.I().light.transform.eulerAngles = new Vector3(50, -50, 0);
         Program.cameraPosition = new Vector3(0, 23, -18.5f - 3.2f * (Program.fieldSize - 1f) / 0.21f);
-        Program.camera_game_main.transform.position = Program.cameraPosition * 1.5f;
+        Program.I().main_camera.transform.position = Program.cameraPosition * 1.5f;
         Program.cameraRotation = new Vector3(60, 0, 0);
-        Program.camera_game_main.transform.eulerAngles = Program.cameraRotation;
+        Program.I().main_camera.transform.eulerAngles = Program.cameraRotation;
         Program.reMoveCam(getScreenCenter());
         gameField = new GameField();
         if (paused)
@@ -7671,7 +7671,7 @@ public class Ocgcore : ServantWithCardDescription
         if (texture != null)
         {
             RemoveUpdateAction_s(animation_show_card_code_handler);
-            //Vector3 position = Program.camera_game_main.ScreenToWorldPoint(new Vector3(getScreenCenter(), Screen.height / 2f, 10));
+            //Vector3 position = Program.I().main_camera.ScreenToWorldPoint(new Vector3(getScreenCenter(), Screen.height / 2f, 10));
             //GameObject obj = create_s(Program.I().mod_simple_quad);
             //obj.AddComponent<animation_screen_lock>().screen_point = new Vector3(getScreenCenter(), Screen.height / 2f, 6);
             //obj.transform.eulerAngles = new Vector3(60, 0, 0);
@@ -7681,7 +7681,7 @@ public class Ocgcore : ServantWithCardDescription
             //destroy(obj, 1f);
             var shower =
                 create(Program.I().Pro1_CardShower, Program.I().ocgcore.centre(), Vector3.zero, false,
-                    Program.ui_main_2d).GetComponent<pro1CardShower>();
+                    Program.I().ui_main_2d).GetComponent<pro1CardShower>();
             shower.card.mainTexture = texture;
             shower.mask.mainTexture = GameTextureManager.Mask;
             shower.disable.mainTexture = GameTextureManager.negated;

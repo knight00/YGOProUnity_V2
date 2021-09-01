@@ -828,8 +828,8 @@ public static class UIHelper
 
     internal static Vector3 getCamGoodPosition(Vector3 v, float l)
     {
-        var screenposition = Program.camera_game_main.WorldToScreenPoint(v);
-        return Program.camera_game_main.ScreenToWorldPoint(new Vector3(screenposition.x, screenposition.y,
+        var screenposition = Program.I().main_camera.WorldToScreenPoint(v);
+        return Program.I().main_camera.ScreenToWorldPoint(new Vector3(screenposition.x, screenposition.y,
             screenposition.z + l));
     }
 
@@ -955,9 +955,9 @@ public static class UIHelper
 
     internal static float getScreenDistance(GameObject a, GameObject b)
     {
-        var sa = Program.camera_game_main.WorldToScreenPoint(a.transform.position);
+        var sa = Program.I().main_camera.WorldToScreenPoint(a.transform.position);
         sa.z = 0;
-        var sb = Program.camera_game_main.WorldToScreenPoint(b.transform.position);
+        var sb = Program.I().main_camera.WorldToScreenPoint(b.transform.position);
         sb.z = 0;
         return Vector3.Distance(sa, sb);
     }
