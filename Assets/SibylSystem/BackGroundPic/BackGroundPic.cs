@@ -23,19 +23,21 @@ public class BackGroundPic : Servant
 
     public override void applyShowArrangement()
     {
-        var s = (float) Utils.UIHeight() / Screen.height;
-        var tex = backGround.GetComponent<UITexture>().mainTexture;
-        var ss = tex.height / (float) tex.width;
-        var width = (int) (Screen.width * s);
-        var height = (int) (width * ss);
-        if (height < Screen.height)
-        {
-            height = (int) (Screen.height * s);
-            width = (int) (height / ss);
-        }
+        var component = backGround.GetComponent<UITexture>();
+        var texture = component.mainTexture;
 
-        backGround.GetComponent<UITexture>().height = height + 2;
-        backGround.GetComponent<UITexture>().width = width + 2;
+        if (texture.width <= texture.height * Screen.width / Screen.height)
+        {
+            // 图窄屏幕宽，用宽度
+            component.width = Utils.UIWidth();
+            component.height = component.width * texture.height / texture.width;
+        }
+        else
+        {
+            // 图宽屏幕窄，用高度
+            component.height = Utils.UIHeight();
+            component.width = component.height * texture.width / texture.height;
+        }
     }
 
     public override void applyHideArrangement()

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 public class Setting : WindowServant2D
 {
@@ -16,10 +18,19 @@ public class Setting : WindowServant2D
     private UISlider sliderVsize;
     public int star = 5;
 
+    private UIPopupList _screen;
+
     public override void initialize()
     {
         gameObject = SetWindow(this, Program.I().new_ui_setting);
         setting = gameObject.GetComponentInChildren<LAZYsetting>();
+
+        _screen = UIHelper.getByName<UIPopupList>(gameObject, "screen_");
+        _screen.items = new[] {new UnityEngine.Resolution {width = 1300, height = 700}}.Concat(Screen.resolutions)
+            .Select(r => $"{r.width} x {r.height}")
+            .Distinct()
+            .ToList();
+
         UIHelper.registEvent(gameObject, "exit_", onClickExit);
         UIHelper.registEvent(gameObject, "screen_", resizeScreen);
         UIHelper.registEvent(gameObject, "full_", resizeScreen);
@@ -85,7 +96,7 @@ public class Setting : WindowServant2D
         UIHelper.registEvent(setting.Vlink.gameObject, onCP);
         onchangeMouse();
         onchangeCloud();
-        setScreenSizeValue();
+        SetScreenSizeValue();
     }
 
     private void readVales()
@@ -117,10 +128,10 @@ public class Setting : WindowServant2D
 
     //private int dontResizeTwice = 2;
 
-    public void setScreenSizeValue()
+    public void SetScreenSizeValue()
     {
-        //dontResizeTwice = 3;
-        UIHelper.getByName<UIPopupList>(gameObject, "screen_").value = Screen.width + "*" + Screen.height;
+        var target = $"{Screen.currentResolution.width} x {Screen.currentResolution.height}";
+        if (_screen.value != target) _screen.value = target;
     }
 
     private void onCP()
@@ -220,12 +231,17 @@ public class Setting : WindowServant2D
         //dontResizeTwice = 2;
         if (UIHelper.isMaximized())
             UIHelper.RestoreWindow();
+
         var mats = UIHelper.getByName<UIPopupList>(gameObject, "screen_").value
-            .Split(new[] {"*"}, StringSplitOptions.RemoveEmptyEntries);
-        if (mats.Length == 2)
-            Screen.SetResolution(int.Parse(mats[0]), int.Parse(mats[1]),
-                UIHelper.getByName<UIToggle>(gameObject, "full_").value);
-        Program.go(100, () => { Program.I().fixScreenProblems(); });
+            .Split(new[] {" x "}, StringSplitOptions.RemoveEmptyEntries);
+        Assert.IsTrue(mats.Length == 2);
+        Screen.SetResolution(int.Parse(mats[0]), int.Parse(mats[1]),
+            UIHelper.getByName<UIToggle>(gameObject, "full_").value);
+        Program.go(100, () =>
+        {
+            SetScreenSizeValue();
+            Program.I().fixScreenProblems();
+        });
     }
 
     public void saveWhenQuit()
