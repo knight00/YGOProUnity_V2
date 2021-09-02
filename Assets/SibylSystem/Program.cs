@@ -51,6 +51,10 @@ public class Program : MonoBehaviour
     public GameObject new_ui_searchDetailed;
     public GameObject new_bar_editDeck;
     public GameObject new_bar_duel;
+    public GameObject new_ui_book;
+    
+    [Header("其他")]
+    public GameObject mouseParticle;
 
     [Header("Prefab")] public facer face;
     public AudioClip zhankai;
@@ -120,7 +124,6 @@ public class Program : MonoBehaviour
     public GameObject mod_ocgcore_ss_dark_hole;
     public GameObject mod_ocgcore_ss_link_mark;
     
-    public GameObject new_ui_book;
     public GameObject new_ui_cardOnSearchList;
     public GameObject new_bar_changeSide;
     public GameObject new_bar_watchDuel;
@@ -134,7 +137,6 @@ public class Program : MonoBehaviour
     public GameObject new_ocgcore_field;
     public GameObject new_ocgcore_chainCircle;
     public GameObject new_ocgcore_wait;
-    public GameObject new_mouse;
     public GameObject remaster_tagRoom;
     public GameObject remaster_room;
     public GameObject ES_1;
@@ -476,7 +478,7 @@ public class Program : MonoBehaviour
         }
     }
 
-    public GameObject mouseParticle;
+    
 
     private static int lastChargeTime;
 
@@ -794,7 +796,7 @@ public class Program : MonoBehaviour
         if (Screen.width < 100 || Screen.height < 100) Screen.SetResolution(1366, 768, false);
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 144;
-        mouseParticle = Instantiate(new_mouse);
+        // mouseParticle = Instantiate(new_mouse);
         instance = this;
         initialize();
         go(500, () => { gameStart(); });

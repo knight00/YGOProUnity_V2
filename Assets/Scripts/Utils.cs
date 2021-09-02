@@ -17,9 +17,4 @@ public static class Utils
         return Program.I().camera_back_ground_2d
             .ViewportToWorldPoint(new Vector3(point.x / UIWidth(), point.y / UIHeight(), point.z));
     }
-
-    // public static float UIScale()
-    // {
-    //     return Program.I().ui_back_ground_2d.GetComponent<UIRoot>().activeScaling;
-    // }
 }
