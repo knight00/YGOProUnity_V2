@@ -29,13 +29,13 @@ public class BackGroundPic : Servant
         if (texture.width <= texture.height * Screen.width / Screen.height)
         {
             // 图窄屏幕宽，用宽度
-            component.width = Utils.UIWidth();
+            component.width = Utils.UIWidth() + 2;
             component.height = component.width * texture.height / texture.width;
         }
         else
         {
             // 图宽屏幕窄，用高度
-            component.height = Utils.UIHeight();
+            component.height = Utils.UIHeight() + 2;
             component.width = component.height * texture.width / texture.height;
         }
     }
