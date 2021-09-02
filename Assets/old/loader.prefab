@@ -69,8 +69,8 @@ MonoBehaviour:
   new_ui_setting: {fileID: 0}
   new_bar_room: {fileID: 0}
   new_ui_searchDetailed: {fileID: 0}
-  new_bar_editDeck: {fileID: 0}
-  new_bar_duel: {fileID: 0}
+  new_ui_book: {fileID: 0}
+  mouseParticle: {fileID: 0}
   face: {fileID: 11468716, guid: faf0ce5c46e971049a20f2597b5f6194, type: 3}
   zhankai: {fileID: 8300000, guid: cab912f3009b43843b0a48ac3120c6ad, type: 3}
   mod_winExplode: {fileID: 100000, guid: d0bd642121bd8624ea5f79bc25a0be69, type: 3}
@@ -185,10 +185,11 @@ MonoBehaviour:
     type: 3}
   mod_ocgcore_ss_link_mark: {fileID: 193842, guid: 31f237d5f58cc3d44b8c6f489981cdbe,
     type: 3}
-  new_ui_book: {fileID: 154202, guid: 26b8ac8b01eea214c9aa2dda03224bf8, type: 3}
   new_ui_cardOnSearchList: {fileID: 121738, guid: 2b6ccbb323c719640a5956255df6e60f,
     type: 3}
+  new_bar_editDeck: {fileID: 178988, guid: 765dbdb0e4818974a91597f4abb24ee1, type: 3}
   new_bar_changeSide: {fileID: 122638, guid: 63e044f7c8ec2f941bdf744dfc74c476, type: 3}
+  new_bar_duel: {fileID: 123392, guid: 829bf6713f5afeb40840803e21e03092, type: 3}
   new_bar_watchDuel: {fileID: 117332, guid: c31923f847d652f428563c70ae9126c0, type: 3}
   new_bar_watchRecord: {fileID: 101550, guid: c2bfacfbd9e90a145a2e44e65731cecf, type: 3}
   new_mod_cardInDeckManager: {fileID: 189694, guid: 6747c695cb6d93142b1f445a7896ea98,
@@ -204,7 +205,6 @@ MonoBehaviour:
   new_ocgcore_chainCircle: {fileID: 139058, guid: d32a4ff301257644a9d5e19d14ba7010,
     type: 3}
   new_ocgcore_wait: {fileID: 192526, guid: ebe9fe8493cc48b4d8fc206976a5e897, type: 3}
-  new_mouse: {fileID: 136044, guid: 19638d3f760fa38429c40cca2b503881, type: 3}
   remaster_tagRoom: {fileID: 154246, guid: 95580b5915bf1eb4eaf9b6b19a82f92d, type: 3}
   remaster_room: {fileID: 154246, guid: fa04b5d4defb9284aa6b679865c5b9f1, type: 3}
   ES_1: {fileID: 152348, guid: 49504cab875642a4a89768cf637df4e0, type: 3}
@@ -234,4 +234,3 @@ MonoBehaviour:
     type: 3}
   New_ocgcore_placeSelector: {fileID: 114714, guid: 86a90872c7957c84db384fd3d2961da2,
     type: 3}
-  mouseParticle: {fileID: 0}
