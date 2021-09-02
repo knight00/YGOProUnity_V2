@@ -78,7 +78,7 @@ public class WindowServantSP : Servant
         }
     }
 
-    public void createWindow(GameObject mod)
+    public void SetWindow(GameObject mod)
     {
         gameObject = mod;
         UIHelper.InterGameObject(gameObject);
@@ -89,6 +89,18 @@ public class WindowServantSP : Servant
         var panelKIller = gameObject.GetComponent<panelKIller>();
         if (panelKIller == null) panelKIller = gameObject.AddComponent<panelKIller>();
         panelKIller.ini();
+    }
+
+    public void CreateWindow(GameObject mod)
+    {
+        SetWindow(create
+        (
+            mod,
+            Vector3.zero,
+            Vector3.zero,
+            false,
+            Program.I().ui_windows_2d
+        ));
     }
 
     public override void ES_quit()

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using DG.Tweening;
+using UnityEngine;
 
 public class WindowServant2D : Servant
 {
@@ -7,7 +8,7 @@ public class WindowServant2D : Servant
         if (gameObject != null)
         {
             UIHelper.clearITWeen(gameObject);
-            iTween.MoveTo(gameObject,
+            gameObject.transform.DOMove(
                 Program.I().camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height * 1.5f, 0)),
                 0.6f);
         }
@@ -18,8 +19,9 @@ public class WindowServant2D : Servant
         if (gameObject != null)
         {
             UIHelper.clearITWeen(gameObject);
-            iTween.MoveTo(gameObject,
-                Program.I().camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2, 0)), 0.6f);
+            gameObject.transform.DOMove(
+                Program.I().camera_main_2d.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2, 0)),
+                0.6f);
         }
     }
 

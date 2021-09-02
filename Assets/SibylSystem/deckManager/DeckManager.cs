@@ -848,7 +848,7 @@ public class DeckManager : ServantWithCardDescription
         {
             case Condition.editDeck:
                 UIHelper.setParent(gameObjectSearch, Program.I().ui_back_ground_2d);
-                SetBar(Program.I().new_bar_editDeck, 0, 230);
+                CreateBar(Program.I().new_bar_editDeck, 0, 230);
                 UIPopupList_banlist = UIHelper.getByName<UIPopupList>(toolBar, "lfList_");
                 var banlistNames = BanlistManager.getAllName();
                 UIPopupList_banlist.items = banlistNames;
@@ -864,7 +864,7 @@ public class DeckManager : ServantWithCardDescription
                 break;
             case Condition.changeSide:
                 UIHelper.setParent(gameObjectSearch, Program.I().ui_main_2d);
-                SetBar(Program.I().new_bar_changeSide, 0, 230);
+                CreateBar(Program.I().new_bar_changeSide, 0, 230);
                 UIPopupList_banlist = null;
                 UIHelper.registEvent(toolBar, "rand_", rand);
                 UIHelper.registEvent(toolBar, "sort_", sort);

@@ -520,7 +520,7 @@ public class Ocgcore : ServantWithCardDescription
         switch (condition)
         {
             case Condition.duel:
-                SetBar(Program.I().new_bar_duel, 0, 0);
+                CreateBar(Program.I().new_bar_duel, 0, 0);
                 UIHelper.registEvent(toolBar, "input_", onChat);
                 UIHelper.registEvent(toolBar, "gg_", onDuelResultConfirmed);
                 UIHelper.registEvent(toolBar, "left_", on_left);
@@ -530,7 +530,7 @@ public class Ocgcore : ServantWithCardDescription
                 UIHelper.addButtonEvent_toolShift(toolBar, "stop_", on_stop);
                 break;
             case Condition.watch:
-                SetBar(Program.I().new_bar_watchDuel, 0, 0);
+                CreateBar(Program.I().new_bar_watchDuel, 0, 0);
                 UIHelper.registEvent(toolBar, "input_", onChat);
                 UIHelper.registEvent(toolBar, "exit_", onExit);
                 UIHelper.registEvent(toolBar, "left_", on_left);
@@ -539,7 +539,7 @@ public class Ocgcore : ServantWithCardDescription
                 UIHelper.addButtonEvent_toolShift(toolBar, "stop_", on_stop);
                 break;
             case Condition.record:
-                SetBar(Program.I().new_bar_watchRecord, 0, 0);
+                CreateBar(Program.I().new_bar_watchRecord, 0, 0);
                 UIHelper.registEvent(toolBar, "home_", onHome);
                 UIHelper.registEvent(toolBar, "left_", on_left);
                 UIHelper.registEvent(toolBar, "right_", on_right);

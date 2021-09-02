@@ -13,7 +13,7 @@ public class puzzleMode : WindowServantSP
 
     public override void initialize()
     {
-        createWindow(Program.I().remaster_puzzleManager);
+        SetWindow(Program.I().remaster_puzzleManager);
         UIHelper.registEvent(gameObject, "exit_", onClickExit);
         superScrollView = gameObject.GetComponentInChildren<UIselectableList>();
         superScrollView.selectedAction = onSelected;

@@ -49,8 +49,6 @@ public class Program : MonoBehaviour
     public GameObject new_ui_setting;
     public GameObject new_bar_room;
     public GameObject new_ui_searchDetailed;
-    public GameObject new_bar_editDeck;
-    public GameObject new_bar_duel;
     public GameObject new_ui_book;
     
     [Header("其他")]
@@ -125,7 +123,9 @@ public class Program : MonoBehaviour
     public GameObject mod_ocgcore_ss_link_mark;
     
     public GameObject new_ui_cardOnSearchList;
+    public GameObject new_bar_editDeck;
     public GameObject new_bar_changeSide;
+    public GameObject new_bar_duel;
     public GameObject new_bar_watchDuel;
     public GameObject new_bar_watchRecord;
     public GameObject new_mod_cardInDeckManager;

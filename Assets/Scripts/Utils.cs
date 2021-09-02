@@ -17,4 +17,10 @@ public static class Utils
         return Program.I().camera_back_ground_2d
             .ViewportToWorldPoint(new Vector3(point.x / UIWidth(), point.y / UIHeight(), point.z));
     }
+
+    public static Vector3 WorldToUIPoint(Vector3 point)
+    {
+        var viewport = Program.I().camera_back_ground_2d.WorldToViewportPoint(point);
+        return new Vector3(viewport.x * UIWidth(), viewport.y * UIHeight(), viewport.z);
+    }
 }

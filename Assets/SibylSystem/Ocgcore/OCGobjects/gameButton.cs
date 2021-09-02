@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using DG.Tweening;
+using UnityEngine;
 
 public class gameButton : OCGobject
 {
@@ -35,9 +36,7 @@ public class gameButton : OCGobject
             gameObject.GetComponent<iconSetForButton>().setTexture(type);
             gameObject.GetComponent<iconSetForButton>().setText(hint);
             gameObject.transform.localScale = Vector3.zero;
-            iTween.ScaleTo(gameObject,
-                new Vector3(0.7f * Screen.height / 700f, 0.7f * Screen.height / 700f, 0.7f * Screen.height / 700f),
-                0.2f);
+            gameObject.transform.DOScale(Vector3.one * 0.7f, 0.2f);
         }
 
         gameObject.transform.position = Program.I().camera_main_2d.ScreenToWorldPoint(v);
