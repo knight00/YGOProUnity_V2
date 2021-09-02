@@ -37,7 +37,7 @@ public class WindowServant2D : Servant
         Program.ShiftUIenabled(Program.I().ui_main_3d, false);
     }
 
-    public static GameObject createWindow(Servant servant, GameObject mod)
+    public static GameObject SetWindow(Servant servant, GameObject mod)
     {
         var re = mod;
         UIHelper.InterGameObject(re);

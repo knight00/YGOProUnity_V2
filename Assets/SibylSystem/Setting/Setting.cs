@@ -18,7 +18,7 @@ public class Setting : WindowServant2D
 
     public override void initialize()
     {
-        gameObject = createWindow(this, Program.I().new_ui_setting);
+        gameObject = SetWindow(this, Program.I().new_ui_setting);
         setting = gameObject.GetComponentInChildren<LAZYsetting>();
         UIHelper.registEvent(gameObject, "exit_", onClickExit);
         UIHelper.registEvent(gameObject, "screen_", resizeScreen);
