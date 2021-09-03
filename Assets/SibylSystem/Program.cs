@@ -30,7 +30,6 @@ public class Program : MonoBehaviour
 
     [Header("ui_back_ground_2d")]
     public Camera camera_back_ground_2d;
-    public GameObject mod_simple_ngui_background_texture;
     public GameObject new_ui_cardDescription;
     public GameObject new_ui_search;
     public gameInfo new_ui_gameInfo;
@@ -291,9 +290,6 @@ public class Program : MonoBehaviour
         UIHelper.iniFaces();
         initializeALLcameras();
         fixALLcamerasPreFrame();
-        backGroundPic = new BackGroundPic();
-        servants.Add(backGroundPic);
-        backGroundPic.fixScreenProblem();
         // });
         // go(300, () =>
         // {
@@ -719,7 +715,6 @@ public class Program : MonoBehaviour
 
     private readonly List<Servant> servants = new List<Servant>();
 
-    public Servant backGroundPic;
     public Menu menu;
     public Setting setting;
     public selectDeck selectDeck;
@@ -762,7 +757,6 @@ public class Program : MonoBehaviour
 
     public void shiftToServant(Servant to)
     {
-        if (to != backGroundPic && backGroundPic.isShowed) backGroundPic.hide();
         if (to != menu && menu.isShowed) menu.hide();
         if (to != setting && setting.isShowed) setting.hide();
         if (to != selectDeck && selectDeck.isShowed) selectDeck.hide();
@@ -774,7 +768,6 @@ public class Program : MonoBehaviour
         if (to != puzzleMode && puzzleMode.isShowed) puzzleMode.hide();
         if (to != aiRoom && aiRoom.isShowed) aiRoom.hide();
 
-        if (to == backGroundPic && backGroundPic.isShowed == false) backGroundPic.show();
         if (to == menu && menu.isShowed == false) menu.show();
         if (to == setting && setting.isShowed == false) setting.show();
         if (to == selectDeck && selectDeck.isShowed == false) selectDeck.show();
@@ -911,7 +904,6 @@ public class Program : MonoBehaviour
     private void gameStart()
     {
         if (UIHelper.shouldMaximize()) UIHelper.MaximizeWindow();
-        backGroundPic.show();
         shiftToServant(menu);
     }
 

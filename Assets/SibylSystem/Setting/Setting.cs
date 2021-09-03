@@ -236,8 +236,6 @@ public class Setting : WindowServant2D
         var mats = UIHelper.getByName<UIPopupList>(gameObject, "screen_").value
             .Split(new[] { " x " }, StringSplitOptions.RemoveEmptyEntries);
         Assert.IsTrue(mats.Length == 2);
-        Debug.Log(int.Parse(mats[0]));
-        Debug.Log(int.Parse(mats[1]));
         Screen.SetResolution(int.Parse(mats[0]), int.Parse(mats[1]),
             UIHelper.getByName<UIToggle>(gameObject, "full_").value);
         Program.go(100, () =>
