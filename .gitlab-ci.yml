@@ -89,6 +89,19 @@ ocgcore_linux:
     paths:
       - Assets/Plugins/Linux
 
+ocgcore_macos:
+  extends:
+    - .ocgcore_unix
+  tags:
+    - linux
+  image: git-registry.mycard.moe/mycard/docker-runner-base:buster
+  variables:
+    GMAKE_PLATFORM: macos
+    PLUGIN_PLATFORM: MacOS
+  artifacts:
+    paths:
+      - Assets/Plugins/Linux
+
 # run this job when you need to request a license
 # you may need to follow activation steps from documentation
 get-activation-file:
@@ -194,7 +207,8 @@ build-StandaloneLinux64:
 
 build-StandaloneOSX:
   extends: .build
-  dependencies: [] # todo
+  dependencies:
+    - ocgcore_macos
   image: $IMAGE:$UNITY_VERSION-mac-mono-$IMAGE_VERSION
   variables:
     BUILD_TARGET: StandaloneOSX
