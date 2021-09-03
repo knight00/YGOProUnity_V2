@@ -32,7 +32,7 @@ public class WindowServantSP : Servant
             if (glass != null) glass.gameObject.SetActive(false);
         }
 
-        resize();
+        // resize();
     }
 
     public void SetActiveFalse()
@@ -59,24 +59,24 @@ public class WindowServantSP : Servant
             if (glass != null) glass.gameObject.SetActive(true);
         }
 
-        resize();
+        // resize();
     }
 
-    private void resize()
-    {
-        if (gameObject != null)
-        {
-            if (Program.I().setting.setting.resize.value)
-            {
-                var f = Screen.height / 700f;
-                gameObject.transform.localScale = new Vector3(f, f, f);
-            }
-            else
-            {
-                gameObject.transform.localScale = new Vector3(1, 1, 1);
-            }
-        }
-    }
+    // private void resize()
+    // {
+    //     if (gameObject != null)
+    //     {
+    //         if (Program.I().setting.setting.resize.value)
+    //         {
+    //             var f = Screen.height / 700f;
+    //             gameObject.transform.localScale = new Vector3(f, f, f);
+    //         }
+    //         else
+    //         {
+    //             gameObject.transform.localScale = new Vector3(1, 1, 1);
+    //         }
+    //     }
+    // }
 
     public void SetWindow(GameObject mod)
     {

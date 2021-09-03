@@ -26,7 +26,7 @@ public class Setting : WindowServant2D
         setting = gameObject.GetComponentInChildren<LAZYsetting>();
 
         _screen = UIHelper.getByName<UIPopupList>(gameObject, "screen_");
-        _screen.items = new[] {new UnityEngine.Resolution {width = 1300, height = 700}}.Concat(Screen.resolutions)
+        _screen.items = new[] { new Resolution { width = 1300, height = 700 } }.Concat(Screen.resolutions)
             .Select(r => $"{r.width} x {r.height}")
             .Distinct()
             .ToList();
@@ -34,7 +34,7 @@ public class Setting : WindowServant2D
         UIHelper.registEvent(gameObject, "exit_", onClickExit);
         UIHelper.registEvent(gameObject, "screen_", resizeScreen);
         UIHelper.registEvent(gameObject, "full_", resizeScreen);
-        UIHelper.registEvent(gameObject, "resize_", resizeScreen);
+        // UIHelper.registEvent(gameObject, "resize_", resizeScreen);
         UIHelper.getByName<UIToggle>(gameObject, "full_").value = Screen.fullScreen;
         UIHelper.getByName<UIToggle>(gameObject, "ignoreWatcher_").value =
             UIHelper.fromStringToBool(Config.Get("ignoreWatcher_", "0"));
@@ -49,8 +49,9 @@ public class Setting : WindowServant2D
         UIHelper.getByName<UIToggle>(gameObject, "handmPosition_").value =
             UIHelper.fromStringToBool(Config.Get("handmPosition_", "1"));
         UIHelper.getByName<UIToggle>(gameObject, "spyer_").value = UIHelper.fromStringToBool(Config.Get("spyer_", "1"));
-        UIHelper.getByName<UIToggle>(gameObject, "resize_").value =
-            UIHelper.fromStringToBool(Config.Get("resize_", "0"));
+        UIHelper.getByName<UIToggle>(gameObject, "resize_").canChange = false;
+        // UIHelper.getByName<UIToggle>(gameObject, "resize_").value =
+        // UIHelper.fromStringToBool(Config.Get("resize_", "0"));
         UIHelper.getByName<UIToggle>(gameObject, "longField_").value =
             UIHelper.fromStringToBool(Config.Get("longField_", "0"));
         if (QualitySettings.GetQualityLevel() < 3)
@@ -233,7 +234,7 @@ public class Setting : WindowServant2D
             UIHelper.RestoreWindow();
 
         var mats = UIHelper.getByName<UIPopupList>(gameObject, "screen_").value
-            .Split(new[] {" x "}, StringSplitOptions.RemoveEmptyEntries);
+            .Split(new[] { " x " }, StringSplitOptions.RemoveEmptyEntries);
         Assert.IsTrue(mats.Length == 2);
         Debug.Log(int.Parse(mats[0]));
         Debug.Log(int.Parse(mats[1]));
@@ -248,9 +249,9 @@ public class Setting : WindowServant2D
 
     public void saveWhenQuit()
     {
-        Config.Set("vol_", ((int) (UIHelper.getByName<UISlider>(gameObject, "vol_").value * 1000)).ToString());
-        Config.Set("size_", ((int) (UIHelper.getByName<UISlider>(gameObject, "size_").value * 1000)).ToString());
-        Config.Set("vSize_", ((int) (UIHelper.getByName<UISlider>(gameObject, "vSize_").value * 1000)).ToString());
+        Config.Set("vol_", ((int)(UIHelper.getByName<UISlider>(gameObject, "vol_").value * 1000)).ToString());
+        Config.Set("size_", ((int)(UIHelper.getByName<UISlider>(gameObject, "size_").value * 1000)).ToString());
+        Config.Set("vSize_", ((int)(UIHelper.getByName<UISlider>(gameObject, "vSize_").value * 1000)).ToString());
         //Config.Set("alpha_", ((int)(UIHelper.getByName<UISlider>(gameObject, "alpha_").value * 1000)).ToString());
         Config.Set("longField_",
             UIHelper.fromBoolToString(UIHelper.getByName<UIToggle>(gameObject, "longField_").value));
@@ -260,7 +261,7 @@ public class Setting : WindowServant2D
                 Config.Set(collection[i].name, UIHelper.fromBoolToString(collection[i].value));
         Config.Set("showoffATK", setting.showoffATK.value);
         Config.Set("showoffStar", setting.showoffStar.value);
-        Config.Set("resize_", UIHelper.fromBoolToString(UIHelper.getByName<UIToggle>(gameObject, "resize_").value));
+        // Config.Set("resize_", UIHelper.fromBoolToString(UIHelper.getByName<UIToggle>(gameObject, "resize_").value));
         Config.Set("maximize_", UIHelper.fromBoolToString(UIHelper.isMaximized()));
     }
 
