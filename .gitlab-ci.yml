@@ -15,26 +15,26 @@ variables:
 
 image: $IMAGE:$UNITY_VERSION-base-$IMAGE_VERSION
 
-.unity_before_script: &unity_before_script
+.unity_before_script:
   before_script:
     - chmod +x ./ci/before_script.sh && ./ci/before_script.sh
 
-.cache: &cache
+.cache:
   cache:
     key: "$CI_PROJECT_NAMESPACE-$CI_PROJECT_NAME-$CI_COMMIT_REF_SLUG-$TEST_PLATFORM"
     paths:
       - $UNITY_DIR/Library/
 
-.license: &license
+.license:
   rules:
     - if: '$UNITY_LICENSE != null'
       when: always
 
-.unity_defaults: &unity_defaults
-  <<:
-    - *unity_before_script
-    - *cache
-    - *license
+.unity_defaults:
+  extends:
+    - .unity_before_script
+    - .cache
+    - .license
 
 # run this job when you need to request a license
 # you may need to follow activation steps from documentation
@@ -50,9 +50,9 @@ get-activation-file:
       - $UNITY_ACTIVATION_FILE
     expire_in: 10 min # Expiring this as artifacts may contain sensitive data and should not be kept public
 
-.test: &test
+.test:
   stage: build_and_test
-  <<: *unity_defaults
+  extends: .unity_defaults
   script:
     - chmod +x ./ci/test.sh && ./ci/test.sh
   artifacts:
@@ -65,12 +65,12 @@ get-activation-file:
   coverage: /<Linecoverage>(.*?)</Linecoverage>/
 
 test-playmode:
-  <<: *test
+  extends: .test
   variables:
     TEST_PLATFORM: playmode
 
 test-editmode:
-  <<: *test
+  extends: .test
   variables:
     TEST_PLATFORM: editmode
 
@@ -81,7 +81,7 @@ test-editmode:
 
 # .test-with-junit-reports: &test-with-junit-reports
 #   stage: build_and_test
-#   <<: *unity_defaults
+#   extends: .unity_defaults
 #   script:
 #     # This could be made faster by adding these packages to base image or running in a separate job (and step)
 #     # We could use an image with these two depencencies only and only do the saxonb-xslt command on
@@ -103,18 +103,18 @@ test-editmode:
 #   coverage: /<Linecoverage>(.*?)</Linecoverage>/
 
 # test-playmode-with-junit-reports:
-#   <<: *test-with-junit-reports
+#   extends: .test-with-junit-reports
 #   variables:
 #     TEST_PLATFORM: playmode
 
 # test-editmode-with-junit-reports:
-#   <<: *test-with-junit-reports
+#   extends: .test-with-junit-reports
 #   variables:
 #     TEST_PLATFORM: editmode
 
-.build: &build
+.build:
   stage: build_and_test
-  <<: *unity_defaults
+  extends: .unity_defaults
   script:
     - chmod +x ./ci/build.sh && ./ci/build.sh
   artifacts:
@@ -126,38 +126,38 @@ test-editmode:
     - linux
 
 build-StandaloneLinux64:
-  <<: *build
+  extends: .build
   variables:
     BUILD_TARGET: StandaloneLinux64
 
 build-StandaloneLinux64-il2cpp:
-  <<: *build
+  extends: .build
   image: $IMAGE:$UNITY_VERSION-linux-il2cpp-$IMAGE_VERSION
   variables:
     BUILD_TARGET: StandaloneLinux64
     SCRIPTING_BACKEND: IL2CPP
 
 build-StandaloneOSX:
-  <<: *build
+  extends: .build
   image: $IMAGE:$UNITY_VERSION-mac-mono-$IMAGE_VERSION
   variables:
     BUILD_TARGET: StandaloneOSX
 
 #Note: build target names changed in recent versions, use this for versions < 2017.2:
 # build-StandaloneOSXUniversal:
-#   <<: *build
+#   extends: .build
 #   variables:
 #     BUILD_TARGET: StandaloneOSXUniversal
 
 build-StandaloneWindows64:
-  <<: *build
+  extends: .build
   image: $IMAGE:$UNITY_VERSION-windows-mono-$IMAGE_VERSION
   variables:
     BUILD_TARGET: StandaloneWindows64
 
 # For webgl support, you need to set Compression Format to Disabled for v0.9. See https://github.com/game-ci/docker/issues/75
 build-WebGL:
-  <<: *build
+  extends: .build
   image: $IMAGE:$UNITY_VERSION-webgl-$IMAGE_VERSION
   # Temporary workaround for https://github.com/game-ci/docker/releases/tag/v0.9 and webgl support in current project to prevent errors with missing ffmpeg
   before_script:
@@ -167,7 +167,7 @@ build-WebGL:
     BUILD_TARGET: WebGL
 
 build-android:
-  <<: *build
+  extends: .build
   image: $IMAGE:$UNITY_VERSION-android-$IMAGE_VERSION
   variables:
     BUILD_TARGET: Android
@@ -175,7 +175,7 @@ build-android:
     BUILD_APP_BUNDLE: "false"
 
 build-android-il2cpp:
-  <<: *build
+  extends: .build
   image: $IMAGE:$UNITY_VERSION-android-$IMAGE_VERSION
   variables:
     BUILD_TARGET: Android
@@ -195,7 +195,7 @@ build-android-il2cpp:
 #  needs: ["build-android"]
 
 build-ios-xcode:
-  <<: *build
+  extends: .build
   image: $IMAGE:$UNITY_VERSION-ios-$IMAGE_VERSION
   variables:
     BUILD_TARGET: iOS
@@ -229,4 +229,3 @@ workflow:
     - if: $CI_COMMIT_TAG
       when: never
     - when: always
-
