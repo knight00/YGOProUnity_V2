@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class lazyBTNMOVER : MonoBehaviour {
-
+public class lazyBTNMOVER : MonoBehaviour
+{
     public UILabel g1;
     public UILabel g2;
     public UILabel g3;

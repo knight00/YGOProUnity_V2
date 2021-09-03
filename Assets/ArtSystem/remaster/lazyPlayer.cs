@@ -1,18 +1,17 @@
-﻿using UnityEngine;
-using System.Collections;
-using System;
+﻿using System;
+using UnityEngine;
 
-public class lazyPlayer : MonoBehaviour {
-
+public class lazyPlayer : MonoBehaviour
+{
     public UIToggle prep;
 
     public UIButton prepAsButton;
 
-    public UIButton prepAsCollider; 
-        
+    public UIButton prepAsCollider;
+
     public UIButton kickAsButton;
 
-    public UISprite prepAsTexture; 
+    public UISprite prepAsTexture;
 
     public UILabel UILabel_name;
 
@@ -22,7 +21,32 @@ public class lazyPlayer : MonoBehaviour {
 
     public Transform transformOfPrepFore;
 
-    int me = 0;  
+    private bool canKick;
+
+    private int me;
+
+    private bool mIfMe;
+
+    private string mName;
+
+    private bool NotNull;
+
+    public Action<int> onKick = null;
+
+    public Action<int, bool> onPrepareChanged = null;
+
+    // Use this for initialization
+    private void Start()
+    {
+        UIHelper.registEvent(prepAsButton, OnPrepClicked);
+        UIHelper.registEvent(kickAsButton, OnKickClicked);
+        // ini();
+    }
+
+    // Update is called once per frame
+    private void Update()
+    {
+    }
 
     public void ini()
     {
@@ -34,59 +58,31 @@ public class lazyPlayer : MonoBehaviour {
         setName("");
     }
 
-    // Use this for initialization
-    void Start ()
+    private void OnPrepClicked()
     {
-        UIHelper.registEvent(prepAsButton, OnPrepClicked);
-        UIHelper.registEvent(kickAsButton, OnKickClicked);
-       // ini();
+        if (onPrepareChanged != null) onPrepareChanged(me, prep.value);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnKickClicked()
     {
-
-    }
-
-    void OnPrepClicked()
-    {
-        if (onPrepareChanged != null)
-        {
-            onPrepareChanged(me, prep.value);
-        }
-    }
-
-    void OnKickClicked()
-    {
-        Program.DEBUGLOG("OnKickClicked  " + me.ToString());
-        if (onKick != null)
-        {
-            onKick(me);
-        }
+        Program.DEBUGLOG("OnKickClicked  " + me);
+        if (onKick != null) onKick(me);
         //setIfMe(!getIfMe());//bb
     }
-
-    bool canKick = false;
 
     public void SetIFcanKick(bool canKick_)
     {
         canKick = canKick_;
         if (canKick)
-        {
             kickAsButton.gameObject.SetActive(true);
-        }
         else
-        {
             kickAsButton.gameObject.SetActive(false);
-        }
     }
 
     public bool getIfcanKick()
     {
         return canKick;
     }
-
-    bool NotNull = false;
 
     public void SetNotNull(bool notNull_)
     {
@@ -107,8 +103,6 @@ public class lazyPlayer : MonoBehaviour {
     {
         return NotNull;
     }
-
-    bool mIfMe = false;
 
     public void setIfMe(bool isMe)
     {
@@ -132,8 +126,6 @@ public class lazyPlayer : MonoBehaviour {
         return mIfMe;
     }
 
-    string mName;
-
     public void setName(string name_)
     {
         mName = name_;
@@ -152,10 +144,6 @@ public class lazyPlayer : MonoBehaviour {
     {
         return mName;
     }
-
-    public Action<int, bool> onPrepareChanged = null;   
-
-    public Action<int> onKick = null;
 
     public void setIfprepared(bool preped)
     {

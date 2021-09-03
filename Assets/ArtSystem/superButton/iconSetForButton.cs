@@ -1,17 +1,23 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public enum superButtonType
 {
-    act, attack, bp,
-    change, ep, mp,
-    no, see, set,
-    spsummon, summon, yes,
+    act,
+    attack,
+    bp,
+    change,
+    ep,
+    mp,
+    no,
+    see,
+    set,
+    spsummon,
+    summon,
+    yes
 }
 
 public class iconSetForButton : MonoBehaviour
 {
-    
     public UITexture UITextureInButton;
     public UILabel UILabelInButton;
     public Texture2D act;
@@ -26,9 +32,10 @@ public class iconSetForButton : MonoBehaviour
     public Texture2D spsummon;
     public Texture2D summon;
     public Texture2D yes;
+
     public void setTexture(superButtonType type)
     {
-        switch (type)   
+        switch (type)
         {
             case superButtonType.act:
                 UITextureInButton.mainTexture = act;
@@ -67,10 +74,12 @@ public class iconSetForButton : MonoBehaviour
                 UITextureInButton.mainTexture = yes;
                 break;
         }
+
         Color c;
         ColorUtility.TryParseHtmlString(Config.Getui("gameButtonSign.color"), out c);
         UITextureInButton.color = c;
     }
+
     public void setText(string hint)
     {
         UILabelInButton.text = hint;

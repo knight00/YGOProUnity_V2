@@ -1,17 +1,16 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class toolShift : MonoBehaviour {
-    public GameObject ObjectMust = null;
-    public GameObject ObjectOption = null;
+public class toolShift : MonoBehaviour
+{
+    public GameObject ObjectMust;
+    public GameObject ObjectOption;
 
-    void Update()
+    private void Update()
     {
         if (Program.InputEnterDown)
-        {
             if (ObjectMust.name == "input_")
             {
-                UIInput input = UIHelper.getByName<UIInput>(ObjectMust, "input_");
+                var input = UIHelper.getByName<UIInput>(ObjectMust, "input_");
                 if (input != null)
                 {
                     if (ObjectMust.transform.localPosition.y < 0)
@@ -36,26 +35,21 @@ public class toolShift : MonoBehaviour {
                     }
                 }
             }
-        }
     }
 
     public void shift()
     {
-        Vector3 va = ObjectMust.transform.localPosition;
+        var va = ObjectMust.transform.localPosition;
         if (ObjectOption == null)
         {
             if (va.y >= 0)
-            {
                 iTween.MoveToLocal(ObjectMust, new Vector3(va.x, -100, va.z), 0.6f);
-            }
             else
-            {
                 iTween.MoveToLocal(ObjectMust, new Vector3(va.x, 0, va.z), 0.6f);
-            }
         }
         else
         {
-            Vector3 vb = ObjectOption.transform.localPosition;
+            var vb = ObjectOption.transform.localPosition;
             if (va.y > vb.y)
             {
                 iTween.MoveToLocal(ObjectMust, new Vector3(va.x, -100, va.z), 0.6f);

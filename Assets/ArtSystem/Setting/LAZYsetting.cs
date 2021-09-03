@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class LAZYsetting : MonoBehaviour {
+public class LAZYsetting : MonoBehaviour
+{
     public UISlider sliderVolum;
     public UISlider sliderSizeDrawing;
     public UISlider sliderSize;
@@ -12,7 +12,7 @@ public class LAZYsetting : MonoBehaviour {
     public UIToggle closeUp;
     public UIToggle showoff;
     public UIToggle showoffWhenActived;
-    public UIToggle cloud;  
+    public UIToggle cloud;
     public UIToggle Vbattle;
     public UIToggle Vmove;
     public UIToggle Vchain;
@@ -42,12 +42,12 @@ public class LAZYsetting : MonoBehaviour {
     public UIToggle spyer;
 
     // Use this for initialization
-    void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+    private void Start()
+    {
+    }
+
+    // Update is called once per frame
+    private void Update()
+    {
+    }
 }
