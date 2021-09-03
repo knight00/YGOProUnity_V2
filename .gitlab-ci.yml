@@ -93,8 +93,7 @@ ocgcore_macos:
   extends:
     - .ocgcore_unix
   tags:
-    - linux
-  image: git-registry.mycard.moe/mycard/docker-runner-base:buster
+    - macos
   variables:
     GMAKE_PLATFORM: macos
     PLUGIN_PLATFORM: MacOS
