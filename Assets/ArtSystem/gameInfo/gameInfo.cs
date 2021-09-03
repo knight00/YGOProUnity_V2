@@ -78,34 +78,30 @@ public class gameInfo : MonoBehaviour
                 .color = c;
         }
 
-        var k = (Screen.width - Program.I().cardDescription.width) / 1200f;
-        if (k > 1.2f) k = 1.2f;
-        if (k < 0.8f) k = 0.8f;
-        var ks = new Vector3(k, k, k);
-        var kb = (Screen.width - Program.I().cardDescription.width) / 1200f;
-        if (kb > 1.2f) kb = 1.2f;
-        if (kb < 0.73f) kb = 0.73f;
-        var ksb = new Vector3(kb, kb, kb);
+        var k = Mathf.Clamp((Utils.UIWidth() - Program.I().cardDescription.width) / 1200f, 0.8f, 1.2f);
+        var ks = k * Vector3.one;
+        var kb = Mathf.Clamp((Utils.UIWidth() - Program.I().cardDescription.width) / 1200f, 0.73f, 1.2f);
+        var ksb = kb * Vector3.one;
         instance_btnPan.gameObject.transform.localScale = ksb;
         opponent.transform.localScale = ks;
         me.transform.localScale = ks;
         if (!swaped)
         {
-            opponent.transform.localPosition = new Vector3(Screen.width / 2 - 14, Screen.height / 2 - 14);
+            opponent.transform.localPosition = new Vector3(Utils.UIWidth() / 2 - 14, Utils.UIHeight() / 2 - 14);
             me.transform.localPosition =
-                new Vector3(Screen.width / 2 - 14, Screen.height / 2 - 14 - k * opponent.under.height);
+                new Vector3(Utils.UIWidth() / 2 - 14, Utils.UIHeight() / 2 - 14 - k * opponent.under.height);
         }
         else
         {
-            me.transform.localPosition = new Vector3(Screen.width / 2 - 14, Screen.height / 2 - 14);
+            me.transform.localPosition = new Vector3(Utils.UIWidth() / 2 - 14, Utils.UIHeight() / 2 - 14);
             opponent.transform.localPosition =
-                new Vector3(Screen.width / 2 - 14, Screen.height / 2 - 14 - k * opponent.under.height);
+                new Vector3(Utils.UIWidth() / 2 - 14, Utils.UIHeight() / 2 - 14 - k * opponent.under.height);
         }
 
         width = 150 * kb + 15f;
-        var localPositionPanX = (Screen.width - 150 * kb) / 2 - 15f;
+        var localPositionPanX = (Utils.UIWidth() - 150 * kb) / 2 - 15f;
         instance_btnPan.transform.localPosition = new Vector3(localPositionPanX, 145, 0);
-        instance_lab.transform.localPosition = new Vector3(Screen.width / 2 - 315, -Screen.height / 2 + 90, 0);
+        instance_lab.transform.localPosition = new Vector3(Utils.UIWidth() / 2 - 315, -Utils.UIHeight() / 2 + 90, 0);
         var j = 0;
         foreach (var t in HashedButtons)
             if (t.gameObject != null)
@@ -113,16 +109,14 @@ public class gameInfo : MonoBehaviour
                 if (t.dying)
                 {
                     t.gameObject.transform.localPosition +=
-                        (new Vector3(0, -120, 0) - t.gameObject.transform.localPosition) *
-                        Program.deltaTime * 20f;
-                    if (Math.Abs(t.gameObject.transform.localPosition.y - -120) < 1)
-                        t.dead = true;
+                        (new Vector3(0, -120, 0) - t.gameObject.transform.localPosition) * Program.deltaTime * 20f;
+                    if (Math.Abs(t.gameObject.transform.localPosition.y - -120) < 1) t.dead = true;
                 }
                 else
                 {
                     t.gameObject.transform.localPosition +=
-                        (new Vector3(0, -145 - j * 50, 0) - t.gameObject.transform.localPosition) *
-                        Program.deltaTime * 10f;
+                        (new Vector3(0, -145 - j * 50, 0) - t.gameObject.transform.localPosition) * Program.deltaTime *
+                        10f;
                     j++;
                 }
             }
