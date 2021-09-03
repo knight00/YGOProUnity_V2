@@ -1,4 +1,5 @@
 stages:
+  - ocgcore
   - build_and_test
   - deploy
 
@@ -36,6 +37,55 @@ image: $IMAGE:$UNITY_VERSION-base-$IMAGE_VERSION
     - .cache
     - .license
 
+.common_image:
+  image: git-registry.mycard.moe/mycard/docker-runner-base
+
+.ocgcore:
+  extends: .common_image
+  stage: ocgcore
+  cache:
+    key: "$CI_JOB_NAME-$CI_COMMIT_REF_SLUG"
+    paths:
+      - AI_core_vs2017solution/x64/Release
+      - AI_core_vs2017solution/Release
+      - AI_core_vs2017solution/bin
+      - AI_core_vs2017solution/obj
+
+.ocgcore_unix:
+  extends: .ocgcore
+  script:
+    - cd AI_core_vs2017solution/build/gmake.$GMAKE_PLATFORM/
+    - make config=release -j$(nproc)
+    - cd ../..
+    - cp -rf bin/gmake.$GMAKE_PLATFORM/x64/*.so ../Assets/Plugins/$PLUGIN_PLATFORM/
+
+ocgcore_windows:
+  extends:
+    - .ocgcore
+  tags:
+    - vs
+  script:
+    - cd AI_core_vs2017solution
+    - cmd /c '"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\msbuild.exe" core.sln /m /p:Configuration=Release /p:Platform=x86'
+    - cmd /c '"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\msbuild.exe" core.sln /m /p:Configuration=Release /p:Platform=x64'
+    - bash -c 'cp -rf Release/ocgcore.dll ../Assets/Plugins/x86/ ; cp -rf x64/Release/ocgcore.dll ../Assets/Plugins/x64/'
+  artifacts:
+    paths:
+      - Assets/Plugins/Release
+      - Assets/Plugins/x64/Release
+
+ocgcore_linux:
+  extends:
+    - .ocgcore_unix
+  tags:
+    - linux
+  variables:
+    GMAKE_PLATFORM: linux
+    PLUGIN_PLATFORM: Linux
+  artifacts:
+    paths:
+      - Assets/Plugins/Linux
+
 # run this job when you need to request a license
 # you may need to follow activation steps from documentation
 get-activation-file:
@@ -64,15 +114,15 @@ get-activation-file:
     - linux
   coverage: /<Linecoverage>(.*?)</Linecoverage>/
 
-test-playmode:
-  extends: .test
-  variables:
-    TEST_PLATFORM: playmode
+#test-playmode:
+#  extends: .test
+#  variables:
+#    TEST_PLATFORM: playmode
 
-test-editmode:
-  extends: .test
-  variables:
-    TEST_PLATFORM: editmode
+#test-editmode:
+#  extends: .test
+#  variables:
+#    TEST_PLATFORM: editmode
 
 # uncomment the following blocks if you'd like to have junit reporting unity test results in gitlab
 # We currently have the following issue which prevents it from working right now, but you can give
@@ -127,18 +177,21 @@ test-editmode:
 
 build-StandaloneLinux64:
   extends: .build
+  dependencies:
+    - ocgcore_linux
   variables:
     BUILD_TARGET: StandaloneLinux64
 
-build-StandaloneLinux64-il2cpp:
-  extends: .build
-  image: $IMAGE:$UNITY_VERSION-linux-il2cpp-$IMAGE_VERSION
-  variables:
-    BUILD_TARGET: StandaloneLinux64
-    SCRIPTING_BACKEND: IL2CPP
+#build-StandaloneLinux64-il2cpp:
+#  extends: .build
+#  image: $IMAGE:$UNITY_VERSION-linux-il2cpp-$IMAGE_VERSION
+#  variables:
+#    BUILD_TARGET: StandaloneLinux64
+#    SCRIPTING_BACKEND: IL2CPP
 
 build-StandaloneOSX:
   extends: .build
+  dependencies: [] # todo
   image: $IMAGE:$UNITY_VERSION-mac-mono-$IMAGE_VERSION
   variables:
     BUILD_TARGET: StandaloneOSX
@@ -151,37 +204,39 @@ build-StandaloneOSX:
 
 build-StandaloneWindows64:
   extends: .build
+  dependencies:
+    - ocgcore_windows
   image: $IMAGE:$UNITY_VERSION-windows-mono-$IMAGE_VERSION
   variables:
     BUILD_TARGET: StandaloneWindows64
 
 # For webgl support, you need to set Compression Format to Disabled for v0.9. See https://github.com/game-ci/docker/issues/75
-build-WebGL:
-  extends: .build
-  image: $IMAGE:$UNITY_VERSION-webgl-$IMAGE_VERSION
+#build-WebGL:
+#  extends: .build
+#  image: $IMAGE:$UNITY_VERSION-webgl-$IMAGE_VERSION
   # Temporary workaround for https://github.com/game-ci/docker/releases/tag/v0.9 and webgl support in current project to prevent errors with missing ffmpeg
-  before_script:
-    - chmod +x ./ci/before_script.sh && ./ci/before_script.sh
-    - apt-get update && apt-get install ffmpeg -y
-  variables:
-    BUILD_TARGET: WebGL
+#  before_script:
+#    - chmod +x ./ci/before_script.sh && ./ci/before_script.sh
+#    - apt-get update && apt-get install ffmpeg -y
+#  variables:
+#    BUILD_TARGET: WebGL
 
-build-android:
-  extends: .build
-  image: $IMAGE:$UNITY_VERSION-android-$IMAGE_VERSION
-  variables:
-    BUILD_TARGET: Android
-    BUNDLE_VERSION_CODE: $CI_PIPELINE_IID
-    BUILD_APP_BUNDLE: "false"
+#build-android:
+#  extends: .build
+#  image: $IMAGE:$UNITY_VERSION-android-$IMAGE_VERSION
+#  variables:
+#    BUILD_TARGET: Android
+#    BUNDLE_VERSION_CODE: $CI_PIPELINE_IID
+#    BUILD_APP_BUNDLE: "false"
 
-build-android-il2cpp:
-  extends: .build
-  image: $IMAGE:$UNITY_VERSION-android-$IMAGE_VERSION
-  variables:
-    BUILD_TARGET: Android
-    BUNDLE_VERSION_CODE: $CI_PIPELINE_IID
-    BUILD_APP_BUNDLE: "false"
-    SCRIPTING_BACKEND: IL2CPP
+#build-android-il2cpp:
+#  extends: .build
+#  image: $IMAGE:$UNITY_VERSION-android-$IMAGE_VERSION
+#  variables:
+#    BUILD_TARGET: Android
+#    BUNDLE_VERSION_CODE: $CI_PIPELINE_IID
+#    BUILD_APP_BUNDLE: "false"
+#    SCRIPTING_BACKEND: IL2CPP
 
 #deploy-android:
 #  stage: deploy
@@ -194,11 +249,11 @@ build-android-il2cpp:
 #    - fastlane supply --aab $BUILD_NAME.aab --track internal --package_name com.youcompany.yourgame --json_key ./gpc_token.json
 #  needs: ["build-android"]
 
-build-ios-xcode:
-  extends: .build
-  image: $IMAGE:$UNITY_VERSION-ios-$IMAGE_VERSION
-  variables:
-    BUILD_TARGET: iOS
+#build-ios-xcode:
+#  extends: .build
+#  image: $IMAGE:$UNITY_VERSION-ios-$IMAGE_VERSION
+#  variables:
+#    BUILD_TARGET: iOS
 
 #build-and-deploy-ios:
 #  stage: deploy
@@ -211,21 +266,21 @@ build-ios-xcode:
 #    - mac
 #  needs: ["build-ios-xcode"]
 
-pages:
-  image: alpine:latest
-  stage: deploy
-  script:
-    - mv "$UNITY_DIR/Builds/WebGL/${BUILD_NAME}" public
-  artifacts:
-    paths:
-      - public
-  only:
-   - master
+#pages:
+#  image: alpine:latest
+#  stage: deploy
+#  script:
+#    - mv "$UNITY_DIR/Builds/WebGL/${BUILD_NAME}" public
+#  artifacts:
+#    paths:
+#      - public
+#  only:
+#   - master
 
-workflow:
-  rules:
-    - if: $CI_MERGE_REQUEST_ID
-      when: never
-    - if: $CI_COMMIT_TAG
-      when: never
-    - when: always
+#workflow:
+#  rules:
+#    - if: $CI_MERGE_REQUEST_ID
+#      when: never
+#    - if: $CI_COMMIT_TAG
+#      when: never
+#    - when: always
