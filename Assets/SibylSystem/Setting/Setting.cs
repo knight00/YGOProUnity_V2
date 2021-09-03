@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -26,10 +27,6 @@ public class Setting : WindowServant2D
         setting = gameObject.GetComponentInChildren<LAZYsetting>();
 
         _screen = UIHelper.getByName<UIPopupList>(gameObject, "screen_");
-        _screen.items = new[] { new Resolution { width = 1300, height = 700 } }.Concat(Screen.resolutions)
-            .Select(r => $"{r.width} x {r.height}")
-            .Distinct()
-            .ToList();
 
         UIHelper.registEvent(gameObject, "exit_", onClickExit);
         UIHelper.registEvent(gameObject, "screen_", resizeScreen);
@@ -133,6 +130,23 @@ public class Setting : WindowServant2D
     {
         var target = $"{Screen.width} x {Screen.height}";
         if (_screen.value != target) _screen.value = target;
+
+        _screen.items = (Screen.fullScreen ? Screen.resolutions : WindowResolutions())
+            .Select(r => $"{r.width} x {r.height}")
+            .Distinct()
+            .ToList();
+    }
+
+    private static IEnumerable<Resolution> WindowResolutions()
+    {
+        var resolutions = new List<Resolution>();
+        var max = Screen.resolutions.Last();
+        for (var height = 560; height <= max.height && height * 1300 / 700 <= max.width; height += 7 * 20)
+        {
+            resolutions.Add(new Resolution {width = height * 1300 / 700, height = height});
+        }
+
+        return resolutions;
     }
 
     private void onCP()
@@ -234,7 +248,7 @@ public class Setting : WindowServant2D
             UIHelper.RestoreWindow();
 
         var mats = UIHelper.getByName<UIPopupList>(gameObject, "screen_").value
-            .Split(new[] { " x " }, StringSplitOptions.RemoveEmptyEntries);
+            .Split(new[] {" x "}, StringSplitOptions.RemoveEmptyEntries);
         Assert.IsTrue(mats.Length == 2);
         Screen.SetResolution(int.Parse(mats[0]), int.Parse(mats[1]),
             UIHelper.getByName<UIToggle>(gameObject, "full_").value);
@@ -247,9 +261,9 @@ public class Setting : WindowServant2D
 
     public void saveWhenQuit()
     {
-        Config.Set("vol_", ((int)(UIHelper.getByName<UISlider>(gameObject, "vol_").value * 1000)).ToString());
-        Config.Set("size_", ((int)(UIHelper.getByName<UISlider>(gameObject, "size_").value * 1000)).ToString());
-        Config.Set("vSize_", ((int)(UIHelper.getByName<UISlider>(gameObject, "vSize_").value * 1000)).ToString());
+        Config.Set("vol_", ((int) (UIHelper.getByName<UISlider>(gameObject, "vol_").value * 1000)).ToString());
+        Config.Set("size_", ((int) (UIHelper.getByName<UISlider>(gameObject, "size_").value * 1000)).ToString());
+        Config.Set("vSize_", ((int) (UIHelper.getByName<UISlider>(gameObject, "vSize_").value * 1000)).ToString());
         //Config.Set("alpha_", ((int)(UIHelper.getByName<UISlider>(gameObject, "alpha_").value * 1000)).ToString());
         Config.Set("longField_",
             UIHelper.fromBoolToString(UIHelper.getByName<UIToggle>(gameObject, "longField_").value));
