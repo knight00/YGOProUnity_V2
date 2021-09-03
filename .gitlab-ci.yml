@@ -79,6 +79,9 @@ ocgcore_linux:
     - .ocgcore_unix
   tags:
     - linux
+  image: git-registry.mycard.moe/mycard/docker-runner-base:buster
+  before_script:
+    - apt update; apt -y install clang build-essential
   variables:
     GMAKE_PLATFORM: linux
     PLUGIN_PLATFORM: Linux
