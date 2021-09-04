@@ -258,6 +258,8 @@ public static class TcpHelper
 
     public static void CtosMessage_UpdateDeck(Deck deckFor)
     {
+        if (deckFor.Main.Count == 0)
+            return;
         deckStrings.Clear();
         deck = deckFor;
         var message = new Package();
