@@ -283,7 +283,7 @@ build-StandaloneWindows64:
 .pack:
   extends: .common_image
   stage: pack
-  script: ./.ci/pack.sh
+  script: ./ci/pack.sh
   artifacts:
     paths:
       - dist
@@ -359,7 +359,7 @@ upload:
     - pack_darwin_en-US
   variables:
     appVersion: $CI_COMMIT_TAG
-  script: ./.ci/upload-packager.sh
+  script: ./ci/upload-packager.sh
   only:
     - tags
 
