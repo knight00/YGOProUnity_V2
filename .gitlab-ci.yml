@@ -101,7 +101,7 @@ ocgcore_macos:
     OUTPUT_PATH: '*.bundle'
   artifacts:
     paths:
-      - Assets/Plugins/Linux
+      - Assets/Plugins/MacOS
 
 # run this job when you need to request a license
 # you may need to follow activation steps from documentation
