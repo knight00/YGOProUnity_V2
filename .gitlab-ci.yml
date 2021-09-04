@@ -1,6 +1,7 @@
 stages:
   - ocgcore
   - build_and_test
+  - pack
   - deploy
 
 # If you are looking for a place where to add 'UNITY_LICENSE_FILE' and other secrets, please visit your project's gitlab page:
@@ -39,6 +40,9 @@ image: $IMAGE:$UNITY_VERSION-base-$IMAGE_VERSION
 
 .common_image:
   image: git-registry.mycard.moe/mycard/docker-runner-base
+  tags:
+    - linux
+
 
 .ocgcore:
   extends: .common_image
@@ -102,6 +106,54 @@ ocgcore_macos:
   artifacts:
     paths:
       - Assets/Plugins/MacOS
+
+.assets:
+  extends: .common_image
+  stage: build_and_test
+  dependencies: []
+  script: ./ci/assets-locale.sh
+  artifacts:
+    paths:
+      - cdb
+      - config
+      - deck
+      - puzzle
+      - picture
+      - script
+  only:
+    - master
+    - ci
+    - tags
+
+._locale_zh-CN:
+  variables:
+    TARGET_LOCALE: zh-CN
+
+._locale_en-US:
+  variables:
+    TARGET_LOCALE: en-US
+
+._platform_win32:
+  variables:
+    TARGET_PLATFORM: win32
+
+._platform_linux:
+  variables:
+    TARGET_PLATFORM: linux
+
+._platform_darwin:
+  variables:
+    TARGET_PLATFORM: darwin
+
+assets_zh-CN:
+  extends: 
+    - .assets
+    - ._locale_zh-CN
+
+assets_en-US:
+  extends: 
+    - .assets
+    - ._locale_en-US
 
 # run this job when you need to request a license
 # you may need to follow activation steps from documentation
@@ -227,6 +279,89 @@ build-StandaloneWindows64:
   image: $IMAGE:$UNITY_VERSION-windows-mono-$IMAGE_VERSION
   variables:
     BUILD_TARGET: StandaloneWindows64
+
+.pack:
+  extends: .common_image
+  stage: pack
+  script: ./ci/pack.sh
+  artifacts:
+    paths:
+      - dist
+  only:
+    - master
+    - ci
+    - tags
+
+pack_win32_zh-CN:
+  extends: 
+    - .pack
+    - ._locale_zh-CN
+    - ._platform_win32
+  dependencies:
+    - assets_zh-CN
+    - build-StandaloneWindows64
+
+pack_linux_zh-CN:
+  extends: 
+    - .pack
+    - ._locale_zh-CN
+    - ._platform_linux
+  dependencies:
+    - assets_zh-CN
+    - build-StandaloneLinux64
+
+pack_darwin_zh-CN:
+  extends: 
+    - .pack
+    - ._locale_zh-CN
+    - ._platform_darwin
+  dependencies:
+    - assets_zh-CN
+    - build-StandaloneOSX
+
+pack_win32_en-US:
+  extends: 
+    - .pack
+    - ._locale_en-US
+    - ._platform_win32
+  dependencies:
+    - assets_en-US
+    - build-StandaloneWindows64
+
+pack_linux_en-US:
+  extends: 
+    - .pack
+    - ._locale_en-US
+    - ._platform_linux
+  dependencies:
+    - assets_en-US
+    - build-StandaloneLinux64
+
+pack_darwin_en-US:
+  extends: 
+    - .pack
+    - ._locale_en-US
+    - ._platform_darwin
+  dependencies:
+    - assets_en-US
+    - build-StandaloneOSX
+
+upload:
+  extends:
+    - .common_image
+  stage: deploy
+  dependencies:
+    - pack_win32_zh-CN
+    - pack_linux_zh-CN
+    - pack_darwin_zh-CN
+    - pack_win32_en-US
+    - pack_linux_en-US
+    - pack_darwin_en-US
+  variables:
+    appVersion: $CI_COMMIT_TAG
+  script: ./ci/upload-packager.sh
+  only:
+    - tags
 
 # For webgl support, you need to set Compression Format to Disabled for v0.9. See https://github.com/game-ci/docker/issues/75
 #build-WebGL:
