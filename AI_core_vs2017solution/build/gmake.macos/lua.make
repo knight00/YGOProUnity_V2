@@ -48,8 +48,8 @@ ifeq ($(config),release)
 TARGETDIR = ../../bin/gmake.macos
 TARGET = $(TARGETDIR)/liblua.a
 OBJDIR = ../../obj/gmake.macos/lua
-ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -O3 -fno-strict-aliasing -Wno-format-security $(OSX_FLAGS)
-ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -O3 -fno-strict-aliasing -Wno-format-security $(OSX_FLAGS)
+ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -O3 -fno-strict-aliasing -Wno-format-security -x c++ $(OSX_FLAGS)
+ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -O3 -fno-strict-aliasing -Wno-format-security -x c++ $(OSX_FLAGS)
 endif
 
 # Per File Configurations

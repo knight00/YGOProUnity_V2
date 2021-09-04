@@ -57,7 +57,7 @@ image: $IMAGE:$UNITY_VERSION-base-$IMAGE_VERSION
     - cd AI_core_vs2017solution/build/gmake.$GMAKE_PLATFORM/
     - make config=release -j$(nproc)
     - cd ../..
-    - cp -rf bin/gmake.$GMAKE_PLATFORM/x64/*.so ../Assets/Plugins/$PLUGIN_PLATFORM/
+    - cp -rf bin/gmake.$GMAKE_PLATFORM/$OUTPUT_PATH ../Assets/Plugins/$PLUGIN_PLATFORM/
 
 ocgcore_windows:
   extends:
@@ -71,8 +71,8 @@ ocgcore_windows:
     - bash -c 'cp -rf Release/ocgcore.dll ../Assets/Plugins/x86/ ; cp -rf x64/Release/ocgcore.dll ../Assets/Plugins/x64/'
   artifacts:
     paths:
-      - Assets/Plugins/Release
-      - Assets/Plugins/x64/Release
+      - Assets/Plugins/x86
+      - Assets/Plugins/x64
 
 ocgcore_linux:
   extends:
@@ -85,9 +85,23 @@ ocgcore_linux:
   variables:
     GMAKE_PLATFORM: linux
     PLUGIN_PLATFORM: Linux
+    OUTPUT_PATH: x64/*.so
   artifacts:
     paths:
       - Assets/Plugins/Linux
+
+ocgcore_macos:
+  extends:
+    - .ocgcore_unix
+  tags:
+    - macos
+  variables:
+    GMAKE_PLATFORM: macos
+    PLUGIN_PLATFORM: MacOS
+    OUTPUT_PATH: '*.bundle'
+  artifacts:
+    paths:
+      - Assets/Plugins/MacOS
 
 # run this job when you need to request a license
 # you may need to follow activation steps from documentation
@@ -194,7 +208,8 @@ build-StandaloneLinux64:
 
 build-StandaloneOSX:
   extends: .build
-  dependencies: [] # todo
+  dependencies:
+    - ocgcore_macos
   image: $IMAGE:$UNITY_VERSION-mac-mono-$IMAGE_VERSION
   variables:
     BUILD_TARGET: StandaloneOSX
