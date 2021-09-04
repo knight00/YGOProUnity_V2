@@ -32,7 +32,7 @@ public class WindowServantSP : Servant
             if (glass != null) glass.gameObject.SetActive(false);
         }
 
-        resize();
+        // resize();
     }
 
     public void SetActiveFalse()
@@ -59,26 +59,26 @@ public class WindowServantSP : Servant
             if (glass != null) glass.gameObject.SetActive(true);
         }
 
-        resize();
+        // resize();
     }
 
-    private void resize()
-    {
-        if (gameObject != null)
-        {
-            if (Program.I().setting.setting.resize.value)
-            {
-                var f = Screen.height / 700f;
-                gameObject.transform.localScale = new Vector3(f, f, f);
-            }
-            else
-            {
-                gameObject.transform.localScale = new Vector3(1, 1, 1);
-            }
-        }
-    }
+    // private void resize()
+    // {
+    //     if (gameObject != null)
+    //     {
+    //         if (Program.I().setting.setting.resize.value)
+    //         {
+    //             var f = Screen.height / 700f;
+    //             gameObject.transform.localScale = new Vector3(f, f, f);
+    //         }
+    //         else
+    //         {
+    //             gameObject.transform.localScale = new Vector3(1, 1, 1);
+    //         }
+    //     }
+    // }
 
-    public void createWindow(GameObject mod)
+    public void SetWindow(GameObject mod)
     {
         gameObject = mod;
         UIHelper.InterGameObject(gameObject);
@@ -89,6 +89,18 @@ public class WindowServantSP : Servant
         var panelKIller = gameObject.GetComponent<panelKIller>();
         if (panelKIller == null) panelKIller = gameObject.AddComponent<panelKIller>();
         panelKIller.ini();
+    }
+
+    public void CreateWindow(GameObject mod)
+    {
+        SetWindow(create
+        (
+            mod,
+            Vector3.zero,
+            Vector3.zero,
+            false,
+            Program.I().ui_windows_2d
+        ));
     }
 
     public override void ES_quit()

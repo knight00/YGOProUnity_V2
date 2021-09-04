@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 115194}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.0026041667, y: 0.0026041667, z: 0.0026041667}
+  m_LocalScale: {x: 0.0028571428, y: 0.0028571428, z: 0.0028571428}
   m_Children:
   - {fileID: 471862}
   m_Father: {fileID: 0}
@@ -47,8 +47,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scalingStyle: 1
-  manualWidth: 1366
-  manualHeight: 768
+  manualWidth: 1300
+  manualHeight: 700
   minimumHeight: 320
   maximumHeight: 2160
   fitWidth: 0

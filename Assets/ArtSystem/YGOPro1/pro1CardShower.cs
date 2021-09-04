@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class pro1CardShower : MonoBehaviour {
+public class pro1CardShower : MonoBehaviour
+{
     public UITexture card;
     public UITexture mask;
     public UITexture disable;

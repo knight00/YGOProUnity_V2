@@ -713,10 +713,8 @@ public class Room : WindowServantSP
         for (var i = 0; i < 4; i++) roomPlayers[i] = null;
         if (gameObject != null) ES_quit();
         Object.DestroyImmediate(gameObject);
-        if (mode == 2)
-            createWindow(Program.I().remaster_tagRoom);
-        else
-            createWindow(Program.I().remaster_room);
+        CreateWindow(mode == 2 ? Program.I().remaster_tagRoom : Program.I().remaster_room);
+
         lazyRoom = gameObject.GetComponent<lazyRoom>();
         fixScreenProblem();
         superScrollView = gameObject.GetComponentInChildren<UIselectableList>();

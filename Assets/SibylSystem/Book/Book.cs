@@ -23,7 +23,7 @@ public class Book : WindowServant2D
         kacha = InterString.Get("卡差:");
         changcha = InterString.Get("场差:");
         xuecha = InterString.Get("血差:");
-        gameObject = createWindow(this, Program.I().new_ui_book);
+        gameObject = SetWindow(this, Program.I().new_ui_book);
         texts = gameObject.GetComponentInChildren<lazyBookbtns>();
         texts.textlist.scrollValue = 1;
         texts.textlist.lockDrag = true;

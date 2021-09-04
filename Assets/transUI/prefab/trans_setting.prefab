@@ -2664,7 +2664,7 @@ MonoBehaviour:
     relative: 1
     absolute: -2
   updateAnchors: 2
-  mColor: {r: 1, g: 1, b: 1, a: 1}
+  mColor: {r: 0.4, g: 0.4, b: 0.4, a: 1}
   mPivot: 3
   mWidth: 200
   mHeight: 20
@@ -5100,7 +5100,7 @@ MonoBehaviour:
   activeAnimation: {fileID: 11172060}
   animator: {fileID: 0}
   tween: {fileID: 0}
-  startsActive: 0
+  startsActive: 1
   instantTween: 0
   optionCanBeNone: 0
   onChange: []
@@ -7886,7 +7886,7 @@ MonoBehaviour:
     relative: 0.5
     absolute: 5
   updateAnchors: 2
-  mColor: {r: 1, g: 1, b: 1, a: 1}
+  mColor: {r: 0.4, g: 0.4, b: 0.4, a: 1}
   mPivot: 4
   mWidth: 10
   mHeight: 10
@@ -18946,7 +18946,7 @@ MonoBehaviour:
   anchorOffset: 0
   softBorderPadding: 1
   renderQueue: 0
-  startingRenderQueue: 3017
+  startingRenderQueue: 3016
   mClipTexture: {fileID: 0}
   mAlpha: 1
   mClipping: 0

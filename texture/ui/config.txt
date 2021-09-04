@@ -1,0 +1,6 @@
+gameButtonSign.color=72707dFF
+gameChainCheckArea.color=4a4855FF
+allUI.color=4a4855FF
+List.color=4a4855FF
+lable.color=FFFFFFFF
+lable.color.fadecolor=CCCCCCFF

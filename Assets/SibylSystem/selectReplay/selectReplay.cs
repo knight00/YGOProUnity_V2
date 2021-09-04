@@ -19,7 +19,7 @@ public class selectReplay : WindowServantSP
 
     public override void initialize()
     {
-        createWindow(Program.I().remaster_replayManager);
+        SetWindow(Program.I().remaster_replayManager);
         UIHelper.registEvent(gameObject, "exit_", onClickExit);
         superScrollView = gameObject.GetComponentInChildren<UIselectableList>();
         superScrollView.selectedAction = onSelected;

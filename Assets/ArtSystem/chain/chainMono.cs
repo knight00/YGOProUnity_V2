@@ -1,18 +1,20 @@
-﻿using UnityEngine;
-using System;
+﻿using TMPro;
+using UnityEngine;
 
-public class chainMono : MonoBehaviour {
+public class chainMono : MonoBehaviour
+{
     public Renderer circle;
-    public TMPro.TextMeshPro text;
+    public TextMeshPro text;
     public bool flashing = true;
-    float all = 0;
-    bool p = true;
-    void Update()
+    private float all;
+    private bool p = true;
+
+    private void Update()
     {
-        if (flashing)   
+        if (flashing)
         {
             all += Program.deltaTime;
-            if (all>0.05)
+            if (all > 0.05)
             {
                 all = 0;
                 p = !p;

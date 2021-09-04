@@ -18,7 +18,7 @@ public class SelectServer : WindowServantSP
 
     public override void initialize()
     {
-        createWindow(Program.I().new_ui_selectServer);
+        SetWindow(Program.I().new_ui_selectServer);
         UIHelper.registEvent(gameObject, "exit_", onClickExit);
         UIHelper.registEvent(gameObject, "face_", onClickFace);
         UIHelper.registEvent(gameObject, "join_", onClickJoin);

@@ -33,7 +33,7 @@ public class AIRoom : WindowServantSP
     public override void initialize()
     {
         suiji = InterString.Get("随机卡组");
-        createWindow(Program.I().new_ui_aiRoom);
+        SetWindow(Program.I().new_ui_aiRoom);
         superScrollView = gameObject.GetComponentInChildren<UIselectableList>();
         superScrollView.selectedAction = onSelected;
         list_aideck = UIHelper.getByName<UIPopupList>(gameObject, "aideck_");

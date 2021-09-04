@@ -292,7 +292,7 @@ public class gameCard : OCGobject
         {
             var screenposition =
                 Program.I().main_camera.WorldToScreenPoint(gameObject_face.transform.position +
-                                                            new Vector3(0, 1f * 2.4f, 1.732f * 2.4f));
+                                                           new Vector3(0, 1f * 2.4f, 1.732f * 2.4f));
             var worldposition =
                 Camera.main.ScreenToWorldPoint(new Vector3(screenposition.x, screenposition.y, screenposition.z - 5));
             obj_number.transform.position = worldposition;
@@ -606,10 +606,10 @@ public class gameCard : OCGobject
                     vector_of_begin = gameObject_face.transform.position + new Vector3(0, 0, 2);
                 else
                     vector_of_begin = gameObject_face.transform.position + new Vector3(0, 0, 1.5f);
-                vector_of_begin = Program.I().main_camera.WorldToScreenPoint(vector_of_begin);
+                vector_of_begin = Utils.WorldToUIPoint(vector_of_begin);
                 for (var i = 0; i < buttons.Count; i++)
-                    buttons[i].show(vector_of_begin + i * new Vector3(0, 65f * 0.7f * Screen.height / 700f) +
-                                    new Vector3(0, 35f * 0.7f * Screen.height / 700f));
+                    buttons[i].show(vector_of_begin + i * new Vector3(0, 65f * 0.7f) +
+                                    new Vector3(0, 35f * 0.7f));
             }
             else
             {
@@ -617,10 +617,10 @@ public class gameCard : OCGobject
                 var vector_of_begin = Vector3.zero;
                 var l = 0.5f * game_object_verticle_drawing.transform.localScale.y * (h - 0.5f);
                 vector_of_begin = game_object_verticle_drawing.transform.position + new Vector3(0, l, l * 1.732f);
-                vector_of_begin = Program.I().main_camera.WorldToScreenPoint(vector_of_begin);
+                vector_of_begin = Utils.WorldToUIPoint(vector_of_begin);
                 for (var i = 0; i < buttons.Count; i++)
-                    buttons[i].show(vector_of_begin + i * new Vector3(0, 65f * 0.7f * Screen.height / 700f) +
-                                    new Vector3(0, 35f * 0.7f * Screen.height / 700f));
+                    buttons[i].show(vector_of_begin + i * new Vector3(0, 65f * 0.7f) +
+                                    new Vector3(0, 35f * 0.7f));
             }
         }
     }
@@ -657,7 +657,7 @@ public class gameCard : OCGobject
         var overlayed_cards = Program.I().ocgcore.GCS_cardGetOverlayElements(this);
         var screen = Program.I().main_camera.WorldToScreenPoint(gameObject.transform.position);
         screen.z = 0;
-        var k = Screen.height / 700f;
+
         for (var x = 0; x < overlayed_cards.Count; x++)
             if (overlayed_cards[x].isShowed == false)
             {
@@ -665,7 +665,7 @@ public class gameCard : OCGobject
                 if (Program.getVerticalTransparency() < 0.5f) pianyi = 90f;
                 var screen_vector_to_move = screen +
                                             new Vector3(
-                                                pianyi * k + 60f * k * (overlayed_cards.Count -
+                                                pianyi + 60f * (overlayed_cards.Count -
                                                                         overlayed_cards[x].p.position - 1), 0,
                                                 12f + 2f * (overlayed_cards.Count - overlayed_cards[x].p.position - 1));
                 overlayed_cards[x].flash_line_on();
@@ -1294,7 +1294,8 @@ public class gameCard : OCGobject
             {
                 Vector3 screen_number_pos;
                 screen_number_pos = Program.I().main_camera.WorldToScreenPoint(cardHint.gameObject.transform.position +
-                    new Vector3(-0.61f, 0.65f, 0.65f * 1.732f));
+                                                                               new Vector3(-0.61f, 0.65f,
+                                                                                   0.65f * 1.732f));
                 screen_number_pos.z -= 2f;
                 verticle_number.transform.position = Program.I().main_camera.ScreenToWorldPoint(screen_number_pos);
                 if (game_object_verticle_Star != null)

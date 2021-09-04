@@ -26,7 +26,7 @@ public class selectDeck : WindowServantSP
 
     public override void initialize()
     {
-        createWindow(Program.I().remaster_deckManager);
+        SetWindow(Program.I().remaster_deckManager);
         deckPanel = gameObject.GetComponentInChildren<UIDeckPanel>();
         UIHelper.registEvent(gameObject, "exit_", onClickExit);
         superScrollView = gameObject.GetComponentInChildren<UIselectableList>();

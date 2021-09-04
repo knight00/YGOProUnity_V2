@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Assertions;
 using YGOSharp.OCGWrapper.Enums;
@@ -118,13 +119,11 @@ public class Servant
     {
         if (toolBar != null)
         {
-            var vectorOfShowedBar_Screen = new Vector3(Screen.width - RightToScreen, buttomToScreen, 0);
-            iTween.MoveTo(toolBar, Program.I().camera_back_ground_2d.ScreenToWorldPoint(vectorOfShowedBar_Screen),
+            toolBar.transform.DOMove(
+                Utils.UIToWorldPoint(new Vector3(Utils.UIWidth() - RightToScreen, buttomToScreen, 0)),
                 0.6f);
-            toolBar.transform.localScale =
-                new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f);
             var items = toolBar.GetComponentsInChildren<toolShift>();
-            for (var i = 0; i < items.Length; i++) items[i].enabled = true;
+            foreach (var t in items) t.enabled = true;
         }
     }
 
@@ -132,12 +131,11 @@ public class Servant
     {
         if (toolBar != null)
         {
-            var vectorOfHidedBar_Screen = new Vector3(Screen.width - RightToScreen, -100, 0);
-            iTween.MoveTo(toolBar, Program.I().camera_back_ground_2d.ScreenToWorldPoint(vectorOfHidedBar_Screen), 0.6f);
-            toolBar.transform.localScale =
-                new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f);
+            toolBar.transform.DOMove(
+                Utils.UIToWorldPoint(new Vector3(Utils.UIWidth() - RightToScreen, -100, 0)),
+                0.6f);
             var items = toolBar.GetComponentsInChildren<toolShift>();
-            for (var i = 0; i < items.Length; i++) items[i].enabled = false;
+            foreach (var t in items) t.enabled = false;
         }
     }
 
@@ -258,6 +256,18 @@ public class Servant
         toolBar = mod;
         UIHelper.InterGameObject(toolBar);
         fixScreenProblem();
+    }
+
+    public void CreateBar(GameObject mod, float buttomToScreen, float RightToScreen)
+    {
+        if (toolBar != null) Object.DestroyImmediate(toolBar);
+        SetBar(create(
+            mod,
+            Utils.UIToWorldPoint(new Vector3(Utils.UIWidth() - RightToScreen, -100, 0)),
+            new Vector3(0, 0, 0),
+            false,
+            Program.I().ui_main_2d
+        ), buttomToScreen, RightToScreen);
     }
 
     public void reShowBar(float buttomToScreen, float RightToScreen)

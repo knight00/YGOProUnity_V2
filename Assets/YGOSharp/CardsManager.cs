@@ -19,19 +19,19 @@ namespace YGOSharp
         internal static void initialize(string databaseFullPath)
         {
             nullName = InterString.Get("未知卡片");
-            nullString = "";
-            nullString += "欢迎使用 YGOPro2";
-            nullString += "\r\n\r\n";
-            nullString += "官方网站：";
-            nullString += "\r\n";
-            nullString += "[url=https://ygopro2.lofter.com/][u]https://ygopro2.lofter.com/[/u][/url]";
-            nullString += "\r\n\r\n";
-            nullString += "公测玩家交流群：\r\n[url=https://jq.qq.com/?_wv=1027&k=O1xapcRQ][u]966380039[/u][/url]";
+            nullString = @"欢迎使用 YGOPro2
+
+玩家社区：
+[url=https://ygobbs.com/][u]https://ygobbs.com/[/u][/url]
+
+玩家交流群：
+214167219";
             using (SqliteConnection connection = new SqliteConnection("Data Source=" + databaseFullPath))
             {
                 connection.Open();
 
-                using (IDbCommand command = new SqliteCommand("SELECT datas.*, texts.* FROM datas,texts WHERE datas.id=texts.id;", connection))
+                using (IDbCommand command =
+                    new SqliteCommand("SELECT datas.*, texts.* FROM datas,texts WHERE datas.id=texts.id;", connection))
                 {
                     using (IDataReader reader = command.ExecuteReader())
                     {
@@ -71,11 +71,13 @@ namespace YGOSharp
                         break;
                     }
                 }
+
                 if (returnValue == null)
                 {
                     returnValue = new Card();
                 }
             }
+
             return returnValue;
         }
 
@@ -118,31 +120,33 @@ namespace YGOSharp
             uint getRaceFilter,
             uint getAttributeFilter,
             uint getCatagoryFilter
-            )
+        )
         {
             List<Card> returnValue = new List<Card>();
             foreach (var item in _cards)
             {
                 Card card = item.Value;
-                if ((card.Type & (uint)CardType.Token) == 0)
+                if ((card.Type & (uint) CardType.Token) == 0)
                 {
-                    if (getName == "" 
-                        || Regex.Replace(card.Name, getName,"miaowu", RegexOptions.IgnoreCase) != card.Name
+                    if (getName == ""
+                        || Regex.Replace(card.Name, getName, "miaowu", RegexOptions.IgnoreCase) != card.Name
                         || Regex.Replace(card.Desc, getName, "miaowu", RegexOptions.IgnoreCase) != card.Desc
                         || Regex.Replace(card.strSetName, getName, "miaowu", RegexOptions.IgnoreCase) != card.strSetName
                         || card.Id.ToString() == getName
-                        )
+                    )
                     {
                         if (((card.Type & getTypeFilter) == getTypeFilter || getTypeFilter == 0)
                             && ((card.Type == getTypeFilter2
-                                || getTypeFilter == (UInt32)CardType.Monster) && (card.Type & getTypeFilter2) == getTypeFilter2
+                                 || getTypeFilter == (UInt32) CardType.Monster) &&
+                                (card.Type & getTypeFilter2) == getTypeFilter2
                                 || getTypeFilter2 == 0))
                         {
-                            if ((card.Race & getRaceFilter) >0 || getRaceFilter == 0)
+                            if ((card.Race & getRaceFilter) > 0 || getRaceFilter == 0)
                             {
                                 if ((card.Attribute & getAttributeFilter) > 0 || getAttributeFilter == 0)
                                 {
-                                    if (((card.Category & getCatagoryFilter))== getCatagoryFilter || getCatagoryFilter == 0)
+                                    if (((card.Category & getCatagoryFilter)) == getCatagoryFilter ||
+                                        getCatagoryFilter == 0)
                                     {
                                         if (judgeint(getAttack, getAttack_UP, card.Attack))
                                         {
@@ -154,7 +158,8 @@ namespace YGOSharp
                                                     {
                                                         if (judgeint(getYear, getYear_UP, card.year))
                                                         {
-                                                            if (getBAN == -233 || banlist == null || banlist.GetQuantity(card.Id) == getBAN)
+                                                            if (getBAN == -233 || banlist == null ||
+                                                                banlist.GetQuantity(card.Id) == getBAN)
                                                             {
                                                                 if (getOT == -233 || getOT == card.Ot)
                                                                 {
@@ -176,6 +181,7 @@ namespace YGOSharp
                     }
                 }
             }
+
             nameInSearch = getName;
             returnValue.Sort(comparisonOfCard());
             nameInSearch = "";
@@ -191,43 +197,48 @@ namespace YGOSharp
             {
                 re = true;
             }
+
             if (min == -233 && max != -233)
             {
                 re = max == raw;
             }
+
             if (min != -233 && max == -233)
             {
                 re = min == raw;
             }
+
             if (min != -233 && max != -233)
             {
                 re = min <= raw && raw <= max;
             }
+
             return re;
         }
 
         internal static List<Card> search(
-          string getName,
+            string getName,
             List<int> getsearchCode
-            )
+        )
         {
             List<Card> returnValue = new List<Card>();
             foreach (var item in _cards)
             {
                 Card card = item.Value;
                 if (getName == ""
-                        || Regex.Replace(card.Name, getName, "miaowu", RegexOptions.IgnoreCase) != card.Name
-                        //|| Regex.Replace(card.Desc, getName, "miaowu", RegexOptions.IgnoreCase) != card.Desc
-                        || Regex.Replace(card.strSetName, getName, "miaowu", RegexOptions.IgnoreCase) != card.strSetName
-                        || card.Id.ToString() == getName
-                        )
+                    || Regex.Replace(card.Name, getName, "miaowu", RegexOptions.IgnoreCase) != card.Name
+                    //|| Regex.Replace(card.Desc, getName, "miaowu", RegexOptions.IgnoreCase) != card.Desc
+                    || Regex.Replace(card.strSetName, getName, "miaowu", RegexOptions.IgnoreCase) != card.strSetName
+                    || card.Id.ToString() == getName
+                )
                 {
-                    if (getsearchCode.Count == 0|| is_declarable(card, getsearchCode))
+                    if (getsearchCode.Count == 0 || is_declarable(card, getsearchCode))
                     {
                         returnValue.Add(card);
                     }
                 }
             }
+
             nameInSearch = getName;
             returnValue.Sort(comparisonOfCard());
             nameInSearch = "";
@@ -241,39 +252,43 @@ namespace YGOSharp
             {
                 switch (getsearchCode[i])
                 {
-                    case (int)searchCode.OPCODE_ADD:
+                    case (int) searchCode.OPCODE_ADD:
                         if (stack.Count >= 2)
                         {
                             int rhs = stack.Pop();
                             int lhs = stack.Pop();
                             stack.Push(lhs + rhs);
                         }
+
                         break;
-                    case (int)searchCode.OPCODE_SUB:
+                    case (int) searchCode.OPCODE_SUB:
                         if (stack.Count >= 2)
                         {
                             int rhs = stack.Pop();
                             int lhs = stack.Pop();
                             stack.Push(lhs - rhs);
                         }
+
                         break;
-                    case (int)searchCode.OPCODE_MUL:
+                    case (int) searchCode.OPCODE_MUL:
                         if (stack.Count >= 2)
                         {
                             int rhs = stack.Pop();
                             int lhs = stack.Pop();
                             stack.Push(lhs * rhs);
                         }
+
                         break;
-                    case (int)searchCode.OPCODE_DIV:
+                    case (int) searchCode.OPCODE_DIV:
                         if (stack.Count >= 2)
                         {
                             int rhs = stack.Pop();
                             int lhs = stack.Pop();
                             stack.Push(lhs / rhs);
                         }
+
                         break;
-                    case (int)searchCode.OPCODE_AND:
+                    case (int) searchCode.OPCODE_AND:
                         if (stack.Count >= 2)
                         {
                             int rhs = stack.Pop();
@@ -289,8 +304,9 @@ namespace YGOSharp
                                 stack.Push(0);
                             }
                         }
+
                         break;
-                    case (int)searchCode.OPCODE_OR:
+                    case (int) searchCode.OPCODE_OR:
                         if (stack.Count >= 2)
                         {
                             int rhs = stack.Pop();
@@ -306,15 +322,17 @@ namespace YGOSharp
                                 stack.Push(0);
                             }
                         }
+
                         break;
-                    case (int)searchCode.OPCODE_NEG:
+                    case (int) searchCode.OPCODE_NEG:
                         if (stack.Count >= 1)
                         {
                             int rhs = stack.Pop();
                             stack.Push(-rhs);
                         }
+
                         break;
-                    case (int)searchCode.OPCODE_NOT:
+                    case (int) searchCode.OPCODE_NOT:
                         if (stack.Count >= 1)
                         {
                             int rhs = stack.Pop();
@@ -328,8 +346,9 @@ namespace YGOSharp
                                 stack.Push(1);
                             }
                         }
+
                         break;
-                    case (int)searchCode.OPCODE_ISCODE:
+                    case (int) searchCode.OPCODE_ISCODE:
                         if (stack.Count >= 1)
                         {
                             int code = stack.Pop();
@@ -343,8 +362,9 @@ namespace YGOSharp
                                 stack.Push(0);
                             }
                         }
+
                         break;
-                    case (int)searchCode.OPCODE_ISSETCARD:
+                    case (int) searchCode.OPCODE_ISSETCARD:
                         if (stack.Count >= 1)
                         {
                             if (IfSetCard(stack.Pop(), card.Setcode))
@@ -356,8 +376,9 @@ namespace YGOSharp
                                 stack.Push(0);
                             }
                         }
+
                         break;
-                    case (int)searchCode.OPCODE_ISTYPE:
+                    case (int) searchCode.OPCODE_ISTYPE:
                         if (stack.Count >= 1)
                         {
                             if ((stack.Pop() & card.Type) > 0)
@@ -369,8 +390,9 @@ namespace YGOSharp
                                 stack.Push(0);
                             }
                         }
+
                         break;
-                    case (int)searchCode.OPCODE_ISRACE:
+                    case (int) searchCode.OPCODE_ISRACE:
                         if (stack.Count >= 1)
                         {
                             if ((stack.Pop() & card.Race) > 0)
@@ -382,8 +404,9 @@ namespace YGOSharp
                                 stack.Push(0);
                             }
                         }
+
                         break;
-                    case (int)searchCode.OPCODE_ISATTRIBUTE:
+                    case (int) searchCode.OPCODE_ISATTRIBUTE:
                         if (stack.Count >= 1)
                         {
                             if ((stack.Pop() & card.Attribute) > 0)
@@ -395,22 +418,24 @@ namespace YGOSharp
                                 stack.Push(0);
                             }
                         }
+
                         break;
                     default:
                         stack.Push(getsearchCode[i]);
                         break;
                 }
             }
+
             if (stack.Count != 1 || stack.Pop() == 0)
                 return false;
             return
-                card.Id == (int)TwoNameCards.CARD_MARINE_DOLPHIN
+                card.Id == (int) TwoNameCards.CARD_MARINE_DOLPHIN
                 ||
-                card.Id == (int)TwoNameCards.CARD_TWINKLE_MOSS
-         ||
-         (!(card.Alias != 0)
-         && ((card.Type & ((int)CardType.Monster + (int)CardType.Token)))
-         != ((int)CardType.Monster + (int)CardType.Token));
+                card.Id == (int) TwoNameCards.CARD_TWINKLE_MOSS
+                ||
+                (!(card.Alias != 0)
+                 && ((card.Type & ((int) CardType.Monster + (int) CardType.Token)))
+                 != ((int) CardType.Monster + (int) CardType.Token));
         }
 
         public static bool IfSetCard(int setCodeToAnalyse, long setCodeFromCard)
@@ -530,17 +555,17 @@ namespace YGOSharp
                         }
                     }
                 }
+
                 return a;
             };
         }
-
     }
 
     internal static class PacksManager
     {
         public class packName
         {
-           public string fullName;
+            public string fullName;
             public string shortName;
             public int year;
             public int month;
@@ -564,7 +589,7 @@ namespace YGOSharp
                         {
                             try
                             {
-                                int Id = (int)reader.GetInt64(0);
+                                int Id = (int) reader.GetInt64(0);
                                 Card c = CardsManager.GetCardRaw(Id);
                                 if (c != null)
                                 {
@@ -579,7 +604,8 @@ namespace YGOSharp
                                         c.day = int.Parse(mats[1]);
                                         c.year = int.Parse(mats[2]);
                                     }
-                                    if (!pacDic.ContainsKey(c.packFullName))    
+
+                                    if (!pacDic.ContainsKey(c.packFullName))
                                     {
                                         pacDic.Add(c.packFullName, c.packShortNam);
                                         packName p = new packName();
@@ -594,7 +620,6 @@ namespace YGOSharp
                             }
                             catch (Exception)
                             {
-
                             }
                         }
                     }
@@ -604,34 +629,40 @@ namespace YGOSharp
 
         internal static void initializeSec()
         {
-            packs.Sort((left, right) => {
+            packs.Sort((left, right) =>
+            {
                 if (left.year > right.year)
                 {
                     return -1;
                 }
+
                 if (left.year < right.year)
                 {
                     return 1;
                 }
+
                 if (left.month > right.month)
                 {
                     return -1;
                 }
+
                 if (left.month < right.month)
                 {
                     return 1;
                 }
+
                 if (left.day > right.day)
                 {
                     return -1;
                 }
+
                 if (left.day < right.day)
                 {
                     return 1;
                 }
+
                 return 1;
             });
         }
-
     }
 }

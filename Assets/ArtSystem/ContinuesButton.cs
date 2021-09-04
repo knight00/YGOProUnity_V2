@@ -1,40 +1,28 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class ContinuesButton : MonoBehaviour {
-    UIButton btn;
-	// Use this for initialization
-	void Start ()
+public class ContinuesButton : MonoBehaviour
+{
+    private UIButton btn;
+
+    private bool isTrigging;
+
+    // Update is called once per frame
+    private float time;
+
+    // Use this for initialization
+    private void Start()
     {
         btn = GetComponentInChildren<UIButton>();
-        UIEventTrigger trigger= gameObject.GetComponentInChildren<UIEventTrigger>();
-        if (trigger==null)  
-        {
-            trigger = gameObject.AddComponent<UIEventTrigger>();
-        }
+        var trigger = gameObject.GetComponentInChildren<UIEventTrigger>();
+        if (trigger == null) trigger = gameObject.AddComponent<UIEventTrigger>();
         trigger.onRelease.Add(new EventDelegate(this, "off"));
         trigger.onPress.Add(new EventDelegate(this, "on"));
     }
 
-    void on()
+    private void Update()
     {
-        isTrigging = true;
-        time = 0;
-    }
-
-    void off()  
-    {
-        isTrigging = false;
-        time = 0;
-    }
-
-    bool isTrigging = false;
-    // Update is called once per frame
-    float time = 0;
-	void Update () {
-        if (isTrigging) 
-        {
-            if (btn!=null)  
+        if (isTrigging)
+            if (btn != null)
             {
                 time += Time.deltaTime;
                 if (time > 0.2f)
@@ -43,6 +31,17 @@ public class ContinuesButton : MonoBehaviour {
                     EventDelegate.Execute(btn.onClick);
                 }
             }
-        }
+    }
+
+    private void on()
+    {
+        isTrigging = true;
+        time = 0;
+    }
+
+    private void off()
+    {
+        isTrigging = false;
+        time = 0;
     }
 }

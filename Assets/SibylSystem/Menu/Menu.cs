@@ -21,7 +21,7 @@ public class Menu : WindowServantSP
     //GameObject screen;
     public override void initialize()
     {
-        createWindow(Program.I().new_ui_menu);
+        SetWindow(Program.I().new_ui_menu);
         UIHelper.registEvent(gameObject, "setting_", onClickSetting);
         UIHelper.registEvent(gameObject, "deck_", onClickSelectDeck);
         UIHelper.registEvent(gameObject, "online_", onClickOnline);

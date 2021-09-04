@@ -30,7 +30,6 @@ public class Program : MonoBehaviour
 
     [Header("ui_back_ground_2d")]
     public Camera camera_back_ground_2d;
-    public GameObject mod_simple_ngui_background_texture;
     public GameObject new_ui_cardDescription;
     public GameObject new_ui_search;
     public gameInfo new_ui_gameInfo;
@@ -49,8 +48,10 @@ public class Program : MonoBehaviour
     public GameObject new_ui_setting;
     public GameObject new_bar_room;
     public GameObject new_ui_searchDetailed;
-    public GameObject new_bar_editDeck;
-    public GameObject new_bar_duel;
+    public GameObject new_ui_book;
+    
+    [Header("其他")]
+    public GameObject mouseParticle;
 
     [Header("Prefab")] public facer face;
     public AudioClip zhankai;
@@ -120,9 +121,10 @@ public class Program : MonoBehaviour
     public GameObject mod_ocgcore_ss_dark_hole;
     public GameObject mod_ocgcore_ss_link_mark;
     
-    public GameObject new_ui_book;
     public GameObject new_ui_cardOnSearchList;
+    public GameObject new_bar_editDeck;
     public GameObject new_bar_changeSide;
+    public GameObject new_bar_duel;
     public GameObject new_bar_watchDuel;
     public GameObject new_bar_watchRecord;
     public GameObject new_mod_cardInDeckManager;
@@ -134,7 +136,6 @@ public class Program : MonoBehaviour
     public GameObject new_ocgcore_field;
     public GameObject new_ocgcore_chainCircle;
     public GameObject new_ocgcore_wait;
-    public GameObject new_mouse;
     public GameObject remaster_tagRoom;
     public GameObject remaster_room;
     public GameObject ES_1;
@@ -289,9 +290,6 @@ public class Program : MonoBehaviour
         UIHelper.iniFaces();
         initializeALLcameras();
         fixALLcamerasPreFrame();
-        backGroundPic = new BackGroundPic();
-        servants.Add(backGroundPic);
-        backGroundPic.fixScreenProblem();
         // });
         // go(300, () =>
         // {
@@ -476,7 +474,7 @@ public class Program : MonoBehaviour
         }
     }
 
-    public GameObject mouseParticle;
+    
 
     private static int lastChargeTime;
 
@@ -717,7 +715,6 @@ public class Program : MonoBehaviour
 
     private readonly List<Servant> servants = new List<Servant>();
 
-    public Servant backGroundPic;
     public Menu menu;
     public Setting setting;
     public selectDeck selectDeck;
@@ -760,7 +757,6 @@ public class Program : MonoBehaviour
 
     public void shiftToServant(Servant to)
     {
-        if (to != backGroundPic && backGroundPic.isShowed) backGroundPic.hide();
         if (to != menu && menu.isShowed) menu.hide();
         if (to != setting && setting.isShowed) setting.hide();
         if (to != selectDeck && selectDeck.isShowed) selectDeck.hide();
@@ -772,7 +768,6 @@ public class Program : MonoBehaviour
         if (to != puzzleMode && puzzleMode.isShowed) puzzleMode.hide();
         if (to != aiRoom && aiRoom.isShowed) aiRoom.hide();
 
-        if (to == backGroundPic && backGroundPic.isShowed == false) backGroundPic.show();
         if (to == menu && menu.isShowed == false) menu.show();
         if (to == setting && setting.isShowed == false) setting.show();
         if (to == selectDeck && selectDeck.isShowed == false) selectDeck.show();
@@ -794,7 +789,7 @@ public class Program : MonoBehaviour
         if (Screen.width < 100 || Screen.height < 100) Screen.SetResolution(1366, 768, false);
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 144;
-        mouseParticle = Instantiate(new_mouse);
+        // mouseParticle = Instantiate(new_mouse);
         instance = this;
         initialize();
         go(500, () => { gameStart(); });
@@ -909,7 +904,6 @@ public class Program : MonoBehaviour
     private void gameStart()
     {
         if (UIHelper.shouldMaximize()) UIHelper.MaximizeWindow();
-        backGroundPic.show();
         shiftToServant(menu);
     }
 

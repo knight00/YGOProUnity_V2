@@ -1,19 +1,24 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class mouseParticle : MonoBehaviour {
+public class mouseParticle : MonoBehaviour
+{
     public Camera camera;
     public ParticleSystem e1;
     public ParticleSystem e2;
     public Transform trans;
+
+    private float time = 0;
+
     // Use this for initialization
-    void Start () {
+    private void Start()
+    {
         camera.depth = 99999;
     }
-    float time = 0;
-	// Update is called once per frame
-	void Update () {
-        Vector3 screenPoint = Input.mousePosition;
+
+    // Update is called once per frame
+    private void Update()
+    {
+        var screenPoint = Input.mousePosition;
         screenPoint.z = 10;
         trans.position = camera.ScreenToWorldPoint(screenPoint);
 

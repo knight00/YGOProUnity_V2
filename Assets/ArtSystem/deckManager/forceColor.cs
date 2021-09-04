@@ -1,20 +1,17 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System;
+using UnityEngine;
 
-public class forceColor : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
+public class forceColor : MonoBehaviour
+{
+    // Use this for initialization
+    private void Start()
+    {
         var tweens = GetComponentsInChildren<TweenColor>();
-        foreach (var item in tweens)
-        {
-            DestroyImmediate(item);
-        }
+        foreach (var item in tweens) DestroyImmediate(item);
         Color c;
         ColorUtility.TryParseHtmlString(Config.Getui("allUI.color"), out c);
         var sprites = GetComponentsInChildren<UISprite>();
-        foreach (var item in sprites)   
-        {
+        foreach (var item in sprites)
             if (item.color.a > 0.1f)
             {
                 item.color = c;
@@ -22,11 +19,11 @@ public class forceColor : MonoBehaviour {
                 {
                     item.gameObject.GetComponentInParent<UIButton>().defaultColor = c;
                 }
-                catch (System.Exception)
+                catch (Exception)
                 {
                 }
             }
-        }
+
         ColorUtility.TryParseHtmlString(Config.Getui("List.color"), out c);
         var lists = GetComponentsInChildren<UIPopupList>();
         foreach (var item in lists)
@@ -37,10 +34,11 @@ public class forceColor : MonoBehaviour {
                 item.gameObject.GetComponent<UISprite>().color = c;
                 item.gameObject.GetComponent<UIButton>().defaultColor = c;
             }
-            catch (System.Exception)
+            catch (Exception)
             {
             }
         }
+
         ColorUtility.TryParseHtmlString(Config.Getui("lable.color"), out c);
         var ls = GetComponentsInChildren<UILabel>();
         foreach (var item in ls)
@@ -49,16 +47,14 @@ public class forceColor : MonoBehaviour {
             item.gradientTop = c;
             item.gradientBottom = Color.gray;
         }
+
         ColorUtility.TryParseHtmlString(Config.Getui("lable.color.fadecolor"), out c);
         ls = GetComponentsInChildren<UILabel>();
-        foreach (var item in ls)
-        {
-            item.gradientBottom = c;
-        }
+        foreach (var item in ls) item.gradientBottom = c;
     }
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+
+    // Update is called once per frame
+    private void Update()
+    {
+    }
 }
