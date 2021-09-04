@@ -43,13 +43,11 @@ cdb/
 data/
 deck/
 expansions/
-pack/
 picture/
 puzzle/
 replay/
 script/
-texture/
-config/
+config/lflist.conf
 bin/
 Release/
 Debug/
