@@ -27,7 +27,7 @@ endif
 ifeq ($(origin AR), default)
   AR = ar
 endif
-OSX_FLAGS = -mmacosx-version-min=10.9 -arch i386 -arch x86_64
+OSX_FLAGS = -mmacosx-version-min=10.9 -arch x86_64
 DEFINES += -DUSE_LUA
 INCLUDES += -I../../lua
 FORCE_INCLUDE +=
