@@ -464,9 +464,7 @@ public class Servant
             MSentre(),
             Vector3.zero,
             true,
-            Program.I().ui_main_2d,
-            true,
-            new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f)
+            Program.I().ui_main_2d
         );
         UIHelper.InterGameObject(currentMSwindow);
         UIHelper.trySetLableText(currentMSwindow, "hint_", hint);
