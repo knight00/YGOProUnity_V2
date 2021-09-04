@@ -120,7 +120,7 @@ ocgcore_macos:
       - puzzle
       - picture
       - script
-  when:
+  only:
     - master
     - ci
     - tags
@@ -287,7 +287,7 @@ build-StandaloneWindows64:
   artifacts:
     paths:
       - dist
-  when:
+  only:
     - master
     - ci
     - tags
