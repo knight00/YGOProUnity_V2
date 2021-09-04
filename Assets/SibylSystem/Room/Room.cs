@@ -658,7 +658,10 @@ public class Room : WindowServantSP
         description += InterString.Get("禁限卡表:[?]", BanlistManager.GetName(lflist)) + "\r\n";
         if (rule == 0) description += InterString.Get("(OCG卡池)") + "\r\n";
         if (rule == 1) description += InterString.Get("(TCG卡池)") + "\r\n";
-        if (rule == 2) description += InterString.Get("(混合卡池)") + "\r\n";
+        if (rule == 2) description += InterString.Get("(简中卡池)") + "\r\n";
+        if (rule == 3) description += InterString.Get("(自制卡卡池)") + "\r\n";
+        if (rule == 4) description += InterString.Get("(无独有卡卡池)") + "\r\n";
+        if (rule == 5) description += InterString.Get("(混合卡池)") + "\r\n";
         if (no_check_deck) description += InterString.Get("*不检查卡组") + "\r\n";
         if (no_shuffle_deck) description += InterString.Get("*不洗牌") + "\r\n";
         description += InterString.Get("LP:[?]", start_lp.ToString()) + " ";
