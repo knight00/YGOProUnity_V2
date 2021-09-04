@@ -444,9 +444,7 @@ public class Servant
             MSentre(),
             Vector3.zero,
             true,
-            Program.I().ui_main_2d,
-            true,
-            new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f)
+            Program.I().ui_main_2d
         );
         UIHelper.InterGameObject(currentMSwindow);
         UIHelper.trySetLableText(currentMSwindow, "hint_", hint);
@@ -483,9 +481,7 @@ public class Servant
             MSentre(),
             Vector3.zero,
             true,
-            Program.I().ui_main_2d,
-            true,
-            new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f)
+            Program.I().ui_main_2d
         );
         UIHelper.InterGameObject(yesOrNoForce);
         UIHelper.trySetLableText(yesOrNoForce, "hint_", hint);
@@ -514,9 +510,7 @@ public class Servant
             MSentre(),
             Vector3.zero,
             true,
-            Program.I().ui_main_2d,
-            true,
-            new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f)
+            Program.I().ui_main_2d
         );
         UIHelper.InterGameObject(currentMSwindow);
         UIHelper.registEvent(currentMSwindow, "yes_", ES_RMSpremono, first);
@@ -535,9 +529,7 @@ public class Servant
             MSentre(),
             Vector3.zero,
             true,
-            Program.I().ui_main_2d,
-            true,
-            new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f)
+            Program.I().ui_main_2d
         );
         UIHelper.InterGameObject(currentMSwindow);
         UIHelper.trySetLableText(currentMSwindow, "hint_", hint);
@@ -557,9 +549,7 @@ public class Servant
             MSentre(),
             Vector3.zero,
             true,
-            Program.I().ui_main_2d,
-            true,
-            new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f)
+            Program.I().ui_main_2d
         );
         var sp = UIHelper.getByName<UISprite>(currentMSwindow, "under");
         sp.height = 70 + options.Count * 48;
@@ -598,9 +588,7 @@ public class Servant
             MSentre(),
             Vector3.zero,
             true,
-            Program.I().ui_main_2d,
-            true,
-            new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f)
+            Program.I().ui_main_2d
         );
         var sp = UIHelper.getByName<UISprite>(currentMSwindow, "under");
         sp.height = 70 + UIHelper.get_zonghangshu(options.Count, 5) * 40;
@@ -637,9 +625,7 @@ public class Servant
             MSentre(),
             Vector3.zero,
             true,
-            Program.I().ui_main_2d,
-            true,
-            new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f)
+            Program.I().ui_main_2d
         );
         UIHelper.InterGameObject(currentMSwindow);
         UIHelper.registEvent(currentMSwindow, "atk_", ES_RMSpremono, atk);
@@ -678,9 +664,7 @@ public class Servant
             MSentre(),
             Vector3.zero,
             true,
-            Program.I().ui_main_2d,
-            true,
-            new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f)
+            Program.I().ui_main_2d
         );
         UIHelper.InterGameObject(currentMSwindow);
         UIHelper.registEvent(currentMSwindow, "jiandao_", ES_RMSpremono, jiandao);
@@ -699,9 +683,7 @@ public class Servant
             MSentre(),
             Vector3.zero,
             true,
-            Program.I().ui_main_2d,
-            true,
-            new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f)
+            Program.I().ui_main_2d
         );
         UIHelper.InterGameObject(currentMSwindow);
         UIHelper.trySetLableText(currentMSwindow, "hint_", hint);
@@ -726,9 +708,7 @@ public class Servant
             MSentre(),
             Vector3.zero,
             true,
-            Program.I().ui_main_2d,
-            true,
-            new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f)
+            Program.I().ui_main_2d
         );
         UIHelper.InterGameObject(currentMSwindow);
         UIHelper.getByName<UITexture>(currentMSwindow, "face_").mainTexture = UIHelper.getFace(name);
