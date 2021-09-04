@@ -57,7 +57,7 @@ image: $IMAGE:$UNITY_VERSION-base-$IMAGE_VERSION
     - cd AI_core_vs2017solution/build/gmake.$GMAKE_PLATFORM/
     - make config=release -j$(nproc)
     - cd ../..
-    - cp -rf bin/gmake.$GMAKE_PLATFORM/x64/*.$SUFFIX ../Assets/Plugins/$PLUGIN_PLATFORM/
+    - cp -rf bin/gmake.$GMAKE_PLATFORM/$OUTPUT_PATH ../Assets/Plugins/$PLUGIN_PLATFORM/
 
 ocgcore_windows:
   extends:
@@ -85,7 +85,7 @@ ocgcore_linux:
   variables:
     GMAKE_PLATFORM: linux
     PLUGIN_PLATFORM: Linux
-    SUFFIX: so
+    OUTPUT_PATH: x64/*.so
   artifacts:
     paths:
       - Assets/Plugins/Linux
@@ -98,7 +98,7 @@ ocgcore_macos:
   variables:
     GMAKE_PLATFORM: macos
     PLUGIN_PLATFORM: MacOS
-    SUFFIX: bundle
+    OUTPUT_PATH: '*.bundle'
   artifacts:
     paths:
       - Assets/Plugins/Linux
