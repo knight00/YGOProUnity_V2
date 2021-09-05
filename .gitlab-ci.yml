@@ -9,7 +9,7 @@ stages:
 variables:
   BUILD_NAME: YGOPro2
   UNITY_ACTIVATION_FILE: ./unity3d.alf
-  UNITY_VERSION: "2021.1.18f1"
+  UNITY_VERSION: "2021.2.0b9"
   IMAGE: unityci/editor # https://hub.docker.com/r/unityci/editor
   IMAGE_VERSION: "0.15" # https://github.com/game-ci/docker/releases
   UNITY_DIR: $CI_PROJECT_DIR # this needs to be an absolute path. Defaults to the root of your tree.
