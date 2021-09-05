@@ -1,4 +1,5 @@
 ﻿using System;
+using DefaultNamespace;
 using UnityEngine;
 
 public class lazyPlayer : MonoBehaviour
@@ -55,7 +56,7 @@ public class lazyPlayer : MonoBehaviour
         setIfMe(false);
         SetNotNull(false);
         SetIFcanKick(false);
-        setName("");
+        SetName("");
     }
 
     private void OnPrepClicked()
@@ -126,18 +127,11 @@ public class lazyPlayer : MonoBehaviour
         return mIfMe;
     }
 
-    public void setName(string name_)
+    public void SetName(string name)
     {
-        mName = name_;
-        UILabel_name.text = name_;
-        try
-        {
-            face.mainTexture = UIHelper.getFace(name_);
-        }
-        catch (Exception)
-        {
-            Debug.LogError("setName");
-        }
+        mName = name;
+        UILabel_name.text = name;
+        MyCard.LoadAvatar(name, texture => face.mainTexture = texture);
     }
 
     public string getName()

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DefaultNamespace;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -711,7 +712,8 @@ public class Servant
             Program.I().ui_main_2d
         );
         UIHelper.InterGameObject(currentMSwindow);
-        UIHelper.getByName<UITexture>(currentMSwindow, "face_").mainTexture = UIHelper.getFace(name);
+        MyCard.LoadAvatar(name,
+            texture => UIHelper.getByName<UITexture>(currentMSwindow, "face_").mainTexture = texture);
         UIHelper.registEvent(currentMSwindow, "yes_", ES_RMSpremono, new messageSystemValue());
     }
 
