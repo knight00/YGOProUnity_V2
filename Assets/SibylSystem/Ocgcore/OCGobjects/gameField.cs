@@ -573,9 +573,7 @@ public class GameField : OCGobject
         if (Ocgcore.inSkiping) return;
         if (only) destroy(big_string);
         big_string = create(Program.I().New_phase, Program.I().ocgcore.centre(), Vector3.zero, false,
-            Program.I().ui_main_2d, true,
-            new Vector3(Screen.height / 1000f * Program.fieldSize, Screen.height / 1000f * Program.fieldSize,
-                Screen.height / 1000f * Program.fieldSize));
+            Program.I().ui_main_2d, true, Utils.UIHeight() / 1000f * Program.fieldSize * Vector3.one);
         big_string.GetComponentInChildren<UITexture>().mainTexture = tex;
         Program.I().ocgcore.Sleep(40);
         big_string.AddComponent<animation_screen_lock2>();

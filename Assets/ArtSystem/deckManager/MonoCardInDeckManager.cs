@@ -7,7 +7,7 @@ public class MonoCardInDeckManager : MonoBehaviour
     public bool dying;
 
     private bool bool_physicalON;
-    private Card _cardData = new();
+    private Card _cardData = new Card();
     private bool died;
 
     private bool isDraging;

@@ -742,7 +742,13 @@ public static class UIHelper
     public static async Task<Texture2D> GetTexture2DAsync(string path)
     {
         var pic = new Texture2D(0, 0);
-        pic.LoadImage(await File.ReadAllBytesAsync(path));
+        // Unity < 2021.2
+        var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, true);
+        var data = new byte[stream.Length];
+        await stream.ReadAsync(data, 0, (int) stream.Length);
+        pic.LoadImage(data);
+        // Unity >= 2021.2
+        // pic.LoadImage(await File.ReadAllBytesAsync(path));
         return pic;
     }
 

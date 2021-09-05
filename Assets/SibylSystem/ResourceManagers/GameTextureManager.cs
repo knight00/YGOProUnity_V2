@@ -75,9 +75,9 @@ public class GameTextureManager
         loadedCloseUp.Clear();
     }
 
-    private static readonly Dictionary<int, Task<Texture2D>> loadedPicture = new();
-    private static readonly Dictionary<int, Task<Texture2D>> loadedCloseUp = new();
-    private static readonly Dictionary<string, Texture2D> loadedUI = new();
+    private static readonly Dictionary<int, Task<Texture2D>> loadedPicture = new Dictionary<int, Task<Texture2D>>();
+    private static readonly Dictionary<int, Task<Texture2D>> loadedCloseUp = new Dictionary<int, Task<Texture2D>>();
+    private static readonly Dictionary<string, Texture2D> loadedUI = new Dictionary<string, Texture2D>();
 
     public static Task<Texture2D> GetCardPicture(int code)
     {
