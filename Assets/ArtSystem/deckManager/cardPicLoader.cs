@@ -23,7 +23,6 @@ public class cardPicLoader : MonoBehaviour
 
     private async void LoadCard()
     {
-        Debug.Log(code);
         uiTexture.mainTexture = await GameTextureManager.GetCardPicture(code);
         if (uiTexture.mainTexture == null) return;
         uiTexture.aspectRatio = (float) uiTexture.mainTexture.width / uiTexture.mainTexture.height;
