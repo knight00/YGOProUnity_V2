@@ -211,7 +211,6 @@ public class CardDescription : Servant
 
         picLoader.code = card.Id;
         picLoader.defaults = def;
-        picLoader.loaded_code = -1;
         currentCard = card;
         shiftCardShower(true);
         Program.go(50, () => { shiftCardShower(true); });
@@ -310,7 +309,7 @@ public class CardDescription : Servant
             for (var i = 0; i < list.Count; i++)
             {
                 var gp = UIHelper.get_hang_lie(i, eachLine);
-                quickCards[currentCardIndex].reCode(list[i].get_data().Id);
+                quickCards[currentCardIndex].code = list[i].get_data().Id;
                 quickCards[currentCardIndex].transform.localPosition =
                     new Vector3(beginX + 44 * gp.y, beginY - 60 * gp.x, 0);
                 currentCardIndex++;

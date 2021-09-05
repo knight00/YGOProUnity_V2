@@ -60,6 +60,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -376,6 +377,19 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      all_button_6: 21300012
+      all_button_3: 21300006
+      all_button_4: 21300008
+      all_button_11: 21300022
+      all_button_2: 21300004
+      all_button_1: 21300002
+      all_button_10: 21300020
+      all_button_8: 21300016
+      all_button_7: 21300014
+      all_button_0: 21300000
+      all_button_5: 21300010
+      all_button_9: 21300018
   spritePackingTag: button_ocgcore
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

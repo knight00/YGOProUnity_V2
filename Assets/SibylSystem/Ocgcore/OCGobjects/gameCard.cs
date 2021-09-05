@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using YGOSharp;
@@ -228,7 +229,6 @@ public class gameCard : OCGobject
         loaded_cardCode = -1;
         loaded_back = -1;
         loaded_specialHint = -1;
-        loaded_verticalDrawingCode = -1;
         loaded_verticalDrawingReal = Program.getVerticalTransparency() > 0.5f;
         loaded_verticalDrawingNumber = -1;
         loaded_verticalOverAttribute = -1;
@@ -666,7 +666,7 @@ public class gameCard : OCGobject
                 var screen_vector_to_move = screen +
                                             new Vector3(
                                                 pianyi + 60f * (overlayed_cards.Count -
-                                                                        overlayed_cards[x].p.position - 1), 0,
+                                                                overlayed_cards[x].p.position - 1), 0,
                                                 12f + 2f * (overlayed_cards.Count - overlayed_cards[x].p.position - 1));
                 overlayed_cards[x].flash_line_on();
                 overlayed_cards[x].TweenTo(Camera.main.ScreenToWorldPoint(screen_vector_to_move),
@@ -989,7 +989,6 @@ public class gameCard : OCGobject
                     Debug.Log(e);
                 }
 
-                loaded_verticalDrawingCode = 0;
                 loaded_verticalDrawingNumber = -1;
                 loaded_verticalOverAttribute = -1;
                 loaded_verticalatk = -1;
@@ -1100,12 +1099,8 @@ public class gameCard : OCGobject
             }
     }
 
-    private int loaded_verticalDrawingCode = -1;
     private bool loaded_verticalDrawingReal;
-
     private float loaded_verticalDrawingK = 1;
-
-    // bool picLikeASquare = false;
     private int loaded_verticalDrawingNumber = -1;
     private int loaded_verticalatk = -1;
     private int loaded_verticaldef = -1;
@@ -1119,40 +1114,32 @@ public class gameCard : OCGobject
 
     private void card_verticle_drawing_handler()
     {
-        if (game_object_verticle_drawing == null || loaded_verticalDrawingCode != data.Id ||
+        if (game_object_verticle_drawing == null ||
             loaded_verticalDrawingReal != Program.getVerticalTransparency() > 0.5f)
         {
             if (Program.getVerticalTransparency() > 0.5f)
             {
-                var texture = GameTextureManager.get(data.Id, GameTextureType.card_verticle_drawing);
-                if (texture != null)
+                loaded_verticalDrawingK = 1; //GameTextureManager.getK(data.Id, GameTextureType.card_verticle_drawing);
+                if (game_object_verticle_drawing == null)
                 {
-                    loaded_verticalDrawingCode = data.Id;
-                    loaded_verticalDrawingK = GameTextureManager.getK(data.Id, GameTextureType.card_verticle_drawing);
-                    // picLikeASquare = GameTextureManager.getB(data.Id, GameTextureType.card_verticle_drawing);
-                    if (game_object_verticle_drawing == null)
-                    {
-                        game_object_verticle_drawing = create(Program.I().mod_simple_quad,
-                            gameObject.transform.position, new Vector3(60, 0, 0));
-                        VerticleTransparency = 1f;
-                    }
-
-                    if (loaded_verticalDrawingReal != Program.getVerticalTransparency() > 0.5f)
-                    {
-                        loaded_verticalDrawingReal = Program.getVerticalTransparency() > 0.5f;
-                        game_object_verticle_drawing.transform.localScale = Vector3.zero;
-                    }
-
-                    game_object_verticle_drawing.GetComponent<Renderer>().material.mainTexture = texture;
-                    k_verticle = texture.width / (float) texture.height;
+                    game_object_verticle_drawing = create(Program.I().mod_simple_quad,
+                        gameObject.transform.position, new Vector3(60, 0, 0));
+                    VerticleTransparency = 1f;
                 }
+
+                if (loaded_verticalDrawingReal != Program.getVerticalTransparency() > 0.5f)
+                {
+                    loaded_verticalDrawingReal = Program.getVerticalTransparency() > 0.5f;
+                    game_object_verticle_drawing.transform.localScale = Vector3.zero;
+                }
+
+                var texture = game_object_verticle_drawing.GetComponent<Renderer>().material.mainTexture;
+                k_verticle = texture.width / (float) texture.height;
             }
             else
             {
                 var texture = GameTextureManager.N;
-                loaded_verticalDrawingCode = data.Id;
                 loaded_verticalDrawingK = 1;
-                // picLikeASquare = true;
                 if (game_object_verticle_drawing == null)
                 {
                     game_object_verticle_drawing = create(Program.I().mod_simple_quad, gameObject.transform.position,
@@ -1173,14 +1160,6 @@ public class gameCard : OCGobject
         else
         {
             var trans = 1f;
-            //if (opMonsterWithBackGroundCard && loaded_verticalDrawingK < 0.9f && ability / loaded_verticalDrawingK > 2600f / 0.9f)  
-            //{
-            //    trans = 0.5f;
-            //}
-            //else
-            //{
-            //    trans = 1f;
-            //}
             trans *= Program.getVerticalTransparency();
             if (trans < 0) trans = 0;
             if (trans > 1) trans = 1;
@@ -1405,8 +1384,8 @@ public class gameCard : OCGobject
     public void set_data(Card d)
     {
         data = d;
-        //caculateAbility();
         if (Program.I().cardDescription.ifShowingThisCard(data)) showMeLeft();
+        LoadCard();
     }
 
     public void set_code(int code)
@@ -1448,49 +1427,30 @@ public class gameCard : OCGobject
     private int loaded_specialHint = -1;
     private bool cardCodeChangedButNowLoadedPic;
 
+    private async void LoadCard()
+    {
+        Debug.Log(data.Id);
+        gameObject_face.GetComponent<Renderer>().material.mainTexture =
+            await GameTextureManager.GetCardPicture(data.Id) ??
+            (p.controller == 0 ? GameTextureManager.myBack : GameTextureManager.opBack);
+        if (game_object_verticle_drawing)
+            game_object_verticle_drawing.GetComponent<Renderer>().material.mainTexture =
+                await GameTextureManager.GetCardCloseUp(data.Id);
+    }
+
     private void card_picture_handler()
     {
-        if (loaded_cardCode != data.Id)
-        {
-            loaded_cardCode = data.Id;
-            cardCodeChangedButNowLoadedPic = true;
-        }
-
-        if (loaded_cardPictureCode != data.Id)
-        {
-            var texture = GameTextureManager.get(data.Id, GameTextureType.card_picture,
-                p.controller == 0 ? GameTextureManager.myBack : GameTextureManager.opBack);
-            if (texture != null)
-            {
-                loaded_cardPictureCode = data.Id;
-                gameObject_face.GetComponent<Renderer>().material.mainTexture = texture;
-            }
-            else
-            {
-                if (cardCodeChangedButNowLoadedPic)
-                {
-                    gameObject_face.GetComponent<Renderer>().material.mainTexture = GameTextureManager.unknown;
-                    cardCodeChangedButNowLoadedPic = false;
-                }
-            }
-        }
-
         if (p.controller != loaded_back)
-            try
-            {
-                loaded_back = (int) p.controller;
-                UIHelper.getByName(gameObject, "back").GetComponent<Renderer>().material.mainTexture =
+        {
+            loaded_back = (int) p.controller;
+            UIHelper.getByName(gameObject, "back").GetComponent<Renderer>().material.mainTexture =
+                loaded_back == 0 ? GameTextureManager.myBack : GameTextureManager.opBack;
+            if (data.Id == 0)
+                UIHelper.getByName(gameObject, "face").GetComponent<Renderer>().material.mainTexture =
                     loaded_back == 0 ? GameTextureManager.myBack : GameTextureManager.opBack;
-                if (data.Id == 0)
-                    UIHelper.getByName(gameObject, "face").GetComponent<Renderer>().material.mainTexture =
-                        loaded_back == 0 ? GameTextureManager.myBack : GameTextureManager.opBack;
-                del_one_tail(GameStringHelper.opHint);
-                if (loaded_back != controllerBased) add_string_tail(GameStringHelper.opHint);
-            }
-            catch (Exception e)
-            {
-                Debug.Log(e);
-            }
+            del_one_tail(GameStringHelper.opHint);
+            if (loaded_back != controllerBased) add_string_tail(GameStringHelper.opHint);
+        }
 
         var special_hint = 0;
         if ((p.position & (int) CardPosition.FaceDown) > 0)
@@ -2007,37 +1967,36 @@ public class gameCard : OCGobject
 
         if (show_off_disabled)
         {
-            refreshFunctions.Add(SOH_dis);
+            SOH_dis();
             Program.I().ocgcore.Sleep(42);
         }
         else if (show_off_shokewave)
         {
-            if (Program.I().setting.setting.showoff.value == false ||
-                File.Exists("picture/closeup/" + data.Id + ".png") == false || data.Attack < Program.I().setting.atk &&
-                data.Level < Program.I().setting.star)
+            if (Program.I().setting.setting.showoff.value && File.Exists("picture/closeup/" + data.Id + ".png") &&
+                (data.Attack >= Program.I().setting.atk || data.Level >= Program.I().setting.star))
             {
-                refreshFunctions.Add(SOH_nSum);
-                Program.I().ocgcore.Sleep(30);
+                SOH_sum();
+                Program.I().ocgcore.Sleep(72);
             }
             else
             {
-                refreshFunctions.Add(SOH_sum);
-                Program.I().ocgcore.Sleep(72);
+                SOH_nSum();
+                Program.I().ocgcore.Sleep(30);
             }
         }
         else
         {
-            if (Program.I().setting.setting.showoffWhenActived.value == false ||
-                File.Exists("picture/closeup/" + data.Id + ".png") == false)
+            if (Program.I().setting.setting.showoffWhenActived.value &&
+                File.Exists("picture/closeup/" + data.Id + ".png"))
             {
-                refreshFunctions.Add(SOH_nAct);
-                Program.I().ocgcore.Sleep(42);
+                SOH_act();
             }
             else
             {
-                refreshFunctions.Add(SOH_act);
-                Program.I().ocgcore.Sleep(42);
+                SOH_nAct();
             }
+
+            Program.I().ocgcore.Sleep(42);
         }
     }
 
@@ -2047,112 +2006,76 @@ public class gameCard : OCGobject
 
     private int show_off_begin_time;
 
-    private void SOH_act()
+    private async void SOH_act()
     {
-        var tex = GameTextureManager.get(data.Id, GameTextureType.card_picture);
-        var texc = GameTextureManager.get(data.Id, GameTextureType.card_feature);
-        if (tex != null)
-            if (texc != null)
-            {
-                var k = GameTextureManager.getK(data.Id, GameTextureType.card_feature);
-                refreshFunctions.Remove(SOH_act);
-                var shower =
-                    create(Program.I().Pro1_superCardShowerA, Program.I().ocgcore.centre(true), Vector3.zero, false,
-                        Program.I().ui_main_2d).GetComponent<YGO1superShower>();
-                shower.card.mainTexture = tex;
-                shower.closeup.mainTexture = texc;
-                shower.closeup.height = (int) (500f / k);
-                shower.closeup.width = (int) (500f / k * texc.width / texc.height);
-                Ocgcore.LRCgo = shower.gameObject;
-                destroy(shower.gameObject, 0.7f, false, true);
-            }
+        var k = 1; //GameTextureManager.getK(data.Id, GameTextureType.card_feature);
+        var shower =
+            create(Program.I().Pro1_superCardShowerA, Program.I().ocgcore.centre(true), Vector3.zero, false,
+                Program.I().ui_main_2d).GetComponent<YGO1superShower>();
+        shower.card.mainTexture = await GameTextureManager.GetCardPicture(data.Id);
+        shower.closeup.mainTexture = await GameTextureManager.GetCardCloseUp(data.Id);
+        shower.closeup.height = (int) (500f / k);
+        shower.closeup.width = (int) (500f / k * shower.closeup.mainTexture.width / shower.closeup.mainTexture.height);
+        Ocgcore.LRCgo = shower.gameObject;
+        destroy(shower.gameObject, 0.7f, false, true);
     }
 
-    private void SOH_nAct()
+    private async void SOH_nAct()
     {
-        var tex = GameTextureManager.get(data.Id, GameTextureType.card_picture);
-        if (tex != null)
-        {
-            refreshFunctions.Remove(SOH_nAct);
-            var shower =
-                create(Program.I().Pro1_CardShower, Program.I().ocgcore.centre(), Vector3.zero, false,
-                    Program.I().ui_main_2d).GetComponent<pro1CardShower>();
-            shower.card.mainTexture = tex;
-            shower.mask.mainTexture = GameTextureManager.Mask;
-            shower.disable.mainTexture = GameTextureManager.negated;
-            shower.transform.localScale = Vector3.zero;
-            shower.gameObject.transform.localScale =
-                new Vector3(Screen.height / 650f, Screen.height / 650f, Screen.height / 650f);
-            shower.run();
-            Ocgcore.LRCgo = shower.gameObject;
-            destroy(shower.gameObject, 0.7f, false, true);
-        }
+        var shower =
+            create(Program.I().Pro1_CardShower, Program.I().ocgcore.centre(), Vector3.zero, false,
+                Program.I().ui_main_2d).GetComponent<pro1CardShower>();
+        shower.card.mainTexture = await GameTextureManager.GetCardPicture(data.Id);
+        shower.mask.mainTexture = GameTextureManager.Mask;
+        shower.disable.mainTexture = GameTextureManager.negated;
+        shower.transform.localScale = Vector3.zero;
+        shower.gameObject.transform.localScale = Utils.UIHeight() / 650f * Vector3.one;
+        shower.run();
+        Ocgcore.LRCgo = shower.gameObject;
+        destroy(shower.gameObject, 0.7f, false, true);
     }
 
-    private void SOH_sum()
+    private async void SOH_sum()
     {
-        var tex = GameTextureManager.get(data.Id, GameTextureType.card_picture);
-        var texc = GameTextureManager.get(data.Id, GameTextureType.card_feature);
-        if (tex != null)
-            if (texc != null)
-            {
-                var k = GameTextureManager.getK(data.Id, GameTextureType.card_feature);
-                refreshFunctions.Remove(SOH_sum);
-                var shower =
-                    create(Program.I().Pro1_superCardShower, Program.I().ocgcore.centre(true), Vector3.zero, false,
-                        Program.I().ui_main_2d).GetComponent<YGO1superShower>();
-                shower.card.mainTexture = tex;
-                shower.closeup.mainTexture = texc;
-                shower.closeup.height = (int) (500f / k);
-                shower.closeup.width = (int) (500f / k * texc.width / texc.height);
-                Ocgcore.LRCgo = shower.gameObject;
-                destroy(shower.gameObject, 2f, false, true);
-            }
+        var k = 1; //GameTextureManager.getK(data.Id, GameTextureType.card_feature);
+        var shower =
+            create(Program.I().Pro1_superCardShower, Program.I().ocgcore.centre(true), Vector3.zero, false,
+                Program.I().ui_main_2d).GetComponent<YGO1superShower>();
+        shower.card.mainTexture = await GameTextureManager.GetCardPicture(data.Id);
+        shower.closeup.mainTexture = await GameTextureManager.GetCardCloseUp(data.Id);
+        shower.closeup.height = (int) (500f / k);
+        shower.closeup.width = (int) (500f / k * shower.closeup.mainTexture.width / shower.closeup.mainTexture.height);
+        Ocgcore.LRCgo = shower.gameObject;
+        destroy(shower.gameObject, 2f, false, true);
     }
 
-    private void SOH_nSum()
+    private async void SOH_nSum()
     {
-        var tex = GameTextureManager.get(data.Id, GameTextureType.card_picture);
-        if (tex != null)
-        {
-            refreshFunctions.Remove(SOH_nSum);
-            var shower =
-                create(Program.I().Pro1_CardShower, Program.I().ocgcore.centre(), Vector3.zero, false,
-                    Program.I().ui_main_2d).GetComponent<pro1CardShower>();
-            shower.card.mainTexture = tex;
-            shower.mask.mainTexture = GameTextureManager.Mask;
-            shower.disable.mainTexture = GameTextureManager.negated;
-            shower.transform.localScale = Vector3.zero;
-            iTween.ScaleTo(shower.gameObject, iTween.Hash(
-                "scale",
-                new Vector3(Screen.height / 650f, Screen.height / 650f, Screen.height / 650f),
-                "time",
-                0.5f
-            ));
-            Ocgcore.LRCgo = shower.gameObject;
-            destroy(shower.gameObject, 0.5f, false, true);
-        }
+        var shower =
+            create(Program.I().Pro1_CardShower, Program.I().ocgcore.centre(), Vector3.zero, false,
+                Program.I().ui_main_2d).GetComponent<pro1CardShower>();
+        shower.card.mainTexture = await GameTextureManager.GetCardPicture(data.Id);
+        shower.mask.mainTexture = GameTextureManager.Mask;
+        shower.disable.mainTexture = GameTextureManager.negated;
+        shower.transform.localScale = Vector3.zero;
+        shower.transform.DOScale(Utils.UIHeight() / 650f * Vector3.one, 0.5f);
+        Ocgcore.LRCgo = shower.gameObject;
+        destroy(shower.gameObject, 0.5f, false, true);
     }
 
-    private void SOH_dis()
+    private async void SOH_dis()
     {
-        var tex = GameTextureManager.get(data.Id, GameTextureType.card_picture);
-        if (tex != null)
-        {
-            refreshFunctions.Remove(SOH_dis);
-            var shower =
-                create(Program.I().Pro1_CardShower, Program.I().ocgcore.centre(), Vector3.zero, false,
-                    Program.I().ui_main_2d).GetComponent<pro1CardShower>();
-            shower.card.mainTexture = tex;
-            shower.mask.mainTexture = GameTextureManager.Mask;
-            shower.disable.mainTexture = GameTextureManager.negated;
-            shower.transform.localScale = Vector3.zero;
-            shower.gameObject.transform.localScale =
-                new Vector3(Screen.height / 650f, Screen.height / 650f, Screen.height / 650f);
-            shower.Dis();
-            Ocgcore.LRCgo = shower.gameObject;
-            destroy(shower.gameObject, 0.7f, false, true);
-        }
+        var shower =
+            create(Program.I().Pro1_CardShower, Program.I().ocgcore.centre(), Vector3.zero, false,
+                Program.I().ui_main_2d).GetComponent<pro1CardShower>();
+        shower.card.mainTexture = await GameTextureManager.GetCardPicture(data.Id);
+        shower.mask.mainTexture = GameTextureManager.Mask;
+        shower.disable.mainTexture = GameTextureManager.negated;
+        shower.transform.localScale = Vector3.zero;
+        shower.gameObject.transform.localScale = Utils.UIHeight() / 650f * Vector3.one;
+        shower.Dis();
+        Ocgcore.LRCgo = shower.gameObject;
+        destroy(shower.gameObject, 0.7f, false, true);
     }
 
     public void sortButtons()

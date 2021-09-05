@@ -75,6 +75,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -349,6 +350,17 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      Default Sprite Atlas_8: 21300030
+      Default Sprite Atlas_6: 21300016
+      Default Sprite Atlas_2: 21300010
+      Default Sprite Atlas_3: 21300006
+      Default Sprite Atlas_5: 21300026
+      Default Sprite Atlas_7: 21300028
+      Default Sprite Atlas_9: 21300032
+      Default Sprite Atlas_0: 21300024
+      Default Sprite Atlas_1: 21300020
+      Default Sprite Atlas_4: 21300022
   spritePackingTag: 
   pSDRemoveMatte: 1
   pSDShowRemoveMatteOption: 1

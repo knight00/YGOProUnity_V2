@@ -644,12 +644,12 @@ public class Servant
             defbutton.transform.localPosition = new Vector3(62.8f, 0f, 0f);
         }
 
-        var cardPicLoader_ = currentMSwindow.AddComponent<cardPicLoader>();
-        cardPicLoader_.code = code;
-        cardPicLoader_.uiTexture = atkpic;
-        cardPicLoader_ = currentMSwindow.AddComponent<cardPicLoader>();
-        cardPicLoader_.code = int.Parse(def.value) == (int) CardPosition.FaceDownDefence ? 0 : code;
-        cardPicLoader_.uiTexture = UIHelper.getByName<UITexture>(currentMSwindow, "defPic_");
+        var cardPicLoader = currentMSwindow.AddComponent<cardPicLoader>();
+        cardPicLoader.uiTexture = atkpic;
+        cardPicLoader.code = code;
+        cardPicLoader = currentMSwindow.AddComponent<cardPicLoader>();
+        cardPicLoader.uiTexture = UIHelper.getByName<UITexture>(currentMSwindow, "defPic_");
+        cardPicLoader.code = int.Parse(def.value) == (int) CardPosition.FaceDownDefence ? 0 : code;
     }
 
     public void RMSshow_tp(string hashCode, messageSystemValue jiandao, messageSystemValue shitou,

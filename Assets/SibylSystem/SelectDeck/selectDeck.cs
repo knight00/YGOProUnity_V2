@@ -261,7 +261,7 @@ public class selectDeck : WindowServantSP
 
     private void printSelected()
     {
-        GameTextureManager.clearUnloaded();
+        // GameTextureManager.clearUnloaded();
         Deck deck;
         DeckManager.FromYDKtoCodedDeck("deck/" + deckSelected + ".ydk", out deck);
         var mainAll = 0;
@@ -287,7 +287,7 @@ public class selectDeck : WindowServantSP
             if ((c.Type & (uint) CardType.Monster) > 0) mainMonster++;
             if ((c.Type & (uint) CardType.Spell) > 0) mainSpell++;
             if ((c.Type & (uint) CardType.Trap) > 0) mainTrap++;
-            quickCards[currentIndex].reCode(item);
+            quickCards[currentIndex].code = item;
             var v = UIHelper.get_hang_lieArry(mainAll - 1, hangshu);
             quickCards[currentIndex].transform.localPosition = new Vector3
             (
@@ -307,7 +307,7 @@ public class selectDeck : WindowServantSP
             if ((c.Type & (uint) CardType.Monster) > 0) sideMonster++;
             if ((c.Type & (uint) CardType.Spell) > 0) sideSpell++;
             if ((c.Type & (uint) CardType.Trap) > 0) sideTrap++;
-            quickCards[currentIndex].reCode(item);
+            quickCards[currentIndex].code = item;
             quickCards[currentIndex].transform.localPosition = new Vector3
             (
                 -176.3f + UIHelper.get_left_right_indexZuo(0, 352f, sideAll - 1, deck.Side.Count, 10)
@@ -327,7 +327,7 @@ public class selectDeck : WindowServantSP
             if ((c.Type & (uint) CardType.Synchro) > 0) extraSync++;
             if ((c.Type & (uint) CardType.Xyz) > 0) extraXyz++;
             if ((c.Type & (uint) CardType.Link) > 0) extraLink++;
-            quickCards[currentIndex].reCode(item);
+            quickCards[currentIndex].code = item;
             quickCards[currentIndex].transform.localPosition = new Vector3
             (
                 -176.3f + UIHelper.get_left_right_indexZuo(0, 352f, extraAll - 1, deck.Extra.Count, 10)

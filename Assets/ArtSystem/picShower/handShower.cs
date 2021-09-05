@@ -12,9 +12,9 @@ public class handShower : MonoBehaviour
 
     private void Start()
     {
-        pics[0] = GameTextureManager.get("jiandao");
-        pics[1] = GameTextureManager.get("shitou");
-        pics[2] = GameTextureManager.get("bu");
+        pics[0] = GameTextureManager.GetUI("jiandao");
+        pics[1] = GameTextureManager.GetUI("shitou");
+        pics[2] = GameTextureManager.GetUI("bu");
         texture_0.mainTexture = pics[me];
         texture_1.mainTexture = pics[op];
         GameObject_0.transform.position = Program.I().camera_main_2d

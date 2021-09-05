@@ -799,19 +799,18 @@ public class DeckManager : ServantWithCardDescription
         });
     }
 
-    private GameObject itemOnListProducer(string[] Args)
+    private GameObject itemOnListProducer(string[] args)
     {
-        GameObject returnValue = null;
-        returnValue = create(Program.I().new_ui_cardOnSearchList, Vector3.zero, Vector3.zero, false,
+        var returnValue = create(Program.I().new_ui_cardOnSearchList, Vector3.zero, Vector3.zero, false,
             Program.I().ui_back_ground_2d);
-        UIHelper.getRealEventGameObject(returnValue).name = Args[0];
-        UIHelper.trySetLableText(returnValue, Args[2]);
-        var cardPicLoader_ = UIHelper.getRealEventGameObject(returnValue).AddComponent<cardPicLoader>();
-        cardPicLoader_.code = int.Parse(Args[0]);
-        cardPicLoader_.data = CardsManager.Get(int.Parse(Args[0]));
-        cardPicLoader_.uiTexture = UIHelper.getByName<UITexture>(returnValue, "pic_");
-        cardPicLoader_.ico = UIHelper.getByName<ban_icon>(returnValue);
-        cardPicLoader_.ico.show(3);
+        UIHelper.getRealEventGameObject(returnValue).name = args[0];
+        UIHelper.trySetLableText(returnValue, args[2]);
+        var cardPicLoader = UIHelper.getRealEventGameObject(returnValue).AddComponent<cardPicLoader>();
+        cardPicLoader.uiTexture = UIHelper.getByName<UITexture>(returnValue, "pic_");
+        cardPicLoader.code = int.Parse(args[0]);
+        cardPicLoader.data = CardsManager.Get(int.Parse(args[0]));
+        cardPicLoader.ico = UIHelper.getByName<ban_icon>(returnValue);
+        cardPicLoader.ico.show(3);
         return returnValue;
     }
 

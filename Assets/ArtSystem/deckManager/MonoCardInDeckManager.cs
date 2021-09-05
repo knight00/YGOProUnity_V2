@@ -7,33 +7,35 @@ public class MonoCardInDeckManager : MonoBehaviour
     public bool dying;
 
     private bool bool_physicalON;
-    public Card cardData = new Card();
+    private Card _cardData = new();
     private bool died;
 
     private bool isDraging;
     private Banlist loaded_banlist;
-    private int loadedPicCode;
+
+    public Card cardData
+    {
+        get => _cardData;
+        set
+        {
+            _cardData = value;
+            LoadCard();
+        }
+    }
+
+    private async void LoadCard()
+    {
+        gameObject.transform.Find("face").GetComponent<Renderer>().material.mainTexture =
+            await GameTextureManager.GetCardPicture(_cardData.Id);
+    }
 
     private void Update()
     {
-        if (loadedPicCode != cardData.Id)
-        {
-            var pic = GameTextureManager.get(cardData.Id, GameTextureType.card_picture);
-            if (pic != null)
-            {
-                loadedPicCode = cardData.Id;
-                gameObject.transform.Find("face").GetComponent<Renderer>().material.mainTexture = pic;
-            }
-        }
-
         if (Program.I().deckManager.currentBanlist != loaded_banlist)
         {
             var ico = GetComponentInChildren<ban_icon>();
             loaded_banlist = Program.I().deckManager.currentBanlist;
-            if (loaded_banlist != null)
-                ico.show(loaded_banlist.GetQuantity(cardData.Id));
-            else
-                ico.show(3);
+            ico.show(loaded_banlist?.GetQuantity(_cardData.Id) ?? 3);
         }
 
         if (isDraging) gameObject.transform.position += (getGoodPosition(4) - gameObject.transform.position) * 0.3f;
