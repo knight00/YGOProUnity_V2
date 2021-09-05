@@ -320,31 +320,31 @@ public class UIScrollView : MonoBehaviour
 			mPanel.clipping = UIDrawCall.Clipping.ConstrainButDontClip;
 		
 		// Auto-upgrade
-		if (movement != Movement.Custom && scale.sqrMagnitude > 0.001f)
-		{
-			if (scale.x == 1f && scale.y == 0f)
-			{
-				movement = Movement.Horizontal;
-			}
-			else if (scale.x == 0f && scale.y == 1f)
-			{
-				movement = Movement.Vertical;
-			}
-			else if (scale.x == 1f && scale.y == 1f)
-			{
-				movement = Movement.Unrestricted;
-			}
-			else
-			{
-				movement = Movement.Custom;
-				customMovement.x = scale.x;
-				customMovement.y = scale.y;
-			}
-			scale = Vector3.zero;
-#if UNITY_EDITOR
-			NGUITools.SetDirty(this);
-#endif
-		}
+// 		if (movement != Movement.Custom && scale.sqrMagnitude > 0.001f)
+// 		{
+// 			if (scale.x == 1f && scale.y == 0f)
+// 			{
+// 				movement = Movement.Horizontal;
+// 			}
+// 			else if (scale.x == 0f && scale.y == 1f)
+// 			{
+// 				movement = Movement.Vertical;
+// 			}
+// 			else if (scale.x == 1f && scale.y == 1f)
+// 			{
+// 				movement = Movement.Unrestricted;
+// 			}
+// 			else
+// 			{
+// 				movement = Movement.Custom;
+// 				customMovement.x = scale.x;
+// 				customMovement.y = scale.y;
+// 			}
+// 			scale = Vector3.zero;
+// #if UNITY_EDITOR
+// 			NGUITools.SetDirty(this);
+// #endif
+// 		}
 
 		// Auto-upgrade
 		if (contentPivot == UIWidget.Pivot.TopLeft && relativePositionOnReset != Vector2.zero)
