@@ -4,7 +4,7 @@ set -o errexit
 
 apt update && apt -y install tar git zstd
 mkdir dist replay expansions icon
-cp -rf per-platform/$TARGET_PLATFORM/* .
+cp -rf per-platform/$TARGET_PLATFORM/* . || true
 
 ARCHIVE_FILES=(LICENSE cdb config deck expansions icon pack picture puzzle replay sound texture script)
 if [[ "$TARGET_PLATFORM" == "darwin" ]]; then
