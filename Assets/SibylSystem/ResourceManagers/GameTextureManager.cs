@@ -79,9 +79,14 @@ public class GameTextureManager
     private static readonly Dictionary<int, Task<Texture2D>> loadedCloseUp = new();
     private static readonly Dictionary<string, Texture2D> loadedUI = new();
 
-    public static async Task<Texture2D> GetCardPicture(int code)
+    public static Task<Texture2D> GetCardPicture(int code)
     {
-        if (code == 0) return null;
+        return GetCardPicture(code, myBack);
+    }
+
+    public static async Task<Texture2D> GetCardPicture(int code, Texture2D zero)
+    {
+        if (code == 0) return zero;
         if (loadedPicture.TryGetValue(code, out var cached)) return await cached;
         foreach (var extname in new[] {".png", ".jpg"})
         {
@@ -94,7 +99,7 @@ public class GameTextureManager
             }
         }
 
-        return null;
+        return unknown;
     }
 
     public static async Task<Texture2D> GetCardCloseUp(int code)

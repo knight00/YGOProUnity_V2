@@ -1429,10 +1429,8 @@ public class gameCard : OCGobject
 
     private async void LoadCard()
     {
-        Debug.Log(data.Id);
-        gameObject_face.GetComponent<Renderer>().material.mainTexture =
-            await GameTextureManager.GetCardPicture(data.Id) ??
-            (p.controller == 0 ? GameTextureManager.myBack : GameTextureManager.opBack);
+        gameObject_face.GetComponent<Renderer>().material.mainTexture = await GameTextureManager.GetCardPicture(data.Id,
+            p.controller == 0 ? GameTextureManager.myBack : GameTextureManager.opBack);
         if (game_object_verticle_drawing)
             game_object_verticle_drawing.GetComponent<Renderer>().material.mainTexture =
                 await GameTextureManager.GetCardCloseUp(data.Id);
