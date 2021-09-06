@@ -684,7 +684,7 @@ public class Room : WindowServantSP
             else
             {
                 realPlayers[i].SetNotNull(true);
-                realPlayers[i].setName(roomPlayers[i].name);
+                realPlayers[i].SetName(roomPlayers[i].name);
                 realPlayers[i].SetIFcanKick(is_host && i != selftype);
                 realPlayers[i].setIfMe(i == selftype);
                 realPlayers[i].setIfprepared(roomPlayers[i].prep);

@@ -46,10 +46,7 @@ public class UITexture : UIBasicSprite
     protected override void OnStart()
     {
         base.OnStart();
-        if (mOutPath != "")
-        {
-            mainTexture = GameTextureManager.get(mOutPath);
-        }
+        if (!string.IsNullOrEmpty(mOutPath)) mainTexture = GameTextureManager.GetUI(mOutPath);
     }
 
     public override Texture mainTexture

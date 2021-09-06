@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Rendering;
 using YGOSharp.OCGWrapper.Enums;
@@ -703,7 +705,7 @@ public static class UIHelper
                         if (!faces.ContainsKey(name))
                             try
                             {
-                                faces.Add(name, getTexture2D("texture/face/" + fileInfos[i].Name));
+                                faces.Add(name, GetTexture2D("texture/face/" + fileInfos[i].Name));
                             }
                             catch (Exception e)
                             {
@@ -730,30 +732,25 @@ public static class UIHelper
         return Program.I().face.faces[sum];
     }
 
-    public static Texture2D getTexture2D(string path)
+    public static Texture2D GetTexture2D(string path)
     {
-        Texture2D pic = null;
-        try
-        {
-            if (!File.Exists(path)) return null;
-            var file = new FileStream(path, FileMode.Open, FileAccess.Read);
-            file.Seek(0, SeekOrigin.Begin);
-            var data = new byte[file.Length];
-            file.Read(data, 0, (int) file.Length);
-            file.Close();
-            file.Dispose();
-            file = null;
-            pic = new Texture2D(1024, 600);
-            pic.LoadImage(data);
-        }
-        catch (Exception e)
-        {
-            Debug.Log(e);
-        }
-
+        var pic = new Texture2D(0, 0);
+        pic.LoadImage(File.ReadAllBytes(path));
         return pic;
     }
 
+    public static async Task<Texture2D> GetTexture2DAsync(string path)
+    {
+        var pic = new Texture2D(0, 0);
+        // Unity < 2021.2
+        var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, true);
+        var data = new byte[stream.Length];
+        await stream.ReadAsync(data, 0, (int) stream.Length);
+        pic.LoadImage(data);
+        // Unity >= 2021.2
+        // pic.LoadImage(await File.ReadAllBytesAsync(path));
+        return pic;
+    }
 
     internal static void shiftButton(UIButton btn, bool enabled)
     {

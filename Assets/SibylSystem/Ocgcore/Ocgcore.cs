@@ -55,7 +55,7 @@ public class Ocgcore : ServantWithCardDescription
     private readonly List<gameCard> cardsSelected = new List<gameCard>();
     private bool clearAllShowedB;
     private bool clearTimeFlag;
-    private long code_for_show;
+    private int code_for_show;
 
     public Condition condition = Condition.duel;
     public List<string> confirmedCards = new List<string>();
@@ -474,11 +474,11 @@ public class Ocgcore : ServantWithCardDescription
         Arrow.gameObject.SetActive(false);
         replayShowAll = Config.Get("replayShowAll", "0") != "0";
         reportShowAll = Config.Get("reportShowAll", "0") != "0";
-        
-        
+
+
         gameInfo = Program.I().new_ui_gameInfo;
-        
-        
+
+
         gameInfo.ini();
         UIHelper.InterGameObject(gameInfo.gameObject);
         shiftCondition(Condition.duel);
@@ -7586,7 +7586,7 @@ public class Ocgcore : ServantWithCardDescription
                 if (leftExcited)
                     if (Input.GetKey(KeyCode.A) == false)
                         leftExcited = false;
-                    //gameInfo.keepChain_set(false);
+            //gameInfo.keepChain_set(false);
         }
 
         base.ES_mouseUpEmpty();
@@ -7603,7 +7603,7 @@ public class Ocgcore : ServantWithCardDescription
         if (leftExcited)
             if (Input.GetKey(KeyCode.A) == false)
                 leftExcited = false;
-            //gameInfo.keepChain_set(false);
+        //gameInfo.keepChain_set(false);
         base.ES_mouseUpGameObject(gameObject);
     }
 
@@ -7613,7 +7613,7 @@ public class Ocgcore : ServantWithCardDescription
         if (rightExcited)
             if (Input.GetKey(KeyCode.S) == false)
                 rightExcited = false;
-            //gameInfo.ignoreChain_set(false);
+        //gameInfo.ignoreChain_set(false);
         if (gameInfo.queryHashedButton("sendSelected"))
         {
             sendSelectedCards();
@@ -7655,37 +7655,23 @@ public class Ocgcore : ServantWithCardDescription
         target.animation_confirm_screenCenter(new Vector3(-30, 0, 0), 0.2f, 0.5f);
     }
 
-    public void animation_show_card_code(long code)
+    public void animation_show_card_code(int code)
     {
         code_for_show = code;
-        AddUpdateAction_s(animation_show_card_code_handler);
+        animation_show_card_code_handler();
         Sleep(30);
     }
 
-    private void animation_show_card_code_handler()
+    private async void animation_show_card_code_handler()
     {
-        var texture = GameTextureManager.get(code_for_show, GameTextureType.card_picture);
-        if (texture != null)
-        {
-            RemoveUpdateAction_s(animation_show_card_code_handler);
-            //Vector3 position = Program.I().main_camera.ScreenToWorldPoint(new Vector3(getScreenCenter(), Screen.height / 2f, 10));
-            //GameObject obj = create_s(Program.I().mod_simple_quad);
-            //obj.AddComponent<animation_screen_lock>().screen_point = new Vector3(getScreenCenter(), Screen.height / 2f, 6);
-            //obj.transform.eulerAngles = new Vector3(60, 0, 0);
-            //obj.GetComponent<Renderer>().material.mainTexture = texture;
-            //obj.transform.localPosition = position;
-            //obj.transform.localScale = new Vector3(3.2f, 4.6f, 1f);
-            //destroy(obj, 1f);
-            var shower =
-                create(Program.I().Pro1_CardShower, Program.I().ocgcore.centre(), Vector3.zero, false,
-                    Program.I().ui_main_2d).GetComponent<pro1CardShower>();
-            shower.card.mainTexture = texture;
-            shower.mask.mainTexture = GameTextureManager.Mask;
-            shower.disable.mainTexture = GameTextureManager.negated;
-            shower.gameObject.transform.localScale =
-                new Vector3(Screen.height / 650f, Screen.height / 650f, Screen.height / 650f);
-            destroy(shower.gameObject, 0.5f);
-        }
+        var shower =
+            create(Program.I().Pro1_CardShower, Program.I().ocgcore.centre(), Vector3.zero, false,
+                Program.I().ui_main_2d).GetComponent<pro1CardShower>();
+        shower.card.mainTexture = await GameTextureManager.GetCardPicture(code_for_show);
+        shower.mask.mainTexture = GameTextureManager.Mask;
+        shower.disable.mainTexture = GameTextureManager.negated;
+        shower.gameObject.transform.localScale = Utils.UIHeight() / 650f * Vector3.one;
+        destroy(shower.gameObject, 0.5f);
     }
 
     private class linkMask

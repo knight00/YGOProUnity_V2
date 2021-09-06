@@ -329,14 +329,14 @@ public class UIButton : UIButtonColor
                 case State.Normal:
                     if (mTextureOutNormal != "")
                     {
-                        texure2d.mainTexture = GameTextureManager.get(mTextureOutNormal);
+                        texure2d.mainTexture = GameTextureManager.GetUI(mTextureOutNormal);
                     }
                     break;
                 case State.Hover:
                 case State.Pressed:
                     if (mTextureOutPressed != "")
                     {
-                        texure2d.mainTexture = GameTextureManager.get(mTextureOutPressed);
+                        texure2d.mainTexture = GameTextureManager.GetUI(mTextureOutPressed);
                     }
                     break;
             }

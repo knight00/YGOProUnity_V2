@@ -144,6 +144,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -1048,6 +1049,47 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      num_29: 21300058
+      num_2: 21300004
+      num_18: 21300036
+      num_25: 21300050
+      num_10: 21300020
+      num_19: 21300038
+      num_15: 21300030
+      num_20: 21300040
+      num_38: 21300076
+      num_3: 21300006
+      num_30: 21300060
+      num_16: 21300032
+      num_1: 21300002
+      num_37: 21300074
+      num_22: 21300044
+      num_11: 21300022
+      num_26: 21300052
+      num_39: 21300078
+      num_0: 21300000
+      num_23: 21300046
+      num_32: 21300064
+      num_9: 21300018
+      num_14: 21300028
+      num_27: 21300054
+      num_24: 21300048
+      num_12: 21300024
+      num_5: 21300010
+      num_21: 21300042
+      num_34: 21300068
+      num_31: 21300062
+      num_8: 21300016
+      num_28: 21300056
+      num_17: 21300034
+      num_13: 21300026
+      num_36: 21300072
+      num_6: 21300012
+      num_33: 21300066
+      num_35: 21300070
+      num_7: 21300014
+      num_4: 21300008
   spritePackingTag: ocgcore_numbers
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

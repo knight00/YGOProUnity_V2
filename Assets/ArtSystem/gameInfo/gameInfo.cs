@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using DefaultNamespace;
+using DG.Tweening;
 using UnityEngine;
 
 public class gameUIbutton
@@ -338,18 +340,16 @@ public class gameInfo : MonoBehaviour
             ((float) Program.I().ocgcore.life_1 > 0 ? Program.I().ocgcore.life_1 : 0).ToString();
         me.api_name.text = Program.I().ocgcore.name_0_c;
         opponent.api_name.text = Program.I().ocgcore.name_1_c;
-        me.api_face.mainTexture = UIHelper.getFace(Program.I().ocgcore.name_0_c);
-        opponent.api_face.mainTexture = UIHelper.getFace(Program.I().ocgcore.name_1_c);
-        iTween.MoveToLocal(me.api_healthBar.gameObject, new Vector3(
+        MyCard.LoadAvatar(Program.I().ocgcore.name_0_c, texture => me.api_face.mainTexture = texture);
+        MyCard.LoadAvatar(Program.I().ocgcore.name_1_c, texture => opponent.api_face.mainTexture = texture);
+
+        me.api_healthBar.transform.DOLocalMoveX(
             me.api_healthBar.width - getRealLife(Program.I().ocgcore.life_0) / Program.I().ocgcore.lpLimit *
-            me.api_healthBar.width,
-            me.api_healthBar.gameObject.transform.localPosition.y,
-            me.api_healthBar.gameObject.transform.localPosition.z), 1f);
-        iTween.MoveToLocal(opponent.api_healthBar.gameObject, new Vector3(
+            me.api_healthBar.width, 1f);
+        opponent.api_healthBar.transform.DOLocalMoveX(
             opponent.api_healthBar.width - getRealLife(Program.I().ocgcore.life_1) / Program.I().ocgcore.lpLimit *
-            opponent.api_healthBar.width,
-            opponent.api_healthBar.gameObject.transform.localPosition.y,
-            opponent.api_healthBar.gameObject.transform.localPosition.z), 1f);
+            opponent.api_healthBar.width, 1f);
+
         instance_lab.Clear();
         if (Program.I().ocgcore.confirmedCards.Count > 0) instance_lab.Add(GameStringHelper.yijingqueren);
         foreach (var item in Program.I().ocgcore.confirmedCards) instance_lab.Add(item);

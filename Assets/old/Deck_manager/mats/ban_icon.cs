@@ -20,12 +20,12 @@ public class ban_icon : MonoBehaviour
         UITexture t = gameObject.GetComponent<UITexture>();
         if (t != null)
         {
-            t.mainTexture = GameTextureManager.get("ban_" + i.ToString());
+            t.mainTexture = GameTextureManager.GetUI("ban_" + i.ToString());
         }
         else
         {
             Renderer r = GetComponent<Renderer>();
-            r.material.mainTexture = GameTextureManager.get("ban_" + i.ToString());
+            r.material.mainTexture = GameTextureManager.GetUI("ban_" + i.ToString());
         }
     }
 }
