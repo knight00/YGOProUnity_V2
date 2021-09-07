@@ -61,3 +61,10 @@ Windbot/
 config/config.conf
 config/hosts.conf
 config/translation.conf
+AI_core_vs2017solution/ocgcore
+AI_core_vs2017solution/sqlite3
+AI_core_vs2017solution/bin
+AI_core_vs2017solution/obj
+AI_core_vs2017solution/Release
+AI_core_vs2017solution/Debug
+AI_core_vs2017solution/lua

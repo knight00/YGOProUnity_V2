@@ -1,4 +1,5 @@
 stages:
+  - fetch_ocgcore
   - ocgcore
   - build_and_test
   - pack
@@ -7,6 +8,7 @@ stages:
 # If you are looking for a place where to add 'UNITY_LICENSE_FILE' and other secrets, please visit your project's gitlab page:
 # settings > CI/CD > Variables instead
 variables:
+  GIT_DEPTH: '1'
   BUILD_NAME: YGOPro2
   UNITY_ACTIVATION_FILE: ./unity3d.alf
   UNITY_VERSION: "2021.1.18f1"
@@ -43,10 +45,30 @@ image: $IMAGE:$UNITY_VERSION-base-$IMAGE_VERSION
   tags:
     - linux
 
+fetch_ocgcore:
+  extends: .common_image
+  dependencies: []
+  script:
+    - cd AI_core_vs2017solution
+    # lua
+    - wget -O - https://cdn01.moecube.com/ygopro-build-materials/lua-5.3.5.tar.gz | tar zfx -
+    - mv lua-5.3.5/src lua
+    - rm -rf lua-5.3.5
+    # sqlite3
+    - wget -O - https://cdn01.moecube.com/ygopro-build-materials/sqlite-autoconf-3360000.tar.gz | tar zfx -
+    - mv sqlite-autoconf-3360000 sqlite3
+    # ocgcore
+    - git clone --depth=1 -b x64 https://github.com/mycard/ygopro-core ocgcore
+    - cd ..
+  artifacts:
+    paths:
+      - AI_core_vs2017solution
 
 .ocgcore:
   extends: .common_image
   stage: ocgcore
+  dependencies:
+    - fetch_ocgcore
   cache:
     key: "$CI_JOB_NAME-$CI_COMMIT_REF_SLUG"
     paths:
