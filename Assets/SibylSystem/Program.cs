@@ -310,6 +310,15 @@ public class Program : MonoBehaviour
             {
             }
 
+        if (!Directory.Exists("replay"))
+            try
+            {
+                Directory.CreateDirectory("replay");
+            }
+            catch
+            {
+            }
+
         var fileInfos = new FileInfo[0];
 
         if (Directory.Exists("expansions"))
