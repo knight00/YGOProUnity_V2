@@ -28,12 +28,6 @@ public class puzzleMode : WindowServantSP
         selectedString = superScrollView.selectedString;
     }
 
-    public override void preFrameFunction()
-    {
-        base.preFrameFunction();
-        Menu.checkCommend();
-    }
-
     public void KF_puzzle(string name)
     {
         launch("puzzle/" + name + ".lua");

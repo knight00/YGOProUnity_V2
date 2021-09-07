@@ -77,12 +77,6 @@ public class SelectServer : WindowServantSP
         Program.charge();
     }
 
-    public override void preFrameFunction()
-    {
-        base.preFrameFunction();
-        Menu.checkCommend();
-    }
-
     private void printFile(bool first)
     {
         list.Clear();
@@ -143,7 +137,7 @@ public class SelectServer : WindowServantSP
                 for (var i = 0; i < list.items.Count; i++) all += list.items[i] + "\r\n";
                 File.WriteAllText("config/hosts.conf", all);
                 printFile(false);
-                new Thread(() => { TcpHelper.@join(ipString, name, portString, pswString, versionString); }).Start();
+                new Thread(() => { TcpHelper.join(ipString, name, portString, pswString, versionString); }).Start();
             }
             else
             {

@@ -9,18 +9,16 @@ using YGOSharp.OCGWrapper.Enums;
 
 public class selectDeck : WindowServantSP
 {
+    private readonly cardPicLoader[] quickCards = new cardPicLoader[200];
+
+    private readonly string sort = "sortByTimeDeck";
     private UIDeckPanel deckPanel;
 
 
     private string deckSelected = "";
 
     private string preString = "";
-
-
-    private readonly cardPicLoader[] quickCards = new cardPicLoader[200];
     private UIInput searchInput;
-
-    private readonly string sort = "sortByTimeDeck";
 
     private UIselectableList superScrollView;
 
@@ -74,7 +72,6 @@ public class selectDeck : WindowServantSP
     public override void preFrameFunction()
     {
         base.preFrameFunction();
-        Menu.checkCommend();
         if (searchInput.value != preString)
         {
             preString = searchInput.value;

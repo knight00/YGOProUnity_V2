@@ -8,13 +8,12 @@ using GameMessage = YGOSharp.OCGWrapper.Enums.GameMessage;
 
 public class selectReplay : WindowServantSP
 {
+    private readonly string sort = "sortByTimeReplay";
     private bool opYRP;
 
     private PrecyOcg precy;
 
     private string selectedTrace = "";
-
-    private readonly string sort = "sortByTimeReplay";
     private UIselectableList superScrollView;
 
     public override void initialize()
@@ -338,12 +337,6 @@ public class selectReplay : WindowServantSP
     {
         if (selectedTrace == superScrollView.selectedString) KF_replay(selectedTrace);
         selectedTrace = superScrollView.selectedString;
-    }
-
-    public override void preFrameFunction()
-    {
-        base.preFrameFunction();
-        Menu.checkCommend();
     }
 
     public void KF_replay(string name, bool god = false)

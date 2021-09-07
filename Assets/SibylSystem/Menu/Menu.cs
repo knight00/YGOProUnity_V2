@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Text;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
-using Debug = UnityEngine.Debug;
 
 public class Menu : WindowServantSP
 {
@@ -36,11 +35,6 @@ public class Menu : WindowServantSP
     {
         base.show();
         Program.charge();
-    }
-
-    public override void hide()
-    {
-        base.hide();
     }
 
     private IEnumerator checkUpdate()
@@ -91,7 +85,6 @@ public class Menu : WindowServantSP
     public override void preFrameFunction()
     {
         base.preFrameFunction();
-        checkCommend();
         if (Program.noAccess && !msgPermissionShowed)
         {
             msgPermissionShowed = true;
@@ -112,7 +105,11 @@ public class Menu : WindowServantSP
         Program.I().quit();
         Program.Running = false;
         TcpHelper.SaveRecord();
-        Process.GetCurrentProcess().Kill();
+#if UNITY_EDITOR
+        EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
     }
 
     private void onClickOnline()
@@ -143,112 +140,5 @@ public class Menu : WindowServantSP
     private void onClickSelectDeck()
     {
         Program.I().shiftToServant(Program.I().selectDeck);
-    }
-
-    public static void deleteShell()
-    {
-        try
-        {
-            if (File.Exists("commamd.shell")) File.Delete("commamd.shell");
-        }
-        catch (Exception)
-        {
-        }
-    }
-
-    public static void checkCommend()
-    {
-        if (Program.TimePassed() - lastTime > 1000)
-        {
-            lastTime = Program.TimePassed();
-            if (Program.I().selectDeck == null) return;
-            if (Program.I().selectReplay == null) return;
-            if (Program.I().puzzleMode == null) return;
-            if (Program.I().selectServer == null) return;
-            try
-            {
-                if (File.Exists("commamd.shell") == false) File.Create("commamd.shell").Close();
-            }
-            catch (Exception e)
-            {
-                Program.noAccess = true;
-                Debug.Log(e);
-            }
-
-            var all = "";
-            try
-            {
-                all = File.ReadAllText("commamd.shell", Encoding.UTF8);
-                var parmChars = all.ToCharArray();
-                var inQuote = false;
-                for (var index = 0; index < parmChars.Length; index++)
-                {
-                    if (parmChars[index] == '"')
-                    {
-                        inQuote = !inQuote;
-                        parmChars[index] = '\n';
-                    }
-
-                    if (!inQuote && parmChars[index] == ' ')
-                        parmChars[index] = '\n';
-                }
-
-                var mats = new string(parmChars).Split(new[] {'\n'}, StringSplitOptions.RemoveEmptyEntries);
-                if (mats.Length > 0)
-                    switch (mats[0])
-                    {
-                        case "online":
-                            if (mats.Length == 5)
-                            {
-                                UIHelper.iniFaces(); //加载用户头像
-                                Program.I().selectServer.KF_onlineGame(mats[1], mats[2], mats[3], mats[4]);
-                            }
-
-                            if (mats.Length == 6)
-                            {
-                                UIHelper.iniFaces();
-                                Program.I().selectServer.KF_onlineGame(mats[1], mats[2], mats[3], mats[4], mats[5]);
-                            }
-
-                            break;
-                        case "edit":
-                            if (mats.Length == 2) Program.I().selectDeck.KF_editDeck(mats[1]); //编辑卡组
-                            break;
-                        case "replay":
-                            if (mats.Length == 2)
-                            {
-                                UIHelper.iniFaces();
-                                Program.I().selectReplay.KF_replay(mats[1]); //编辑录像
-                            }
-
-                            break;
-                        case "puzzle":
-                            if (mats.Length == 2)
-                            {
-                                UIHelper.iniFaces();
-                                Program.I().puzzleMode.KF_puzzle(mats[1]); //运行残局
-                            }
-
-                            break;
-                    }
-            }
-            catch (Exception e)
-            {
-                Program.noAccess = true;
-                Debug.Log(e);
-            }
-
-            try
-            {
-                if (all != "")
-                    if (File.Exists("commamd.shell"))
-                        File.WriteAllText("commamd.shell", "");
-            }
-            catch (Exception e)
-            {
-                Program.noAccess = true;
-                Debug.Log(e);
-            }
-        }
     }
 }

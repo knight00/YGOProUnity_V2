@@ -15,12 +15,6 @@ public class AIRoom : WindowServantSP
         RMSshow_none(InterString.Get("AI模式还在开发中，您在AI模式下遇到的BUG不会在联机的时候出现。"));
     }
 
-    public override void preFrameFunction()
-    {
-        base.preFrameFunction();
-        Menu.checkCommend();
-    }
-
     #region ui
 
     private UIselectableList superScrollView;

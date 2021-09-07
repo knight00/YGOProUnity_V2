@@ -49,6 +49,7 @@ public static class TcpHelper
                 }
                 catch (Exception e)
                 {
+                    Debug.LogError(e);
                     Program.DEBUGLOG("onDisConnected 10");
                 }
 
@@ -224,6 +225,14 @@ public static class TcpHelper
         }
     }
 
+    // public static void SendSync(Package message)
+    // {
+    //     if (tcpClient != null && tcpClient.Connected)
+    //     {
+    //         sender(message);
+    //     }
+    // }
+
     private static void sender(object o)
     {
         try
@@ -238,6 +247,7 @@ public static class TcpHelper
                 b.Write(BitConverter.GetBytes((byte) message.Fuction), 0, 1);
                 b.Write(data, 0, data.Length);
                 var s = memstream.ToArray();
+                Debug.Log(BitConverter.ToString(s));
                 tcpClient.Client.Send(s);
             }
         }

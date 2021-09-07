@@ -19,8 +19,7 @@ public class Program : MonoBehaviour
     public Light light;
     public AudioSource audio;
 
-    [Header("容器")]
-    public GameObject ui_back_ground_2d;
+    [Header("容器")] public GameObject ui_back_ground_2d;
     public GameObject ui_windows_2d;
     public GameObject ui_main_2d;
     public GameObject ui_container_3d;
@@ -28,31 +27,27 @@ public class Program : MonoBehaviour
     public GameObject ui_main_3d;
     public Camera camera_main_3d;
 
-    [Header("ui_back_ground_2d")]
-    public Camera camera_back_ground_2d;
+    [Header("ui_back_ground_2d")] public Camera camera_back_ground_2d;
     public GameObject mod_simple_ngui_background_texture;
     public GameObject new_ui_cardDescription;
     public GameObject new_ui_search;
     public gameInfo new_ui_gameInfo;
-    
-    [Header("ui_windows_2d")]
-    public Camera camera_windows_2d;
+
+    [Header("ui_windows_2d")] public Camera camera_windows_2d;
     public GameObject new_ui_menu;
     public GameObject remaster_deckManager;
     public GameObject new_ui_selectServer;
     public GameObject remaster_replayManager;
     public GameObject remaster_puzzleManager;
     public GameObject new_ui_aiRoom;
-    
-    [Header("ui_main_2d")]
-    public Camera camera_main_2d;
+
+    [Header("ui_main_2d")] public Camera camera_main_2d;
     public GameObject new_ui_setting;
     public GameObject new_bar_room;
     public GameObject new_ui_searchDetailed;
     public GameObject new_ui_book;
-    
-    [Header("其他")]
-    public GameObject mouseParticle;
+
+    [Header("其他")] public GameObject mouseParticle;
 
     [Header("Prefab")] public facer face;
     public AudioClip zhankai;
@@ -121,7 +116,7 @@ public class Program : MonoBehaviour
     public GameObject mod_ocgcore_ss_p_sum_effect;
     public GameObject mod_ocgcore_ss_dark_hole;
     public GameObject mod_ocgcore_ss_link_mark;
-    
+
     public GameObject new_ui_cardOnSearchList;
     public GameObject new_bar_editDeck;
     public GameObject new_bar_changeSide;
@@ -286,17 +281,12 @@ public class Program : MonoBehaviour
 
     private void initialize()
     {
-        // go(1, () =>
-        // {
         UIHelper.iniFaces();
         initializeALLcameras();
         fixALLcamerasPreFrame();
         backGroundPic = new BackGroundPic();
         servants.Add(backGroundPic);
         backGroundPic.fixScreenProblem();
-        // });
-        // go(300, () =>
-        // {
         InterString.initialize("config/translation.conf");
         GameTextureManager.initialize();
         Config.initialize("config/config.conf");
@@ -393,8 +383,6 @@ public class Program : MonoBehaviour
 
         initializeALLservants();
         loadResources();
-        readParams();
-        // });
     }
 
     private void readParams()
@@ -413,8 +401,6 @@ public class Program : MonoBehaviour
             if (args[i].ToLower() == "-n" && args.Length > i + 1)
             {
                 nick = args[++i];
-                if (nick.Contains(" "))
-                    nick = "\"" + nick + "\"";
             }
 
             if (args[i].ToLower() == "-h" && args.Length > i + 1) host = args[++i];
@@ -422,29 +408,21 @@ public class Program : MonoBehaviour
             if (args[i].ToLower() == "-w" && args.Length > i + 1)
             {
                 password = args[++i];
-                if (password.Contains(" "))
-                    password = "\"" + password + "\"";
             }
 
             if (args[i].ToLower() == "-d" && args.Length > i + 1)
             {
                 deck = args[++i];
-                if (deck.Contains(" "))
-                    deck = "\"" + deck + "\"";
             }
 
             if (args[i].ToLower() == "-r" && args.Length > i + 1)
             {
                 replay = args[++i];
-                if (replay.Contains(" "))
-                    replay = "\"" + replay + "\"";
             }
 
             if (args[i].ToLower() == "-s" && args.Length > i + 1)
             {
                 puzzle = args[++i];
-                if (puzzle.Contains(" "))
-                    puzzle = "\"" + puzzle + "\"";
             }
 
             if (args[i].ToLower() == "-j")
@@ -454,31 +432,28 @@ public class Program : MonoBehaviour
             }
         }
 
-        var cmdFile = "commamd.shell";
         if (join)
         {
-            File.WriteAllText(cmdFile, "online " + nick + " " + host + " " + port + " 0x233 " + password,
-                Encoding.UTF8);
+            shiftToServant(selectServer);
+            selectServer.KF_onlineGame(nick, host, port, "0x233", password);
             exitOnReturn = true;
         }
         else if (deck != null)
         {
-            File.WriteAllText(cmdFile, "edit " + deck, Encoding.UTF8);
+            selectDeck.KF_editDeck(deck);
             exitOnReturn = true;
         }
         else if (replay != null)
         {
-            File.WriteAllText(cmdFile, "replay " + replay, Encoding.UTF8);
+            selectReplay.KF_replay(replay);
             exitOnReturn = true;
         }
         else if (puzzle != null)
         {
-            File.WriteAllText(cmdFile, "puzzle " + puzzle, Encoding.UTF8);
+            puzzleMode.KF_puzzle(puzzle);
             exitOnReturn = true;
         }
     }
-
-    
 
     private static int lastChargeTime;
 
@@ -799,7 +774,8 @@ public class Program : MonoBehaviour
         // mouseParticle = Instantiate(new_mouse);
         instance = this;
         initialize();
-        go(500, () => { gameStart(); });
+        gameStart();
+        readParams();
     }
 
     private int preWid;
@@ -941,7 +917,6 @@ public class Program : MonoBehaviour
             //adeUnityEngine.Debug.Log(e);
         }
 
-        Menu.deleteShell();
         foreach (var zip in GameZipManager.Zips) zip.Dispose();
     }
 

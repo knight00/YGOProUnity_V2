@@ -53,7 +53,6 @@ public class Room : WindowServantSP
 
     public override void show()
     {
-        if (isShowed) Menu.deleteShell();
         base.show();
         Program.I().ocgcore.returnServant = Program.I().selectServer;
         Program.I().ocgcore.handler = handler;

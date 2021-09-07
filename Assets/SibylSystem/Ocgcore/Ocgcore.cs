@@ -28,18 +28,6 @@ public class Ocgcore : ServantWithCardDescription
 
     private readonly List<gameCard> allCardsInSelectMessage = new List<gameCard>();
 
-    public List<GameObject> allChainPanelFixedContainer = new List<GameObject>();
-
-    private arrow Arrow;
-    private autoForceChainHandlerType autoForceChainHandler = autoForceChainHandlerType.manDoAll;
-
-    private float camera_max = -17.5f;
-
-    private float camera_min = -17.5f;
-    public bool cantCheckGrave;
-
-    public List<gameCard> cards = new List<gameCard>();
-
     private readonly List<gameCard> cardsForConfirm = new List<gameCard>();
 
     private readonly List<gameCard> cardsInChain = new List<gameCard>();
@@ -53,6 +41,31 @@ public class Ocgcore : ServantWithCardDescription
     private readonly List<gameCard> cardsSelectable = new List<gameCard>();
 
     private readonly List<gameCard> cardsSelected = new List<gameCard>();
+
+    private readonly List<int> ES_searchCode = new List<int>();
+
+    private readonly List<sortResult> ES_sortCurrent = new List<sortResult>();
+
+    private readonly List<sortResult> ES_sortResult = new List<sortResult>();
+
+    private readonly List<int> keys = new List<int>();
+
+    private readonly List<linkMask> linkMaskList = new List<linkMask>();
+    private readonly List<Package> Packages_ALL = new List<Package>();
+
+    private readonly List<placeSelector> placeSelectors = new List<placeSelector>();
+
+    public List<GameObject> allChainPanelFixedContainer = new List<GameObject>();
+
+    private arrow Arrow;
+    private autoForceChainHandlerType autoForceChainHandler = autoForceChainHandlerType.manDoAll;
+
+    private float camera_max = -17.5f;
+
+    private float camera_min = -17.5f;
+    public bool cantCheckGrave;
+
+    public List<gameCard> cards = new List<gameCard>();
     private bool clearAllShowedB;
     private bool clearTimeFlag;
     private int code_for_show;
@@ -82,18 +95,12 @@ public class Ocgcore : ServantWithCardDescription
 
     private string ES_phaseString = "";
 
-    private readonly List<int> ES_searchCode = new List<int>();
-
     private string ES_selectHint = "";
     private int Es_selectMSGHintData;
     private int Es_selectMSGHintPlayer;
     private int Es_selectMSGHintType;
 
     private string ES_selectUnselectHint = "";
-
-    private readonly List<sortResult> ES_sortCurrent = new List<sortResult>();
-
-    private readonly List<sortResult> ES_sortResult = new List<sortResult>();
 
     private int ES_sortSum;
 
@@ -113,8 +120,6 @@ public class Ocgcore : ServantWithCardDescription
     public bool isFirst;
 
     public bool isObserver;
-
-    private readonly List<int> keys = new List<int>();
     private int keysTempCount;
     private float lastAlpha;
     private int lastExcitedController = -1;
@@ -131,8 +136,6 @@ public class Ocgcore : ServantWithCardDescription
     public int life_0;
 
     public int life_1;
-
-    private readonly List<linkMask> linkMaskList = new List<linkMask>();
 
     public int lpLimit = 8000;
 
@@ -155,11 +158,8 @@ public class Ocgcore : ServantWithCardDescription
     public string name_1_tag = "";
 
     private List<Package> Packages = new List<Package>();
-    private readonly List<Package> Packages_ALL = new List<Package>();
 
     public bool paused;
-
-    private readonly List<placeSelector> placeSelectors = new List<placeSelector>();
 
     private bool replayShowAll;
     private bool reportShowAll;
@@ -2356,8 +2356,7 @@ public class Ocgcore : ServantWithCardDescription
                     Program.I().camera_main_2d.ScreenToWorldPoint(point),
                     new Vector3(0, 0, 0),
                     true,
-                    Program.I().ui_main_2d,
-                    true
+                    Program.I().ui_main_2d
                 ).GetComponent<lazyWin>();
             }
             else
@@ -2368,8 +2367,7 @@ public class Ocgcore : ServantWithCardDescription
                     Program.I().camera_main_2d.ScreenToWorldPoint(point),
                     new Vector3(0, 0, 0),
                     true,
-                    Program.I().ui_main_2d,
-                    true
+                    Program.I().ui_main_2d
                 ).GetComponent<lazyWin>();
                 UIHelper.InterGameObject(winCaculator.gameObject);
                 winCaculator.input.value = UIHelper.getTimeString();
@@ -6839,7 +6837,6 @@ public class Ocgcore : ServantWithCardDescription
 
     public override void show()
     {
-        if (isShowed) Menu.deleteShell();
         base.show();
         Program.I().light.transform.eulerAngles = new Vector3(50, -50, 0);
         Program.cameraPosition = new Vector3(0, 23, -18.5f - 3.2f * (Program.fieldSize - 1f) / 0.21f);
