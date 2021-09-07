@@ -47,6 +47,7 @@ image: $IMAGE:$UNITY_VERSION-base-$IMAGE_VERSION
 
 fetch_ocgcore:
   extends: .common_image
+  stage: fetch_ocgcore
   dependencies: []
   script:
     - cd AI_core_vs2017solution
