@@ -2357,8 +2357,7 @@ public class Ocgcore : ServantWithCardDescription
                     new Vector3(0, 0, 0),
                     true,
                     Program.I().ui_main_2d,
-                    true,
-                    new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f)
+                    true
                 ).GetComponent<lazyWin>();
             }
             else
@@ -2370,8 +2369,7 @@ public class Ocgcore : ServantWithCardDescription
                     new Vector3(0, 0, 0),
                     true,
                     Program.I().ui_main_2d,
-                    true,
-                    new Vector3(Screen.height / 700f, Screen.height / 700f, Screen.height / 700f)
+                    true
                 ).GetComponent<lazyWin>();
                 UIHelper.InterGameObject(winCaculator.gameObject);
                 winCaculator.input.value = UIHelper.getTimeString();
