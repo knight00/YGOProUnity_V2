@@ -93,6 +93,7 @@ ocgcore_windows:
     - vs
   script:
     - cd AI_core_vs2017solution
+    - bash -c 'cp -rf build/windows/* .'
     - cmd /c '"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\msbuild.exe" core.sln /m /p:Configuration=Release /p:Platform=x86'
     - cmd /c '"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\msbuild.exe" core.sln /m /p:Configuration=Release /p:Platform=x64'
     - bash -c 'cp -rf Release/ocgcore.dll ../Assets/Plugins/x86/ ; cp -rf x64/Release/ocgcore.dll ../Assets/Plugins/x64/'
