@@ -606,10 +606,10 @@ public class gameCard : OCGobject
                     vector_of_begin = gameObject_face.transform.position + new Vector3(0, 0, 2);
                 else
                     vector_of_begin = gameObject_face.transform.position + new Vector3(0, 0, 1.5f);
-                vector_of_begin = Utils.WorldToUIPoint(vector_of_begin);
+                vector_of_begin = Program.I().main_camera.WorldToScreenPoint(vector_of_begin);
                 for (var i = 0; i < buttons.Count; i++)
-                    buttons[i].show(vector_of_begin + i * new Vector3(0, 65f * 0.7f) +
-                                    new Vector3(0, 35f * 0.7f));
+                    buttons[i].show(vector_of_begin + i * new Vector3(0, 65f * 0.7f * Screen.height / 700f) +
+                                    new Vector3(0, 35f * 0.7f * Screen.height / 700f));
             }
             else
             {
@@ -617,10 +617,10 @@ public class gameCard : OCGobject
                 var vector_of_begin = Vector3.zero;
                 var l = 0.5f * game_object_verticle_drawing.transform.localScale.y * (h - 0.5f);
                 vector_of_begin = game_object_verticle_drawing.transform.position + new Vector3(0, l, l * 1.732f);
-                vector_of_begin = Utils.WorldToUIPoint(vector_of_begin);
+                vector_of_begin = Program.I().main_camera.WorldToScreenPoint(vector_of_begin);
                 for (var i = 0; i < buttons.Count; i++)
-                    buttons[i].show(vector_of_begin + i * new Vector3(0, 65f * 0.7f) +
-                                    new Vector3(0, 35f * 0.7f));
+                    buttons[i].show(vector_of_begin + i * new Vector3(0, 65f * 0.7f * Screen.height / 700f) +
+                                    new Vector3(0, 35f * 0.7f * Screen.height / 700f));
             }
         }
     }
