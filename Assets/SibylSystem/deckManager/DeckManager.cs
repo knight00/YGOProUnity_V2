@@ -215,17 +215,9 @@ public class DeckManager : ServantWithCardDescription
     {
         if (cardInDragging != null)
         {
-            if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
-            {
-                //
-            }
-            else
-            {
-                if (cardInDragging.getIfAlive())
-                    deckDirty = true;
-                ArrangeObjectDeck(true);
-                ShowObjectDeck();
-            }
+            if (cardInDragging.getIfAlive()) deckDirty = true;
+            ArrangeObjectDeck(true);
+            ShowObjectDeck();
 
             cardInDragging.endDrag();
             cardInDragging = null;
