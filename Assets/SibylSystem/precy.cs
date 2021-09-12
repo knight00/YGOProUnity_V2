@@ -62,28 +62,28 @@ public class PrecyOcg
         }
     }
 
-    public void startAI(string playerDek, string aiDeck, string aiScript, bool playerGo, bool unrand, int life,
-        bool god, int rule)
-    {
-        if (Program.I().ocgcore.isShowed == false)
-        {
-            Program.I().room.mode = 0;
-            Program.I().ocgcore.MasterRule = rule;
-            godMode = god;
-            prepareOcgcore();
-            Program.I().ocgcore.lpLimit = life;
-            Program.I().ocgcore.isFirst = playerGo;
-            Program.I().ocgcore.returnServant = Program.I().aiRoom;
-            if (!ygopro.startAI(playerDek, aiDeck, aiScript, playerGo, unrand, life, god, rule))
-            {
-                Program.I().cardDescription.RMSshow_none(InterString.Get("游戏内部出错，请重试。"));
-                return;
-            }
-
-            //Config.ClientVersion = 0x233c;
-            Program.I().shiftToServant(Program.I().ocgcore);
-        }
-    }
+    // public void startAI(string playerDek, string aiDeck, string aiScript, bool playerGo, bool unrand, int life,
+    //     bool god, int rule)
+    // {
+    //     if (Program.I().ocgcore.isShowed == false)
+    //     {
+    //         Program.I().room.mode = 0;
+    //         Program.I().ocgcore.MasterRule = rule;
+    //         godMode = god;
+    //         prepareOcgcore();
+    //         Program.I().ocgcore.lpLimit = life;
+    //         Program.I().ocgcore.isFirst = playerGo;
+    //         Program.I().ocgcore.returnServant = Program.I().aiRoom;
+    //         if (!ygopro.startAI(playerDek, aiDeck, aiScript, playerGo, unrand, life, god, rule))
+    //         {
+    //             Program.I().cardDescription.RMSshow_none(InterString.Get("游戏内部出错，请重试。"));
+    //             return;
+    //         }
+    //
+    //         //Config.ClientVersion = 0x233c;
+    //         Program.I().shiftToServant(Program.I().ocgcore);
+    //     }
+    // }
 
     private void prepareOcgcore()
     {

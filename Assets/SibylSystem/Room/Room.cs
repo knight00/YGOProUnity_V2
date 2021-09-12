@@ -9,7 +9,6 @@ using Object = UnityEngine.Object;
 
 public class Room : WindowServantSP
 {
-    private readonly string sort = "sortByTimeDeck";
     private UIselectableList superScrollView;
 
     public override void initialize()
@@ -32,23 +31,8 @@ public class Room : WindowServantSP
 
     private void printFile()
     {
-        var deckInUse = Config.Get("deckInUse", "wizard");
         superScrollView.clear();
-        var fileInfos = new DirectoryInfo("deck").GetFiles();
-        if (Config.Get(sort, "1") == "1")
-            Array.Sort(fileInfos, UIHelper.CompareTime);
-        else
-            Array.Sort(fileInfos, UIHelper.CompareName);
-        for (var i = 0; i < fileInfos.Length; i++)
-            if (fileInfos[i].Name.Length > 4)
-                if (fileInfos[i].Name.Substring(fileInfos[i].Name.Length - 4, 4) == ".ydk")
-                    if (fileInfos[i].Name.Substring(0, fileInfos[i].Name.Length - 4) == deckInUse)
-                        superScrollView.add(fileInfos[i].Name.Substring(0, fileInfos[i].Name.Length - 4));
-        for (var i = 0; i < fileInfos.Length; i++)
-            if (fileInfos[i].Name.Length > 4)
-                if (fileInfos[i].Name.Substring(fileInfos[i].Name.Length - 4, 4) == ".ydk")
-                    if (fileInfos[i].Name.Substring(0, fileInfos[i].Name.Length - 4) != deckInUse)
-                        superScrollView.add(fileInfos[i].Name.Substring(0, fileInfos[i].Name.Length - 4));
+        foreach (var deck in UIHelper.GetDecks()) superScrollView.add(deck);
     }
 
     public override void show()
