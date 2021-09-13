@@ -117,14 +117,6 @@ public class DeckManager : ServantWithCardDescription
         }
 
         camrem();
-        if (Input.mousePosition.x < Screen.width - 280)
-            if (Input.mousePosition.x > 250)
-            {
-                cameraAngle += Program.wheelValue * 1.2f;
-                if (cameraAngle < 0f) cameraAngle = 0f;
-                if (cameraAngle > 90f) cameraAngle = 90f;
-            }
-
         cameraDistance = 29 - 3.1415926f / 180f * (cameraAngle - 60f) * 13f;
         Program.cameraPosition = new Vector3(0, cameraDistance * Mathf.Sin(3.1415926f / 180f * cameraAngle),
             -cameraDistance * Mathf.Cos(3.1415926f / 180f * cameraAngle));
@@ -223,17 +215,9 @@ public class DeckManager : ServantWithCardDescription
     {
         if (cardInDragging != null)
         {
-            if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
-            {
-                //
-            }
-            else
-            {
-                if (cardInDragging.getIfAlive())
-                    deckDirty = true;
-                ArrangeObjectDeck(true);
-                ShowObjectDeck();
-            }
+            if (cardInDragging.getIfAlive()) deckDirty = true;
+            ArrangeObjectDeck(true);
+            ShowObjectDeck();
 
             cardInDragging.endDrag();
             cardInDragging = null;

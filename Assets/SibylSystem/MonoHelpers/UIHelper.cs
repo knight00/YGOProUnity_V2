@@ -830,6 +830,29 @@ public static class UIHelper
             screenposition.z + l));
     }
 
+    public const string sort = "sortByTimeDeck";
+
+    public static IOrderedEnumerable<FileInfo> SortDeck(this IOrderedEnumerable<FileInfo> source)
+    {
+        return Config.Get(sort, "1") == "1"
+            ? source.ThenByDescending(f => f.LastWriteTime)
+            : source.ThenBy(f => f.Name);
+    }
+
+    public static IEnumerable<string> GetDecks(string search = "")
+    {
+        var deckInUse = Config.Get("deckInUse", "miaowu");
+        var deckInUsePath = Path.GetFullPath($"deck/{deckInUse}.ydk");
+        return new DirectoryInfo("deck").EnumerateFiles("*.ydk", SearchOption.AllDirectories)
+            .Where(f => search == "" || f.Name.Contains(search))
+            .OrderByDescending(f => f.FullName == deckInUsePath)
+            .ThenBy(f => f.DirectoryName)
+            .SortDeck()
+            .Select(f =>
+                f.DirectoryName == Path.GetFullPath("deck")
+                    ? Path.GetFileNameWithoutExtension(f.Name)
+                    : $"{Path.GetFileName(f.DirectoryName)}/{Path.GetFileNameWithoutExtension(f.Name)}");
+    }
 
     public static int CompareTime(object x, object y)
     {

@@ -715,7 +715,7 @@ public class Program : MonoBehaviour
     public SelectServer selectServer;
     public Book book;
     public puzzleMode puzzleMode;
-    public AIRoom aiRoom;
+    // public AIRoom aiRoom;
 
     private void initializeALLservants()
     {
@@ -740,8 +740,8 @@ public class Program : MonoBehaviour
         servants.Add(selectReplay);
         puzzleMode = new puzzleMode();
         servants.Add(puzzleMode);
-        aiRoom = new AIRoom();
-        servants.Add(aiRoom);
+        // aiRoom = new AIRoom();
+        // servants.Add(aiRoom);
     }
 
     public void shiftToServant(Servant to)
@@ -756,7 +756,7 @@ public class Program : MonoBehaviour
         if (to != selectServer && selectServer.isShowed) selectServer.hide();
         if (to != selectReplay && selectReplay.isShowed) selectReplay.hide();
         if (to != puzzleMode && puzzleMode.isShowed) puzzleMode.hide();
-        if (to != aiRoom && aiRoom.isShowed) aiRoom.hide();
+        // if (to != aiRoom && aiRoom.isShowed) aiRoom.hide();
 
         if (to == backGroundPic && backGroundPic.isShowed == false) backGroundPic.show();
         if (to == menu && menu.isShowed == false) menu.show();
@@ -768,7 +768,7 @@ public class Program : MonoBehaviour
         if (to == selectServer && selectServer.isShowed == false) selectServer.show();
         if (to == selectReplay && selectReplay.isShowed == false) selectReplay.show();
         if (to == puzzleMode && puzzleMode.isShowed == false) puzzleMode.show();
-        if (to == aiRoom && aiRoom.isShowed == false) aiRoom.show();
+        // if (to == aiRoom && aiRoom.isShowed == false) aiRoom.show();
     }
 
     #endregion

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using YGOSharp;
@@ -11,7 +12,6 @@ public class selectDeck : WindowServantSP
 {
     private readonly cardPicLoader[] quickCards = new cardPicLoader[200];
 
-    private readonly string sort = "sortByTimeDeck";
     private UIDeckPanel deckPanel;
 
 
@@ -121,7 +121,9 @@ public class selectDeck : WindowServantSP
         if (hashCode == "onNew")
             try
             {
-                File.Create("deck/" + result[0].value + ".ydk").Close();
+                var path = $"deck/{result[0].value}.ydk";
+                Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+                File.Create(path).Close();
                 RMSshow_none(InterString.Get("「[?]」创建完毕。", result[0].value));
                 superScrollView.selectedString = result[0].value;
                 printFile();
@@ -147,7 +149,9 @@ public class selectDeck : WindowServantSP
         if (hashCode == "onCopy")
             try
             {
-                File.Copy("deck/" + superScrollView.selectedString + ".ydk", "deck/" + result[0].value + ".ydk");
+                var path = $"deck/{result[0].value}.ydk";
+                Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+                File.Copy("deck/" + superScrollView.selectedString + ".ydk", path);
                 RMSshow_none(InterString.Get("「[?]」复制完毕。", superScrollView.selectedString));
                 superScrollView.selectedString = result[0].value;
                 printFile();
@@ -160,7 +164,9 @@ public class selectDeck : WindowServantSP
         if (hashCode == "onRename")
             try
             {
-                File.Move("deck/" + superScrollView.selectedString + ".ydk", "deck/" + result[0].value + ".ydk");
+                var path = $"deck/{result[0].value}.ydk";
+                Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+                File.Move("deck/" + superScrollView.selectedString + ".ydk", path);
                 RMSshow_none(InterString.Get("「[?]」重命名完毕。", superScrollView.selectedString));
                 superScrollView.selectedString = result[0].value;
                 printFile();
@@ -233,7 +239,7 @@ public class selectDeck : WindowServantSP
 
     private void setSortLable()
     {
-        if (Config.Get(sort, "1") == "1")
+        if (Config.Get(UIHelper.sort, "1") == "1")
             UIHelper.trySetLableText(gameObject, "sort_", InterString.Get("时间排序"));
         else
             UIHelper.trySetLableText(gameObject, "sort_", InterString.Get("名称排序"));
@@ -241,10 +247,10 @@ public class selectDeck : WindowServantSP
 
     private void onSort()
     {
-        if (Config.Get(sort, "1") == "1")
-            Config.Set(sort, "0");
+        if (Config.Get(UIHelper.sort, "1") == "1")
+            Config.Set(UIHelper.sort, "0");
         else
-            Config.Set(sort, "1");
+            Config.Set(UIHelper.sort, "1");
         setSortLable();
         printFile();
     }
@@ -377,29 +383,9 @@ public class selectDeck : WindowServantSP
 
     private void printFile()
     {
-        var deckInUse = Config.Get("deckInUse", "miaowu");
         superScrollView.clear();
-        var fileInfos = new DirectoryInfo("deck").GetFiles();
-        if (Config.Get(sort, "1") == "1")
-            Array.Sort(fileInfos, UIHelper.CompareTime);
-        else
-            Array.Sort(fileInfos, UIHelper.CompareName);
-        for (var i = 0; i < fileInfos.Length; i++)
-            if (fileInfos[i].Name.Length > 4)
-                if (fileInfos[i].Name.Substring(fileInfos[i].Name.Length - 4, 4) == ".ydk")
-                    if (fileInfos[i].Name.Substring(0, fileInfos[i].Name.Length - 4) == deckInUse)
-                        if (searchInput.value == "" ||
-                            Regex.Replace(fileInfos[i].Name, searchInput.value, "miaowu", RegexOptions.IgnoreCase) !=
-                            fileInfos[i].Name)
-                            superScrollView.add(fileInfos[i].Name.Substring(0, fileInfos[i].Name.Length - 4));
-        for (var i = 0; i < fileInfos.Length; i++)
-            if (fileInfos[i].Name.Length > 4)
-                if (fileInfos[i].Name.Substring(fileInfos[i].Name.Length - 4, 4) == ".ydk")
-                    if (fileInfos[i].Name.Substring(0, fileInfos[i].Name.Length - 4) != deckInUse)
-                        if (searchInput.value == "" ||
-                            Regex.Replace(fileInfos[i].Name, searchInput.value, "miaowu", RegexOptions.IgnoreCase) !=
-                            fileInfos[i].Name)
-                            superScrollView.add(fileInfos[i].Name.Substring(0, fileInfos[i].Name.Length - 4));
+        foreach (var deck in UIHelper.GetDecks(searchInput.value))
+            superScrollView.add(deck);
         if (superScrollView.Selected() == false) superScrollView.selectTop();
     }
 

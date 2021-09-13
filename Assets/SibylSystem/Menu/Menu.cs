@@ -117,10 +117,10 @@ public class Menu : WindowServantSP
         Program.I().shiftToServant(Program.I().selectServer);
     }
 
-    private void onClickAI()
-    {
-        Program.I().shiftToServant(Program.I().aiRoom);
-    }
+    // private void onClickAI()
+    // {
+    //     Program.I().shiftToServant(Program.I().aiRoom);
+    // }
 
     private void onClickPizzle()
     {
