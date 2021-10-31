@@ -63,10 +63,7 @@ public class selectDeck : WindowServantSP
 
     private void returnToSelect()
     {
-        if (Program.exitOnReturn)
-            Program.I().menu.onClickExit();
-        else
-            Program.I().shiftToServant(Program.I().selectDeck);
+        Program.I().shiftToServant(Program.I().selectDeck);
     }
 
     public override void preFrameFunction()
