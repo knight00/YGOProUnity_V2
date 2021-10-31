@@ -113,7 +113,7 @@ public class GameTextureManager
             return await result;
         }
 
-        return null;
+        return N;
     }
 
     public static Texture2D GetUI(string name)
