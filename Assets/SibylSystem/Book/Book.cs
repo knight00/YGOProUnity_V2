@@ -47,11 +47,11 @@ public class Book : WindowServant2D
         base.preFrameFunction();
         if (isShowed)
         {
-            gameObject.transform.position = Program.I().camera_main_2d.ScreenToWorldPoint(
+            gameObject.transform.position = Utils.UIToWorldPoint(
                 new Vector3(Program.I().cardDescription.width / 2,
-                    (Screen.height - Program.I().cardDescription.cHeight) / 2, 0));
+                    (700 - Program.I().cardDescription.cHeight) / 2, 0));
             texts.back.width = (int) Program.I().cardDescription.width;
-            texts.back.height = Screen.height - (int) Program.I().cardDescription.cHeight;
+            texts.back.height = 700 - (int) Program.I().cardDescription.cHeight;
         }
     }
 
