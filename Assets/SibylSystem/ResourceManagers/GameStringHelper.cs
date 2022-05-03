@@ -461,26 +461,29 @@ public class GameStringHelper
 
     public static string getSetName(long Setcode)
     {
+        var setcodes = new int[4];
+        for(var j = 0; j < 4; j++)
+        {
+            setcodes[j] = (int)((Setcode >> j * 16) & 0xffff);
+        }
         var returnValue = new List<string>();
-        var lastBaseType = 0xfff;
         for (var i = 0; i < GameStringManager.xilies.Count; i++)
         {
             var currentHash = GameStringManager.xilies[i].hashCode;
-            if (CardsManager.IfSetCard(currentHash, Setcode))
+            for(var j = 0; j < 4; j++)
             {
-                if ((lastBaseType & currentHash) == lastBaseType)
-                    returnValue.RemoveAt(returnValue.Count - 1);
-                lastBaseType = currentHash & 0xfff;
-                var setArray = GameStringManager.xilies[i].content.Split('\t');
-                var setString = setArray[0];
-                //if (setArray.Length > 1)
-                //{
-                //    setString += "[sup]" + setArray[1] + "[/sup]";
-                //}
-                returnValue.Add(setString);
+                if (currentHash == setcodes[j])
+                {
+                    var setArray = GameStringManager.xilies[i].content.Split('\t');
+                    var setString = setArray[0];
+                    //if (setArray.Length > 1)
+                    //{
+                    //    setString += "[sup]" + setArray[1] + "[/sup]";
+                    //}
+                    returnValue.Add(setString);
+                }
             }
         }
-
-        return string.Join("|", returnValue.ToArray());
+        return String.Join("|", returnValue.ToArray());
     }
 }
