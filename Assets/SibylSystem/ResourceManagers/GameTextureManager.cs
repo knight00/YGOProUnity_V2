@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Ionic.Zip;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -88,6 +89,26 @@ public class GameTextureManager
     {
         if (code == 0) return zero;
         if (loadedPicture.TryGetValue(code, out var cached)) return await cached;
+
+        foreach (ZipFile zip in GameZipManager.Zips)
+        {
+            if (zip.Name.ToLower().EndsWith("script.zip"))
+                continue;
+            foreach (string file in zip.EntryFileNames)
+            {
+                foreach (var extname in new[] { ".png", ".jpg" })
+                {
+                    var path = $"pics/{code}{extname}";
+                    if (file.ToLower() == path)
+                    {
+                        var result = UIHelper.GetTexture2DFromZipAsync(zip, file);
+                        loadedPicture.Add(code, result);
+                        return await result;
+                    }
+                }
+            }
+        }
+
         foreach (var extname in new[] {".png", ".jpg"})
         {
             var path = $"picture/card/{code}{extname}";

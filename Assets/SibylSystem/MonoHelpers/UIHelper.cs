@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ionic.Zip;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -749,6 +750,17 @@ public static class UIHelper
         pic.LoadImage(data);
         // Unity >= 2021.2
         // pic.LoadImage(await File.ReadAllBytesAsync(path));
+        return pic;
+    }
+
+    public static async Task<Texture2D> GetTexture2DFromZipAsync(ZipFile zip, string file)
+    {
+        var pic = new Texture2D(0, 0);
+        MemoryStream stream = new MemoryStream();
+        ZipEntry entry = zip[file];
+        entry.Extract(stream);
+        //await Task.Run(() => { entry.Extract(stream); });
+        pic.LoadImage(stream.ToArray());
         return pic;
     }
 
