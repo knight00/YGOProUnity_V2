@@ -652,6 +652,40 @@ public class Servant
         cardPicLoader.uiTexture = UIHelper.getByName<UITexture>(currentMSwindow, "defPic_");
         cardPicLoader.code = int.Parse(def.value) == (int) CardPosition.FaceDownDefence ? 0 : code;
     }
+    public void RMSshow_position3(string hashCode, int code)
+    {
+        RMSshow_clear();
+        currentMShash = hashCode;
+        currentMStype = messageSystemType.position;
+        currentMSwindow = create
+            (
+            Program.I().ES_position3,
+            MSentre(),
+            Vector3.zero,
+            true,
+            Program.I().ui_main_2d,
+            true,
+            new Vector3(((float)Screen.height) / 700f, ((float)Screen.height) / 700f, ((float)Screen.height) / 700f)
+            );
+        UIHelper.InterGameObject(currentMSwindow);
+        UIHelper.registEvent(currentMSwindow, "upAtk_", ES_RMSpremono, new messageSystemValue { value = "1", hint = "Face-Up Attack" });
+        UIHelper.registEvent(currentMSwindow, "upDef_", ES_RMSpremono, new messageSystemValue { value = "4", hint = "Face-Up Defense" });
+        UIHelper.registEvent(currentMSwindow, "downDef_", ES_RMSpremono, new messageSystemValue { value = "8", hint = "Face-Down Defense" });
+
+        UITexture upatkpic = UIHelper.getByName<UITexture>(currentMSwindow, "upAtkPic_");
+        UITexture updefpic = UIHelper.getByName<UITexture>(currentMSwindow, "upDefPic_");
+        UITexture downdefpic = UIHelper.getByName<UITexture>(currentMSwindow, "downDefPic_");
+
+        cardPicLoader cardPicLoader_ = currentMSwindow.AddComponent<cardPicLoader>();
+        cardPicLoader_.uiTexture = upatkpic;
+        cardPicLoader_.code = code;
+        cardPicLoader_ = currentMSwindow.AddComponent<cardPicLoader>();
+        cardPicLoader_.uiTexture = updefpic;
+        cardPicLoader_.code = code;
+        cardPicLoader_ = currentMSwindow.AddComponent<cardPicLoader>();
+        cardPicLoader_.uiTexture = downdefpic;
+        cardPicLoader_.code = 0;
+    }
 
     public void RMSshow_tp(string hashCode, messageSystemValue jiandao, messageSystemValue shitou,
         messageSystemValue bu)

@@ -3313,6 +3313,10 @@ public class Ocgcore : ServantWithCardDescription
                     binaryMaster.writer.Write(positions);
                     sendReturn(binaryMaster.get());
                 }
+                if (positions == (0x1 | 0x4 | 0x8))
+                {
+                    RMSshow_position3("return", code);
+                }
                 else
                 {
                     if ((positions & 0x1) > 0) op1 = 0x1;
