@@ -40,12 +40,12 @@ public class Setting : WindowServant2D
         UIHelper.getByName<UIToggle>(gameObject, "smartSelect_").value =
             UIHelper.fromStringToBool(Config.Get("smartSelect_", "1"));
         UIHelper.getByName<UIToggle>(gameObject, "autoChain_").value =
-            UIHelper.fromStringToBool(Config.Get("autoChain_", "1"));
+            UIHelper.fromStringToBool(Config.Get("autoChain_", "0"));
         UIHelper.getByName<UIToggle>(gameObject, "handPosition_").value =
             UIHelper.fromStringToBool(Config.Get("handPosition_", "1"));
         UIHelper.getByName<UIToggle>(gameObject, "handmPosition_").value =
             UIHelper.fromStringToBool(Config.Get("handmPosition_", "1"));
-        UIHelper.getByName<UIToggle>(gameObject, "spyer_").value = UIHelper.fromStringToBool(Config.Get("spyer_", "1"));
+        UIHelper.getByName<UIToggle>(gameObject, "spyer_").value = UIHelper.fromStringToBool(Config.Get("spyer_", "0"));
         UIHelper.getByName<UIToggle>(gameObject, "resize_").canChange = false;
         // UIHelper.getByName<UIToggle>(gameObject, "resize_").value =
         // UIHelper.fromStringToBool(Config.Get("resize_", "0"));
@@ -75,11 +75,10 @@ public class Setting : WindowServant2D
         for (var i = 0; i < collection.Length; i++)
             if (collection[i].name.Length > 0 && collection[i].name[0] == '*')
             {
-                if (collection[i].name == "*mouseParticle" || collection[i].name == "*showOff" ||
-                    collection[i].name == "*Efield" || collection[i].name == "*Ewin")
-                    collection[i].value = UIHelper.fromStringToBool(Config.Get(collection[i].name, "1"));
-                else
+                if (collection[i].name == "*MonsterCloud")
                     collection[i].value = UIHelper.fromStringToBool(Config.Get(collection[i].name, "0"));
+                else
+                    collection[i].value = UIHelper.fromStringToBool(Config.Get(collection[i].name, "1"));
             }
 
         setting.showoffATK.value = Config.Get("showoffATK", "1800");
