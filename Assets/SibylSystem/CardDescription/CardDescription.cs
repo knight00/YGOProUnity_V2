@@ -75,7 +75,7 @@ public class CardDescription : Servant
         lineSprite = UIHelper.getByName<UISprite>(gameObject, "line");
         try
         {
-            description.textLabel.fontSize = int.Parse(Config.Get("fontSize", "24"));
+            description.textLabel.fontSize = int.Parse(Config.Get("fontSize", "16"));
         }
         catch (Exception e)
         {
