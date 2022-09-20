@@ -144,6 +144,7 @@ ocgcore_macos:
       - puzzle
       - picture
       - script
+      - pack
   only:
     - master
     - ci

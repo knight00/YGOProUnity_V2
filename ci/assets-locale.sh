@@ -19,7 +19,7 @@ cp -rf locales/$TARGET_LOCALE/config/translation.conf ./config/
 git clone --depth=1 https://github.com/Fluorohydride/ygopro-scripts script
 
 # ygopro-images
-wget -O - https://cdn01.moecube.com/images/ygopro-images-${TARGET_LOCALE}.zip | bsdtar -C picture/card -xf -
+wget -O - https://cdn02.moecube.com:444/images/ygopro-images-${TARGET_LOCALE}.zip | bsdtar -C picture/card -xf -
 mv picture/card/field picture/
 
 # closeup
@@ -30,3 +30,6 @@ mv ygopro2-closeup/closeup picture/
 git clone --depth=1 https://code.mycard.moe/mycard/ygopro-starter-pack
 mv ygopro-starter-pack/deck ./deck
 mv ygopro-starter-pack/single ./puzzle
+
+mkdir pack
+wget -O pack/pack.db https://cdn02.moecube.com:444/ygopro-card-list/pack.db
