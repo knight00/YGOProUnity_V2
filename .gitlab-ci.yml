@@ -59,7 +59,7 @@ fetch_ocgcore:
     - wget -O - https://cdn01.moecube.com/ygopro-build-materials/sqlite-autoconf-3360000.tar.gz | tar zfx -
     - mv sqlite-autoconf-3360000 sqlite3
     # ocgcore
-    - git clone --depth=1 -b x64-mycard https://github.com/mycard/ygopro-core ocgcore
+    - git clone --depth=1 https://github.com/mycard/ygopro-core ocgcore
     - cd ..
   artifacts:
     paths:
