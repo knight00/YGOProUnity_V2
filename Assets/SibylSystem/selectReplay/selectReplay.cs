@@ -341,9 +341,20 @@ public class selectReplay : WindowServantSP
 
     public void KF_replay(string name, bool god = false)
     {
-        try
+        string filename = name;
+        if (!File.Exists(filename))
         {
             if (File.Exists("replay/" + name + ".yrp3d"))
+                filename = "replay/" + name + ".yrp3d";
+            if (name.Length > 4 && name.ToLower().Substring(name.Length - 4, 4) == ".yrp")
+                filename = "replay/" + name;
+            if (!File.Exists(filename))
+                return;
+        }
+        bool yrp3d = filename.Length > 6 && filename.ToLower().Substring(filename.Length - 6, 6) == ".yrp3d";
+        try
+        {
+            if (yrp3d)
             {
                 if (god)
                 {
@@ -351,31 +362,27 @@ public class selectReplay : WindowServantSP
                     if (precy != null)
                         precy.dispose();
                     precy = new PrecyOcg();
-                    var replays = getYRPbuffer("replay/" + name + ".yrp3d");
+                    var replays = getYRPbuffer(filename);
                     var collections =
                         TcpHelper.getPackages(precy.ygopro.getYRP3dBuffer(getYRP(replays[replays.Count - 1])));
                     pushCollection(collections);
                 }
                 else
                 {
-                    var collection = TcpHelper.readPackagesInRecord("replay/" + name + ".yrp3d");
+                    var collection = TcpHelper.readPackagesInRecord(filename);
                     pushCollection(collection);
                 }
             }
             else
             {
-                if (name.Length > 4 && name.Substring(name.Length - 4, 4) == ".yrp")
-                    if (File.Exists("replay/" + name))
-                    {
-                        RMSshow_none(InterString.Get("您正在观看旧版的录像（上帝视角），不保证稳定性。"));
-                        if (precy != null)
-                            precy.dispose();
-                        precy = new PrecyOcg();
-                        var collections =
-                            TcpHelper.getPackages(
-                                precy.ygopro.getYRP3dBuffer(getYRP(File.ReadAllBytes("replay/" + name))));
-                        pushCollection(collections);
-                    }
+                RMSshow_none(InterString.Get("您正在观看旧版的录像（上帝视角），不保证稳定性。"));
+                if (precy != null)
+                    precy.dispose();
+                precy = new PrecyOcg();
+                var collections =
+                    TcpHelper.getPackages(
+                        precy.ygopro.getYRP3dBuffer(getYRP(File.ReadAllBytes(filename))));
+                pushCollection(collections);
             }
         }
         catch (Exception)
