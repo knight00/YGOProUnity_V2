@@ -1432,8 +1432,14 @@ public class gameCard : OCGobject
         gameObject_face.GetComponent<Renderer>().material.mainTexture = await GameTextureManager.GetCardPicture(data.Id,
             p.controller == 0 ? GameTextureManager.myBack : GameTextureManager.opBack);
         if (game_object_verticle_drawing)
-            game_object_verticle_drawing.GetComponent<Renderer>().material.mainTexture =
-                await GameTextureManager.GetCardCloseUp(data.Id);
+        {
+            if (Program.getVerticalTransparency() > 0.5f)
+                game_object_verticle_drawing.GetComponent<Renderer>().material.mainTexture =
+                    await GameTextureManager.GetCardCloseUp(data.Id);
+            else
+                game_object_verticle_drawing.GetComponent<Renderer>().material.mainTexture =
+                    GameTextureManager.N;
+        }
     }
 
     private void card_picture_handler()
