@@ -735,6 +735,10 @@ public static class UIHelper
 
     public static Texture2D GetTexture2D(string path)
     {
+        if (!File.Exists(path))
+        {
+            return null;
+        }
         var pic = new Texture2D(0, 0);
         pic.LoadImage(File.ReadAllBytes(path));
         return pic;
