@@ -940,7 +940,7 @@ MonoBehaviour:
   keepCrispWhenShrunk: 1
   mTrueTypeFont: {fileID: 12800000, guid: f775853fdfd14bb47934543e95c3bae3, type: 3}
   mFont: {fileID: 0}
-  mText: YGOPro2 v2.5.1 1035.4
+  mText: YGOPro2 v2.5.1 1.036.0
   mFontSize: 18
   mFontStyle: 0
   mAlignment: 1

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public static class Config
 {
-    public static uint ClientVersion = 0x1354;
+    public static uint ClientVersion = 0x1360;
 
     private static readonly List<oneString> translations = new List<oneString>();
 
