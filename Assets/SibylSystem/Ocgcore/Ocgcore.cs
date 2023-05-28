@@ -4611,7 +4611,7 @@ public class Ocgcore : ServantWithCardDescription
                 ES_min = r.ReadByte();
                 available = r.ReadUInt32();
                 values = new List<messageSystemValue>();
-                for (var i = 0; i < 25; i++)
+                for (var i = 0; i < 26; i++)
                     if ((available & (1 << i)) > 0)
                         values.Add(new messageSystemValue
                             {hint = GameStringManager.get_unsafe(1020 + i), value = (1 << i).ToString()});

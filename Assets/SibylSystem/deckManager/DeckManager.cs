@@ -1201,7 +1201,7 @@ public class DeckManager : ServantWithCardDescription
             UIPopupList_second.AddItem(GameStringManager.get_unsafe(1074));
             UIPopupList_second.AddItem(GameStringManager.get_unsafe(1075));
             UIPopupList_second.AddItem(GameStringManager.get_unsafe(1076));
-            for (var i = 1020; i <= 1044; i++) UIPopupList_race.AddItem(GameStringManager.get_unsafe(i));
+            for (var i = 1020; i <= 1045; i++) UIPopupList_race.AddItem(GameStringManager.get_unsafe(i));
             for (var i = 1010; i <= 1016; i++) UIPopupList_attribute.AddItem(GameStringManager.get_unsafe(i));
         }
 
@@ -1413,7 +1413,7 @@ public class DeckManager : ServantWithCardDescription
     private uint getRaceFilter()
     {
         uint returnValue = 0;
-        for (var i = 0; i < 25; i++)
+        for (var i = 0; i < 26; i++)
             if (UIPopupList_race.value == GameStringManager.get_unsafe(1020 + i))
                 returnValue |= (uint) Math.Pow(2, i);
         return returnValue;

@@ -59,7 +59,7 @@ public class GameStringHelper
     {
         var r = "";
         var passFirst = false;
-        for (var i = 0; i < 25; i++)
+        for (var i = 0; i < 26; i++)
             if ((a & (1 << i)) > 0)
             {
                 if (passFirst) r += fen;
